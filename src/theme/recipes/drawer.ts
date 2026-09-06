@@ -1,0 +1,56 @@
+import { defineSlotRecipe } from '@pandacss/dev'
+export const drawer = defineSlotRecipe({
+  className: 'kiso-drawer',
+  slots: ['backdrop', 'viewport', 'popup', 'content', 'title', 'description', 'close'],
+  staticCss: ['*', { size: ['*'], responsive: true }],
+  base: {
+    backdrop: {
+      position: 'fixed',
+      inset: 0,
+      bg: 'overlay',
+      zIndex: 60,
+      transition: 'opacity 200ms',
+      _startingStyle: { opacity: 0 },
+      _endingStyle: { opacity: 0 },
+    },
+    viewport: {
+      position: 'fixed',
+      inset: 0,
+      display: 'flex',
+      alignItems: 'end',
+      justifyContent: 'center',
+      zIndex: 61,
+    },
+    popup: {
+      bg: 'surface.raised',
+      color: 'fg',
+      borderTopRadius: '20px',
+      border: '1px solid',
+      borderColor: 'border',
+      boxShadow: 'popup',
+      width: 'full',
+      maxHeight: 'calc(100dvh - 48px)',
+      outline: 'none',
+      transform: 'translateY(var(--drawer-swipe-movement-y, 0px))',
+      transition: 'transform 220ms',
+      _startingStyle: { transform: 'translateY(100%)' },
+      _endingStyle: { transform: 'translateY(100%)' },
+    },
+    content: {
+      p: '6',
+      overflowY: 'auto',
+      maxHeight: 'calc(100dvh - 64px)',
+      pb: 'max(24px, env(safe-area-inset-bottom))',
+    },
+    title: { fontSize: 'lg', fontWeight: 'semibold', letterSpacing: '-.025em' },
+    description: { color: 'fg.muted', fontSize: 'sm', mt: '2', lineHeight: '1.7' },
+  },
+  variants: {
+    size: {
+      sm: { popup: { maxWidth: '400px' } },
+      md: { popup: { maxWidth: '560px' } },
+      lg: { popup: { maxWidth: '760px' } },
+    },
+  },
+  defaultVariants: { size: 'md' },
+})

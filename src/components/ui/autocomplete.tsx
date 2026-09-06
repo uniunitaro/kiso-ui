@@ -1,0 +1,31 @@
+'use client'
+import { Autocomplete as Base } from '@base-ui/react/autocomplete'
+import { combobox, type ComboboxVariantProps } from '../../../styled-system/recipes'
+import { createStyleContext } from './style-context'
+const { Provider, withContext } = createStyleContext(combobox)
+// The upstream overloads separate flat/grouped items; their shared Props handles either.
+const BaseRoot = Base.Root as <ItemValue>(props: Base.Root.Props<ItemValue>) => React.JSX.Element
+
+export function Root<ItemValue>({
+  size,
+  ...props
+}: Base.Root.Props<ItemValue> & ComboboxVariantProps) {
+  return (
+    <Provider size={size}>
+      <BaseRoot {...props} />
+    </Provider>
+  )
+}
+export const Input = withContext(Base.Input, 'input')
+export const InputGroup = withContext(Base.InputGroup, 'inputGroup')
+export const Positioner = withContext(Base.Positioner, 'positioner')
+export const Popup = withContext(Base.Popup, 'popup')
+export const List = withContext(Base.List, 'list')
+export const Item = withContext(Base.Item, 'item')
+export const Empty = withContext(Base.Empty, 'empty')
+export const GroupLabel = withContext(Base.GroupLabel, 'groupLabel')
+export const Portal = Base.Portal
+export const Group = Base.Group
+export const Collection = Base.Collection
+export const Status = Base.Status
+export const useFilter = Base.useFilter

@@ -1,0 +1,40 @@
+'use client'
+import { Combobox as Base } from '@base-ui/react/combobox'
+import { combobox, type ComboboxVariantProps } from '../../../styled-system/recipes'
+import { createStyleContext } from './style-context'
+const { Provider, withContext } = createStyleContext(combobox)
+
+export function Root<Value, Multiple extends boolean | undefined = false, Item = Value>({
+  size,
+  ...props
+}: Base.Root.Props<Value, Multiple, Item> & ComboboxVariantProps) {
+  return (
+    <Provider size={size}>
+      <Base.Root {...props} />
+    </Provider>
+  )
+}
+export const InputGroup = withContext(Base.InputGroup, 'inputGroup')
+export const Input = withContext(Base.Input, 'input')
+export const Trigger = withContext(Base.Trigger, 'trigger')
+export const Clear = withContext(Base.Clear, 'clear')
+export const Positioner = withContext(Base.Positioner, 'positioner')
+export const Popup = withContext(Base.Popup, 'popup')
+export const List = withContext(Base.List, 'list')
+export const Item = withContext(Base.Item, 'item')
+export const ItemIndicator = withContext(Base.ItemIndicator, 'itemIndicator')
+export const GroupLabel = withContext(Base.GroupLabel, 'groupLabel')
+export const Label = withContext(Base.Label, 'label')
+export const Empty = withContext(Base.Empty, 'empty')
+export const Chips = withContext(Base.Chips, 'chips')
+export const Chip = withContext(Base.Chip, 'chip')
+export const ChipRemove = withContext(Base.ChipRemove, 'chipRemove')
+export const Separator = withContext(Base.Separator, 'separator')
+export const Portal = Base.Portal
+export const Value = Base.Value
+export const Collection = Base.Collection
+export const Group = Base.Group
+export const Status = Base.Status
+export const useFilter = Base.useFilter
+export const useFilteredItems = Base.useFilteredItems
+export const createItems = Base.createItems

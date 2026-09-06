@@ -1,0 +1,88 @@
+import { defineRecipe } from '@pandacss/dev'
+import { control } from '../shared'
+
+export const button = defineRecipe({
+  className: 'kiso-button',
+  jsx: ['Button'],
+  staticCss: ['*', { size: ['*'], responsive: true }],
+  base: {
+    '--button-solid': 'token(colors.accent)',
+    '--button-hover': 'token(colors.accent.hover)',
+    '--button-subtle': 'token(colors.accent.subtle)',
+    '--button-fg': 'token(colors.accent.fg)',
+    '--button-contrast': 'token(colors.accent.contrast)',
+    '--button-border': 'token(colors.accent)',
+    ...control,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '2',
+    fontWeight: 'medium',
+    whiteSpace: 'nowrap',
+    userSelect: 'none',
+    border: '1px solid transparent',
+    flexShrink: 0,
+    '& svg': { width: '1.1em', height: '1.1em' },
+    _active: { transform: 'translateY(1px)' },
+    '&[aria-busy=true]': { cursor: 'progress' },
+  },
+  variants: {
+    variant: {
+      solid: {
+        bg: 'var(--button-solid)',
+        color: 'var(--button-contrast)',
+        boxShadow: 'xs',
+        _hover: { bg: 'var(--button-hover)' },
+      },
+      subtle: {
+        bg: 'var(--button-subtle)',
+        color: 'var(--button-fg)',
+        _hover: { filter: 'brightness(.96)' },
+      },
+      outline: {
+        bg: 'surface',
+        borderColor: 'var(--button-border)',
+        color: 'var(--button-fg)',
+        boxShadow: 'xs',
+        _hover: { bg: 'var(--button-subtle)' },
+      },
+      ghost: { color: 'var(--button-fg)', _hover: { bg: 'var(--button-subtle)' } },
+      danger: { bg: 'danger', color: 'surface', _hover: { filter: 'brightness(.92)' } },
+    },
+    size: {
+      xs: { h: '7', px: '2.5', fontSize: 'xs' },
+      sm: { h: '8', px: '3', fontSize: 'xs' },
+      md: { h: '9', px: '3.5', fontSize: 'sm' },
+      lg: { h: '11', px: '5', fontSize: 'sm' },
+    },
+    square: { true: { aspectRatio: '1', px: '0' } },
+    colorPalette: {
+      accent: {},
+      neutral: {
+        '--button-solid': 'token(colors.fg)',
+        '--button-hover': 'token(colors.fg.muted)',
+        '--button-subtle': 'token(colors.surface.subtle)',
+        '--button-fg': 'token(colors.fg)',
+        '--button-contrast': 'token(colors.fg.inverse)',
+        '--button-border': 'token(colors.border.strong)',
+      },
+      danger: {
+        '--button-solid': 'token(colors.danger)',
+        '--button-hover': 'token(colors.danger)',
+        '--button-subtle': 'token(colors.danger.subtle)',
+        '--button-fg': 'token(colors.danger)',
+        '--button-contrast': 'token(colors.surface)',
+        '--button-border': 'token(colors.danger)',
+      },
+      success: {
+        '--button-solid': 'token(colors.success)',
+        '--button-hover': 'token(colors.success)',
+        '--button-subtle': 'token(colors.success.subtle)',
+        '--button-fg': 'token(colors.success)',
+        '--button-contrast': 'token(colors.surface)',
+        '--button-border': 'token(colors.success)',
+      },
+    },
+  },
+  defaultVariants: { variant: 'solid', size: 'md', colorPalette: 'accent' },
+})

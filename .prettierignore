@@ -1,0 +1,9 @@
+node_modules
+styled-system
+dist
+.test-workspaces
+public/r
+public/registry.json
+public/llms*.txt
+pnpm-lock.yaml
+artifacts

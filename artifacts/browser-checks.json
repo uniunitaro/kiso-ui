@@ -1,0 +1,68 @@
+{
+  "date": "2026-09-06T20:17:21.523Z",
+  "build": "production",
+  "components": 48,
+  "checks": [
+    {
+      "accent": "iris",
+      "manual": "Manual review detailsElements must meet minimum color contrast ratio thresholdskbd:nth-child(2)",
+      "status": "0 violations · 30 rules passed · 1 manual reviews · Tested: light / iris",
+      "theme": "light",
+      "viewport": 1280
+    },
+    {
+      "accent": "iris",
+      "manual": "Manual review detailsElements must meet minimum color contrast ratio thresholdskbd:nth-child(2)",
+      "status": "0 violations · 30 rules passed · 1 manual reviews · Tested: dark / iris",
+      "theme": "dark",
+      "viewport": 1280
+    },
+    {
+      "accent": "ocean",
+      "manual": "Manual review detailsElements must meet minimum color contrast ratio thresholdskbd:nth-child(2)",
+      "status": "0 violations · 30 rules passed · 1 manual reviews · Tested: dark / ocean",
+      "theme": "dark",
+      "viewport": 1280
+    },
+    {
+      "accent": "ocean",
+      "manual": "Manual review detailsElements must meet minimum color contrast ratio thresholdskbd:nth-child(2)",
+      "status": "0 violations · 30 rules passed · 1 manual reviews · Tested: light / ocean",
+      "theme": "light",
+      "viewport": 1280
+    },
+    {
+      "accent": "forest",
+      "manual": "Manual review detailsElements must meet minimum color contrast ratio thresholdskbd:nth-child(2)",
+      "status": "0 violations · 30 rules passed · 1 manual reviews · Tested: light / forest",
+      "theme": "light",
+      "viewport": 1280
+    },
+    {
+      "accent": "forest",
+      "manual": "Manual review detailsElements must meet minimum color contrast ratio thresholdskbd:nth-child(2)",
+      "status": "0 violations · 30 rules passed · 1 manual reviews · Tested: dark / forest",
+      "theme": "dark",
+      "viewport": 1280
+    },
+    {
+      "accent": "iris",
+      "clientWidth": 305,
+      "scrollWidth": 305,
+      "status": "0 violations · 30 rules passed · 1 manual reviews · Tested: light / iris",
+      "theme": "light",
+      "viewport": 320
+    }
+  ],
+  "interactionChecks": [
+    "dialog initial focus and focus return",
+    "portal size propagation",
+    "combobox filtering",
+    "menu action and Escape",
+    "OTP next-slot focus and completion",
+    "toast rendering",
+    "vertical slider 160px track and arrow input",
+    "vertical tabs keyboard navigation",
+    "reduced-motion spinner animation 0.01ms"
+  ]
+}

@@ -1,0 +1,13 @@
+node_modules/
+styled-system/
+dist/
+*.tsbuildinfo
+.vite/
+coverage/
+.DS_Store
+.test-workspaces/
+public/r/
+public/registry.json
+public/llms.txt
+public/llms-full.txt
+artifacts/*.log

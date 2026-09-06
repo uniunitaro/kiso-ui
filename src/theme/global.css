@@ -1,0 +1,30 @@
+@layer reset, base, tokens, recipes, utilities;
+
+@layer base {
+  html {
+    background: var(--colors-canvas);
+    color: var(--colors-fg);
+    font-family: var(--fonts-sans);
+    font-size: 16px;
+    color-scheme: light;
+  }
+  html[data-theme='dark'] {
+    color-scheme: dark;
+  }
+  body {
+    margin: 0;
+  }
+  #root {
+    isolation: isolate;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
