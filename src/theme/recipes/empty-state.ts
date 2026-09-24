@@ -12,7 +12,7 @@ export const emptyState = defineSlotRecipe({
       width: 'full',
       border: '1px dashed',
       borderColor: 'border.strong',
-      borderRadius: 'panel',
+      borderRadius: 'l3',
       bg: 'surface',
     },
     icon: {
@@ -22,7 +22,7 @@ export const emptyState = defineSlotRecipe({
       h: '11',
       bg: 'surface.subtle',
       color: 'fg.muted',
-      borderRadius: 'panel',
+      borderRadius: 'l3',
       mb: '4',
       '& svg': { w: '5', h: '5' },
     },

@@ -11,7 +11,7 @@ export const table = defineSlotRecipe({
       overflowX: 'auto',
       border: '1px solid',
       borderColor: 'border',
-      borderRadius: 'panel',
+      borderRadius: 'l3',
       bg: 'surface',
     },
     root: { width: 'full', borderCollapse: 'collapse', textAlign: 'start', fontSize: 'sm' },

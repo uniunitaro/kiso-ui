@@ -1,5 +1,5 @@
 import { defineConfig } from '@pandacss/dev'
-import { tokens, semanticTokens } from './src/theme/tokens'
+import { tokens, createSemanticTokens } from './src/theme/tokens'
 import { recipes, slotRecipes } from './src/theme/recipes'
 import { conditions } from './src/theme/conditions'
 
@@ -10,7 +10,15 @@ export default defineConfig({
   outdir: 'styled-system',
   jsxFramework: 'react',
   conditions: { extend: conditions },
-  theme: { extend: { tokens, semanticTokens, recipes, slotRecipes } },
+  theme: {
+    extend: {
+      tokens,
+      semanticTokens: createSemanticTokens({ accentColor: 'iris', grayColor: 'neutral' }),
+      recipes,
+      slotRecipes,
+    },
+  },
+  staticCss: { css: [{ properties: { colorPalette: ['*'] } }] },
   globalCss: {
     html: {
       bg: 'canvas',

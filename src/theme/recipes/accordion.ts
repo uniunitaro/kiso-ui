@@ -50,7 +50,7 @@ export const accordion = defineSlotRecipe({
         root: {
           border: '1px solid',
           borderColor: 'border',
-          borderRadius: 'panel',
+          borderRadius: 'l3',
           px: '4',
           bg: 'surface',
         },

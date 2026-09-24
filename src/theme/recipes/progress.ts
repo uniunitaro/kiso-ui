@@ -17,7 +17,33 @@ export const progress = defineSlotRecipe({
     },
   },
   variants: {
-    size: { sm: { track: { h: '1' } }, md: { track: { h: '1.5' } }, lg: { track: { h: '2.5' } } },
+    size: {
+      xs: {
+        track: {
+          h: '1.5',
+        },
+      },
+      sm: {
+        track: {
+          h: '2',
+        },
+      },
+      md: {
+        track: {
+          h: '2.5',
+        },
+      },
+      lg: {
+        track: {
+          h: '3',
+        },
+      },
+      xl: {
+        track: {
+          h: '3.5',
+        },
+      },
+    },
   },
   defaultVariants: { size: 'md' },
 })

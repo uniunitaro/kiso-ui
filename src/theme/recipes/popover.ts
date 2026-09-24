@@ -5,7 +5,7 @@ export const popover = defineSlotRecipe({
   slots: ['positioner', 'popup', 'title', 'description', 'arrow', 'close'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
-    positioner: { zIndex: 50, maxWidth: 'calc(100vw - 24px)' },
+    positioner: { zIndex: 'popover', maxWidth: 'calc(100vw - 24px)' },
     popup: { ...popup, p: '4', maxHeight: 'var(--available-height)', overflowY: 'auto' },
     title: { fontSize: 'sm', fontWeight: 'semibold' },
     description: { fontSize: 'sm', color: 'fg.muted', mt: '1.5', lineHeight: '1.6' },

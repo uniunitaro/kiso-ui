@@ -47,16 +47,31 @@ export const slider = defineSlotRecipe({
   variants: {
     size: {
       sm: {
-        track: { '--slider-thickness': 'token(spacing.1)' },
-        thumb: { w: '3.5', h: '3.5' },
+        track: {
+          '--slider-thickness': 'token(spacing.2)',
+        },
+        thumb: {
+          w: '5',
+          h: '5',
+        },
       },
       md: {
-        track: { '--slider-thickness': 'token(spacing.1.5)' },
-        thumb: { w: '4', h: '4' },
+        track: {
+          '--slider-thickness': 'token(spacing.2)',
+        },
+        thumb: {
+          w: '5',
+          h: '5',
+        },
       },
       lg: {
-        track: { '--slider-thickness': 'token(spacing.2)' },
-        thumb: { w: '5', h: '5' },
+        track: {
+          '--slider-thickness': 'token(spacing.2)',
+        },
+        thumb: {
+          w: '5',
+          h: '5',
+        },
       },
     },
   },

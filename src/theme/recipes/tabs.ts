@@ -29,7 +29,7 @@ export const tabs = defineSlotRecipe({
       whiteSpace: 'nowrap',
       position: 'relative',
       zIndex: 1,
-      borderRadius: 'control',
+      borderRadius: 'l2',
       transition: 'background 120ms',
       _hover: { color: 'fg' },
     },
@@ -45,7 +45,7 @@ export const tabs = defineSlotRecipe({
   variants: {
     variant: {
       enclosed: {
-        list: { bg: 'surface.subtle', p: '1', borderRadius: 'panel' },
+        list: { bg: 'surface.subtle', p: '1', borderRadius: 'l3' },
         tab: { _selected: { bg: 'surface', color: 'fg', boxShadow: 'xs' } },
       },
       line: {
@@ -76,9 +76,38 @@ export const tabs = defineSlotRecipe({
       },
     },
     size: {
-      sm: { tab: { px: '3', h: '7', fontSize: 'xs' } },
-      md: { tab: { px: '4', h: '8', fontSize: 'sm' } },
-      lg: { tab: { px: '5', h: '10', fontSize: 'md' } },
+      xs: {
+        tab: {
+          h: '8',
+          minW: '8',
+          px: '3',
+          fontSize: 'xs',
+        },
+      },
+      sm: {
+        tab: {
+          h: '9',
+          minW: '9',
+          px: '3.5',
+          fontSize: 'sm',
+        },
+      },
+      md: {
+        tab: {
+          h: '10',
+          minW: '10',
+          px: '4',
+          fontSize: 'sm',
+        },
+      },
+      lg: {
+        tab: {
+          h: '11',
+          minW: '11',
+          px: '4.5',
+          fontSize: 'md',
+        },
+      },
     },
   },
   defaultVariants: { variant: 'enclosed', size: 'md' },

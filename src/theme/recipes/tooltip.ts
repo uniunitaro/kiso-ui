@@ -4,14 +4,14 @@ export const tooltip = defineSlotRecipe({
   slots: ['positioner', 'popup', 'arrow'],
   staticCss: ['*'],
   base: {
-    positioner: { zIndex: 70 },
+    positioner: { zIndex: 'tooltip' },
     popup: {
       bg: 'fg',
       color: 'fg.inverse',
       px: '2.5',
       py: '1.5',
       fontSize: 'xs',
-      borderRadius: 'control',
+      borderRadius: 'l2',
       maxWidth: '240px',
       boxShadow: 'xs',
       transition: 'opacity 120ms',

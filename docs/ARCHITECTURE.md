@@ -33,3 +33,11 @@ catalog が一覧、anatomy、依存レシピ、注意事項の入口です。re
 ## 境界
 
 ライブラリは操作部品と見た目を担当します。API 通信、権限、業務ルール、並び替えエンジン、日付の国際化、リッチテキスト編集は利用アプリが担当します。Toast の Provider はアプリの適切な位置へ、テーマは html へ置きます。React Server Components ではインタラクティブな境界にある `use client` を保持してください。
+
+## Park UI のテーマ定義
+
+`panda.config.ts` の `createSemanticTokens` でアクセント・グレー・追加パレットを指定します。色データとバリアント状態色は `src/theme/colors` に所有し、出典コミット・ライセンスもコピーします。ランタイムのプレビューにはPanda設定用モジュールをimportせず、名前だけの `src/app/palettes.ts` を使います。
+
+ButtonのcolorPaletteはPandaのユーティリティに渡すため、設定に追加されたパレットも使用できます。DOMへpropsを漏らさず、classNameの状態関数・ref・render合成を保持します。実行時パレット指定は `staticCss.css` の colorPalette を生成対象にしてください。
+
+角丸は入れ子の内側l1・操作部品l2・外側l3。オーバーレイは用途別のzIndexトークンを使い、Dialog内で開くSelectやMenuのPortalはmodalより上のpopover層に置きます。

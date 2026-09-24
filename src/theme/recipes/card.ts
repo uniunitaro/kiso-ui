@@ -5,7 +5,7 @@ export const card = defineSlotRecipe({
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
-      borderRadius: 'panel',
+      borderRadius: 'l3',
       border: '1px solid',
       borderColor: 'border',
       bg: 'surface',
@@ -20,7 +20,7 @@ export const card = defineSlotRecipe({
     size: { sm: { root: { p: '4' } }, md: { root: { p: '5' } }, lg: { root: { p: '7' } } },
     variant: {
       outline: {},
-      elevated: { root: { boxShadow: 'popup' } },
+      elevated: { root: { boxShadow: 'lg' } },
       subtle: { root: { bg: 'surface.subtle', borderColor: 'transparent' } },
     },
   },

@@ -10,7 +10,7 @@ export const menubar = defineRecipe({
     border: '1px solid',
     borderColor: 'border',
     bg: 'surface',
-    borderRadius: 'panel',
+    borderRadius: 'l3',
     width: 'fit-content',
   },
 })

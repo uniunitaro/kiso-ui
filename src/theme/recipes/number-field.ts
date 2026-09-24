@@ -10,7 +10,7 @@ export const numberField = defineSlotRecipe({
       display: 'flex',
       border: '1px solid',
       borderColor: 'border.strong',
-      borderRadius: 'control',
+      borderRadius: 'l2',
       overflow: 'hidden',
       bg: 'surface',
     },
@@ -42,9 +42,42 @@ export const numberField = defineSlotRecipe({
   },
   variants: {
     size: {
-      sm: { group: { h: '8', fontSize: 'xs' } },
-      md: { group: { h: '9', fontSize: 'sm' } },
-      lg: { group: { h: '11', fontSize: 'md' } },
+      xs: {
+        group: {
+          h: '8',
+          fontSize: 'sm',
+        },
+      },
+      sm: {
+        group: {
+          h: '9',
+          fontSize: 'sm',
+        },
+      },
+      md: {
+        group: {
+          h: '10',
+          fontSize: 'md',
+        },
+      },
+      lg: {
+        group: {
+          h: '11',
+          fontSize: 'md',
+        },
+      },
+      xl: {
+        group: {
+          h: '12',
+          fontSize: 'lg',
+        },
+      },
+      '2xl': {
+        group: {
+          h: '16',
+          fontSize: '3xl',
+        },
+      },
     },
   },
   defaultVariants: { size: 'md' },

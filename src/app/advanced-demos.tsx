@@ -501,7 +501,7 @@ export function AdvancedDemo({
                     fontSize: 'xs',
                   })}
                 >
-                  <span className={css({ fontFamily: 'mono', color: 'fg.subtle' })}>
+                  <span className={css({ fontFamily: 'mono', color: 'fg.muted' })}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   {name}

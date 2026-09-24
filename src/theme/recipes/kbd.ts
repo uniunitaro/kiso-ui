@@ -12,10 +12,10 @@ export const kbd = defineRecipe({
     fontFamily: 'mono',
     fontSize: '10px',
     bg: 'surface',
-    color: 'fg.subtle',
+    color: 'fg.muted',
     border: '1px solid',
     borderColor: 'border',
-    borderRadius: '4px',
+    borderRadius: 'l1',
     boxShadow: '0 1px 0 token(colors.border)',
   },
 })

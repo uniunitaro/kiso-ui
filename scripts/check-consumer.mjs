@@ -37,7 +37,7 @@ execFileSync(
 )
 await writeFile(
   path.join(target, 'panda.config.ts'),
-  `import { defineConfig } from '@pandacss/dev'\nimport { tokens, semanticTokens } from './src/theme/tokens'\nimport { conditions } from './src/theme/conditions'\nimport { recipes, slotRecipes } from './src/theme/recipes'\nexport default defineConfig({preflight:true,jsxFramework:'react',include:['./src/**/*.{ts,tsx}'],outdir:'styled-system',conditions:{extend:conditions},theme:{extend:{tokens,semanticTokens,recipes,slotRecipes}}})\n`,
+  `import { defineConfig } from '@pandacss/dev'\nimport { tokens, createSemanticTokens, palettes } from './src/theme/tokens'\nimport { conditions } from './src/theme/conditions'\nimport { recipes, slotRecipes } from './src/theme/recipes'\nexport default defineConfig({preflight:true,jsxFramework:'react',include:['./src/**/*.{ts,tsx}'],outdir:'styled-system',conditions:{extend:conditions},staticCss:{css:[{properties:{colorPalette:['*']}}]},theme:{extend:{tokens,semanticTokens:createSemanticTokens({accentColor:'blue',grayColor:'slate',additionalColors:{brand:palettes.blue}}),recipes,slotRecipes}}})\n`,
 )
 await writeFile(
   path.join(target, 'tsconfig.json'),
@@ -60,6 +60,12 @@ await writeFile(
     2,
   ),
 )
+await writeFile(
+  path.join(target, 'src', 'brand-example.tsx'),
+  `import { Button } from './components/ui/button'
+export const Brand = () => <Button colorPalette="brand" variant="surface" size={{base:'xs',md:'2xl'}}>Brand</Button>
+`,
+)
 for (const entry of catalog) {
   if (!examples[entry.id]) throw new Error(`Missing runnable example: ${entry.id}`)
   await writeFile(path.join(target, 'src', `example-${entry.id}.tsx`), examples[entry.id])
@@ -80,6 +86,8 @@ pnpm(['exec', 'tsc', '--noEmit'])
 pnpm(['exec', 'panda', 'cssgen'])
 const generatedCss = await readFile(path.join(target, 'styled-system', 'styles.css'), 'utf8')
 for (const selector of [
+  '.color-palette_brand',
+  '--colors-brand-solid-bg',
   '.md\\:kiso-button--size_lg',
   '.lg\\:kiso-checkbox__root--size_sm',
   '.sm\\:kiso-spinner--size_lg',

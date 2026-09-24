@@ -28,9 +28,54 @@ export const otpField = defineSlotRecipe({
   },
   variants: {
     size: {
-      sm: { input: { maxW: '8', h: '9', fontSize: 'sm' } },
-      md: { input: { maxW: '10', h: '11', fontSize: 'lg' } },
-      lg: { input: { maxW: '12', h: '14', fontSize: 'xl' } },
+      xs: {
+        input: {
+          h: '8',
+          px: '0',
+          fontSize: 'sm',
+          maxW: '8',
+        },
+      },
+      sm: {
+        input: {
+          h: '9',
+          px: '0',
+          fontSize: 'sm',
+          maxW: '9',
+        },
+      },
+      md: {
+        input: {
+          h: '10',
+          px: '0',
+          fontSize: 'md',
+          maxW: '10',
+        },
+      },
+      lg: {
+        input: {
+          h: '11',
+          px: '0',
+          fontSize: 'md',
+          maxW: '11',
+        },
+      },
+      xl: {
+        input: {
+          h: '12',
+          px: '0',
+          fontSize: 'lg',
+          maxW: '12',
+        },
+      },
+      '2xl': {
+        input: {
+          h: '16',
+          px: '0',
+          fontSize: '3xl',
+          maxW: '16',
+        },
+      },
     },
   },
   defaultVariants: { size: 'md' },

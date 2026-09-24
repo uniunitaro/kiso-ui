@@ -229,7 +229,7 @@ export function ComponentPage({ entry }: { entry: ComponentEntry }) {
               pt: '4',
               fontSize: '11px',
               lineHeight: '1.8',
-              color: 'fg.subtle',
+              color: 'fg.muted',
             })}
           >
             Try the keyboard, too.
@@ -421,7 +421,7 @@ export function CatalogPage() {
           <a href={`#/components/${entry.id}`} key={entry.id} className={s.catalogCard}>
             <div className={s.spread}>
               <h2 className={s.title}>{entry.name}</h2>
-              <ArrowUpRight size={16} className={css({ color: 'fg.subtle' })} />
+              <ArrowUpRight size={16} className={css({ color: 'fg.muted' })} />
             </div>
             <p
               className={css({
@@ -477,7 +477,7 @@ export function InstallationPage() {
       <h2 className={s.docHeading}>03 / Register the local theme</h2>
       <CodeBlock
         title="panda.config.ts"
-        code={`import { defineConfig } from '@pandacss/dev'\nimport { tokens, semanticTokens } from './src/theme/tokens'\nimport { conditions } from './src/theme/conditions'\nimport { recipes, slotRecipes } from './src/theme/recipes'\n\nexport default defineConfig({\n  preflight: true,\n  jsxFramework: 'react',\n  include: ['./src/**/*.{ts,tsx}'],\n  outdir: 'styled-system',\n  conditions: { extend: conditions },\n  theme: { extend: { tokens, semanticTokens, recipes, slotRecipes } },\n})`}
+        code={`import { defineConfig } from '@pandacss/dev'\nimport { tokens, createSemanticTokens } from './src/theme/tokens'\nimport { conditions } from './src/theme/conditions'\nimport { recipes, slotRecipes } from './src/theme/recipes'\n\nexport default defineConfig({\n  preflight: true,\n  jsxFramework: 'react',\n  include: ['./src/**/*.{ts,tsx}'],\n  outdir: 'styled-system',\n  staticCss: { css: [{ properties: { colorPalette: ['*'] } }] },\n  conditions: { extend: conditions },\n  theme: { extend: { tokens, semanticTokens: createSemanticTokens({ accentColor: 'iris', grayColor: 'neutral' }), recipes, slotRecipes } },\n})`}
       />
       <h2 className={s.docHeading}>04 / Set up the page</h2>
       <p className={s.prose}>
@@ -488,7 +488,7 @@ export function InstallationPage() {
       <div className={css({ mt: '4' })}>
         <CodeBlock
           title="app.tsx"
-          code={`import { Button } from './components/ui/button'\n\n// Set data-theme="light" or "dark" on <html>.\n// Optional: data-accent="iris" | "ocean" | "forest".\n// Optional: style="--kiso-radius: 8px".\n\nexport function App() {\n  return <Button variant="solid" size="md">Make something good</Button>\n}`}
+          code={`import { Button } from './components/ui/button'\n\n// Set data-theme="light" or "dark" on <html>.\n// Optional: data-accent="iris" | "blue" | "green".\n// Optional: data-gray="slate".\n\nexport function App() {\n  return <Button variant="solid" size="md">Make something good</Button>\n}`}
         />
       </div>
       <h2 className={s.docHeading}>A note about generation</h2>

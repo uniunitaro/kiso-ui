@@ -9,7 +9,7 @@ export const toast = defineSlotRecipe({
       position: 'fixed',
       bottom: '5',
       insetInlineEnd: '5',
-      zIndex: 100,
+      zIndex: 'toast',
       width: '340px',
       maxWidth: 'calc(100vw - 40px)',
       display: 'flex',
@@ -23,8 +23,8 @@ export const toast = defineSlotRecipe({
       color: 'fg',
       border: '1px solid',
       borderColor: 'border',
-      borderRadius: 'panel',
-      boxShadow: 'popup',
+      borderRadius: 'l3',
+      boxShadow: 'lg',
       p: '4',
       transition: 'opacity 180ms, transform 180ms',
       transform:
@@ -48,7 +48,7 @@ export const toast = defineSlotRecipe({
       display: 'grid',
       placeItems: 'center',
       color: 'fg.muted',
-      borderRadius: '4px',
+      borderRadius: 'l1',
       _hover: { bg: 'surface.hover' },
     },
     action: {

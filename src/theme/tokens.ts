@@ -1,110 +1,127 @@
 import { defineTokens, defineSemanticTokens } from '@pandacss/dev'
+import { colors as palettes } from './colors'
+import { colors } from './base-colors'
+import { shadows } from './shadows'
+import { zIndex } from './z-index'
 
+export { palettes }
+export type PaletteName = keyof typeof palettes
+export const grayNames = ['neutral', 'mauve', 'olive', 'sage', 'sand', 'slate'] as const
 export const tokens = defineTokens({
+  colors,
+  zIndex,
   fonts: {
     sans: { value: "'Geist Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" },
     mono: { value: "'Geist Mono Variable', ui-monospace, monospace" },
   },
-  radii: {
-    control: { value: 'var(--kiso-radius, 8px)' },
-    panel: { value: 'calc(var(--kiso-radius, 8px) + 4px)' },
-    pill: { value: '9999px' },
-  },
+  radii: { pill: { value: '9999px' } },
   durations: { fast: { value: '120ms' }, normal: { value: '180ms' } },
 })
-
-export const semanticTokens = defineSemanticTokens({
-  colors: {
-    canvas: { value: { base: '#f8f8f6', _dark: '#141416' } },
-    surface: {
-      DEFAULT: { value: { base: '#ffffff', _dark: '#1c1c1f' } },
-      subtle: { value: { base: '#f2f2ef', _dark: '#242427' } },
-      hover: { value: { base: '#eaeae6', _dark: '#303034' } },
-      raised: { value: { base: '#ffffff', _dark: '#242427' } },
-    },
-    fg: {
-      DEFAULT: { value: { base: '#232329', _dark: '#f0f0ee' } },
-      muted: { value: { base: '#66666e', _dark: '#aaaab3' } },
-      subtle: { value: { base: '#707078', _dark: '#91919c' } },
-      inverse: { value: { base: '#ffffff', _dark: '#19191d' } },
-    },
-    border: {
-      DEFAULT: { value: { base: '#e4e4e0', _dark: '#35353b' } },
-      strong: { value: { base: '#8b8b96', _dark: '#70707c' } },
-    },
-    accent: {
-      DEFAULT: {
-        value: {
-          base: '#5b4ed6',
-          _dark: '#aca2ff',
-          _ocean: '#1769b3',
-          _forest: '#23774d',
-          _darkOcean: '#8bc5ff',
-          _darkForest: '#91d7ac',
-        },
+const ref = (name: string) => ({ value: `{colors.${name}}` })
+type TokenTree = { [key: string]: TokenTree | { value: string | Record<string, string> } }
+// Select palette aliases, preserving the source palette's light/dark and variant states.
+function aliasPalette(name: string, selectable?: 'accent' | 'gray', template?: TokenTree) {
+  function visit(tree: TokenTree, path: string[] = []): TokenTree {
+    return Object.fromEntries(
+      Object.entries(tree).map(([key, node]) => {
+        const next = [...path, key]
+        if ('value' in node) {
+          const suffix = next.filter((part) => part !== 'DEFAULT').join('.')
+          const value: Record<string, string> = { base: `{colors.${name}.${suffix}}` }
+          const names = selectable === 'gray' ? grayNames : Object.keys(palettes)
+          if (selectable)
+            for (const option of names)
+              value[`_${selectable}_${option}`] = `{colors.${option}.${suffix}}`
+          return [key, { value }]
+        }
+        return [key, visit(node, next)]
+      }),
+    )
+  }
+  // Neutral has an extra surface hover role; copy the selected palette's shape.
+  return visit(template ?? palettes[name as PaletteName] ?? palettes.iris)
+}
+/** Set defaults and add named palettes from panda.config.ts. */
+export function createSemanticTokens(
+  options: {
+    accentColor?: PaletteName | (string & {})
+    grayColor?: (typeof grayNames)[number]
+    additionalColors?: Record<string, typeof palettes.iris>
+  } = {},
+) {
+  const additionalColors = Object.fromEntries(
+    Object.entries(options.additionalColors ?? {}).map(([name, palette]) => {
+      // Rebase palette-local references so overriding brand.9 also updates brand.solid.bg.
+      const solid = palette.solid.bg.DEFAULT.value.base
+      const source = solid.match(/^\{colors\.([^.]+)\.9\}$/)?.[1]
+      return [
+        name,
+        source
+          ? (JSON.parse(
+              JSON.stringify(palette).replaceAll('colors.' + source + '.', 'colors.' + name + '.'),
+            ) as typeof palette)
+          : palette,
+      ]
+    }),
+  )
+  const accentName = options.accentColor ?? 'iris'
+  const available = { ...palettes, ...additionalColors } as Record<string, typeof palettes.iris>
+  if (!available[accentName]) throw new Error('Unknown accent palette: ' + accentName)
+  const accent = aliasPalette(accentName, 'accent', available[accentName])
+  return defineSemanticTokens({
+    colors: {
+      ...palettes,
+      ...additionalColors,
+      gray: aliasPalette(options.grayColor ?? 'neutral', 'gray'),
+      accent: {
+        ...accent,
+        DEFAULT: ref('accent.solid.bg'),
+        hover: ref('accent.solid.bg.hover'),
+        subtle: { ...(accent.subtle as TokenTree), DEFAULT: ref('accent.subtle.bg') },
+        fg: ref('accent.subtle.fg'),
+        contrast: ref('accent.solid.fg'),
       },
-      hover: {
-        value: {
-          base: '#493dc0',
-          _dark: '#bdb5ff',
-          _ocean: '#10568f',
-          _forest: '#195e3b',
-          _darkOcean: '#aed7ff',
-          _darkForest: '#ace6c1',
-        },
-      },
-      subtle: {
-        value: {
-          base: '#efedfc',
-          _dark: '#302b49',
-          _ocean: '#e8f2ff',
-          _forest: '#e8f3eb',
-          _darkOcean: '#203448',
-          _darkForest: '#233b2d',
-        },
+      canvas: ref('gray.1'),
+      surface: {
+        DEFAULT: { value: { base: '{colors.white}', _dark: '{colors.gray.1}' } },
+        subtle: ref('gray.3'),
+        hover: ref('gray.4'),
+        raised: ref('gray.surface.bg'),
       },
       fg: {
-        value: {
-          base: '#5043ba',
-          _dark: '#c4bdff',
-          _ocean: '#145a98',
-          _forest: '#246240',
-          _darkOcean: '#b4daff',
-          _darkForest: '#abe5c0',
-        },
+        DEFAULT: ref('gray.12'),
+        default: ref('gray.12'),
+        muted: ref('gray.11'),
+        subtle: ref('gray.10'),
+        inverse: { value: { base: '{colors.white}', _dark: '{colors.black}' } },
       },
-      contrast: {
-        value: {
-          base: '#ffffff',
-          _dark: '#201c36',
-          _ocean: '#ffffff',
-          _forest: '#ffffff',
-          _darkOcean: '#15273b',
-          _darkForest: '#183124',
-        },
+      border: { DEFAULT: ref('gray.4'), strong: ref('gray.outline.border') },
+      danger: {
+        ...aliasPalette('red'),
+        DEFAULT: ref('red.11'),
+        subtle: { ...palettes.red.subtle, DEFAULT: ref('red.3') },
       },
-    },
-    danger: {
-      DEFAULT: { value: { base: '#c23340', _dark: '#ff929b' } },
-      subtle: { value: { base: '#fff0f1', _dark: '#3a2229' } },
-    },
-    success: {
-      DEFAULT: { value: { base: '#287345', _dark: '#8bd8a6' } },
-      subtle: { value: { base: '#edf6ee', _dark: '#203329' } },
-    },
-    warning: {
-      DEFAULT: { value: { base: '#916014', _dark: '#f1c47b' } },
-      subtle: { value: { base: '#fff6e5', _dark: '#392f20' } },
-    },
-    overlay: { value: '#10101880' },
-  },
-  shadows: {
-    xs: { value: { base: '0 1px 2px #18181b06', _dark: '0 1px 2px #00000022' } },
-    popup: {
-      value: {
-        base: '0 16px 48px -12px #19192630, 0 4px 12px #1919260a',
-        _dark: '0 16px 48px -12px #00000090',
+      success: {
+        ...aliasPalette('green'),
+        DEFAULT: ref('green.12'),
+        subtle: { ...palettes.green.subtle, DEFAULT: ref('green.3') },
       },
+      warning: {
+        ...aliasPalette('amber'),
+        DEFAULT: ref('amber.12'),
+        subtle: { ...palettes.amber.subtle, DEFAULT: ref('amber.3') },
+      },
+      error: ref('red.9'),
+      overlay: ref('black.a7'),
     },
-  },
-})
+    radii: {
+      l1: { value: 'var(--kiso-radius-l1, {radii.xs})' },
+      l2: { value: 'var(--kiso-radius-l2, {radii.sm})' },
+      l3: { value: 'var(--kiso-radius-l3, {radii.md})' },
+      control: { value: '{radii.l2}' },
+      panel: { value: '{radii.l3}' },
+    },
+    shadows: { ...shadows, popup: { value: '{shadows.lg}' } },
+  })
+}
+export const semanticTokens = createSemanticTokens()

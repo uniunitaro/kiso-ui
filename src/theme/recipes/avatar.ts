@@ -22,13 +22,50 @@ export const avatar = defineSlotRecipe({
   },
   variants: {
     size: {
-      xs: { root: { w: '6', h: '6', fontSize: '9px' } },
-      sm: { root: { w: '8', h: '8', fontSize: '10px' } },
-      md: { root: { w: '10', h: '10', fontSize: 'xs' } },
-      lg: { root: { w: '12', h: '12', fontSize: 'sm' } },
-      xl: { root: { w: '16', h: '16', fontSize: 'lg' } },
+      xs: {
+        root: {
+          w: '8',
+          h: '8',
+          fontSize: 'xs',
+        },
+      },
+      sm: {
+        root: {
+          w: '9',
+          h: '9',
+          fontSize: 'sm',
+        },
+      },
+      md: {
+        root: {
+          w: '10',
+          h: '10',
+          fontSize: 'md',
+        },
+      },
+      lg: {
+        root: {
+          w: '11',
+          h: '11',
+          fontSize: 'md',
+        },
+      },
+      xl: {
+        root: {
+          w: '12',
+          h: '12',
+          fontSize: 'lg',
+        },
+      },
+      '2xl': {
+        root: {
+          w: '16',
+          h: '16',
+          fontSize: 'xl',
+        },
+      },
     },
-    shape: { circle: {}, square: { root: { borderRadius: 'panel' } } },
+    shape: { circle: {}, square: { root: { borderRadius: 'l3' } } },
   },
   defaultVariants: { size: 'md', shape: 'circle' },
 })

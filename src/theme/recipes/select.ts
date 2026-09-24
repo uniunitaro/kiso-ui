@@ -32,21 +32,60 @@ export const select = defineSlotRecipe({
       color: 'fg',
       _invalid: { borderColor: 'danger' },
     },
-    value: { truncate: true, textAlign: 'start', '&[data-placeholder]': { color: 'fg.subtle' } },
+    value: { truncate: true, textAlign: 'start', '&[data-placeholder]': { color: 'fg.muted' } },
     icon: { color: 'fg.muted', '& svg': { width: '4', height: '4' } },
-    positioner: { zIndex: 50, outline: 'none' },
+    positioner: { zIndex: 'popover', outline: 'none' },
     popup: { ...popup, minWidth: 'var(--anchor-width)', maxHeight: 'var(--available-height)' },
     list: { overflowY: 'auto', maxH: 'min(320px, var(--available-height))' },
     item,
     itemIndicator: { marginInlineStart: 'auto', '& svg': { w: '3.5', h: '3.5' } },
-    groupLabel: { px: '3', py: '2', fontSize: 'xs', fontWeight: 'medium', color: 'fg.subtle' },
+    groupLabel: { px: '3', py: '2', fontSize: 'xs', fontWeight: 'medium', color: 'fg.muted' },
     separator: { h: '1px', bg: 'border', my: '1' },
   },
   variants: {
     size: {
-      sm: { trigger: { h: '8', px: '2.5', fontSize: 'xs' }, item: { fontSize: 'xs', py: '1.5' } },
-      md: { trigger: { h: '9', px: '3', fontSize: 'sm' } },
-      lg: { trigger: { h: '11', px: '3.5', fontSize: 'md' }, item: { py: '2.5' } },
+      xs: {
+        trigger: {
+          h: '8',
+          px: '2',
+          fontSize: 'sm',
+        },
+      },
+      sm: {
+        trigger: {
+          h: '9',
+          px: '2.5',
+          fontSize: 'sm',
+        },
+      },
+      md: {
+        trigger: {
+          h: '10',
+          px: '3',
+          fontSize: 'md',
+        },
+      },
+      lg: {
+        trigger: {
+          h: '11',
+          px: '3.5',
+          fontSize: 'md',
+        },
+      },
+      xl: {
+        trigger: {
+          h: '12',
+          px: '4',
+          fontSize: 'lg',
+        },
+      },
+      '2xl': {
+        trigger: {
+          h: '16',
+          px: '4.5',
+          fontSize: '3xl',
+        },
+      },
     },
   },
   defaultVariants: { size: 'md' },

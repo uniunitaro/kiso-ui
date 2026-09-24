@@ -2,7 +2,7 @@
 
 Base UI の振る舞いと Panda CSS のレシピを組み合わせた、ソースを所有する React コンポーネント集です。48種類の部品、実際に操作できるプレビュー、使用例、レシピ、ローカルコピー用 CLI を収録しています。
 
-Park UI の「意味トークン → レシピ → サイズ・バリアント」という考え方を参考に、Base UI の render 合成・状態コールバック・値のジェネリクスを保持する設計を採用しました。見た目は独自のニュートラルな配色とタイポグラフィです。
+Park UI の「意味トークン → レシピ → サイズ・バリアント」という考え方を参考に、Base UI の render 合成・状態コールバック・値のジェネリクスを保持する設計を採用しました。配色・状態色・主要部品のサイズ・角丸・影・重なり順は Park UI の定義に準拠しています。
 
 ## 起動
 
@@ -39,7 +39,7 @@ pnpm exec panda init --postcss
 
 ```ts
 import { defineConfig } from '@pandacss/dev'
-import { tokens, semanticTokens } from './src/theme/tokens'
+import { tokens, createSemanticTokens } from './src/theme/tokens'
 import { conditions } from './src/theme/conditions'
 import { recipes, slotRecipes } from './src/theme/recipes'
 
@@ -48,8 +48,16 @@ export default defineConfig({
   jsxFramework: 'react',
   include: ['./src/**/*.{ts,tsx}'],
   outdir: 'styled-system',
+  staticCss: { css: [{ properties: { colorPalette: ['*'] } }] },
   conditions: { extend: conditions },
-  theme: { extend: { tokens, semanticTokens, recipes, slotRecipes } },
+  theme: {
+    extend: {
+      tokens,
+      semanticTokens: createSemanticTokens({ accentColor: 'iris', grayColor: 'neutral' }),
+      recipes,
+      slotRecipes,
+    },
+  },
 })
 ```
 
@@ -82,7 +90,7 @@ CLI は依存ファイルとレシピを追跡し、ページ分割の Button �
 
 ## カスタマイズ
 
-- **全体**: `src/theme/tokens.ts` の意味トークン。ライト・ダーク、iris・ocean・forest を用意しています。
+- **全体**: `src/theme/tokens.ts` の意味トークン。ライト・ダーク、Park UIと同じ31色のパレット を用意しています。
 - **部品**: `src/theme/recipes/*.ts` の `defineRecipe` / `defineSlotRecipe`。サイズ、バリアント、状態、各スロットの見た目を変更できます。
 - **局所**: `className={css({ ... })}`。utilities レイヤーが recipes レイヤーより後に適用されます。
 - **合成**: Base UI の `render`、`ref`、状態を受ける `className`、controlled / uncontrolled の props を利用できます。
@@ -94,7 +102,7 @@ CLI は依存ファイルとレシピを追跡し、ページ分割の Button �
 ```
 
 ```html
-<html data-theme="dark" data-accent="ocean" style="--kiso-radius: 12px"></html>
+<html data-theme="dark" data-accent="blue" data-gray="slate"></html>
 ```
 
 テーマ属性は html に設定すると Portal 内にも継承されます。フォントの追加は任意で、標準ではシステムフォントへフォールバックします。プレビューは Geist を同梱しています。
@@ -118,3 +126,30 @@ pnpm preview
 ## 対応範囲
 
 Base UI のフォーム、選択、オーバーレイ、ナビゲーションに加え、Card・Table・Breadcrumb・Pagination などを収録しています。Drawer の既定レシピは下から開く構成です。日付処理、データテーブルのソートエンジン、グラフ描画、サービスへの送信はアプリ側で合成してください。アクセシビリティは実際のラベルと使い方にも依存し、自動検査だけで適合を保証するものではありません。
+
+## Park UI テーマ
+
+配色と状態色の参照元は [Park UI](https://park-ui.com/docs/theming) です。取り込み元のコミットは `src/theme/park-source.json`、ライセンスは `src/theme/PARK-UI-LICENSE` に保存しています。Ark UI の実装は取り込まず、Base UI の状態属性と合成契約を維持します。
+
+`panda.config.ts` で、アクセント・グレー・追加パレットを設定できます。
+
+```ts
+import { tokens, createSemanticTokens, palettes } from './src/theme/tokens'
+
+// defineConfig の theme.extend 内
+semanticTokens: createSemanticTokens({
+  accentColor: 'iris',
+  grayColor: 'neutral',
+  additionalColors: { brand: palettes.blue },
+})
+```
+
+追加色は `<Button colorPalette="brand" variant="surface" />` で使えます。`accentColor: 'brand'` で全体にも適用できます。設定変更後に Panda を再生成してください。実行時に色を選ぶ場合は、上の設定例の `staticCss` でパレットのクラスを生成します。`data-accent` / `data-gray` はプレビュー等の組み込み色の切り替え用で、指定した場合は設定の既定値より優先します。
+
+各パレットは `1`〜`12`、透過色 `a1`〜`a12`、`solid / subtle / surface / outline / plain` の背景・文字・境界線・状態色を持ちます。`brand.9` などを上書きした場合も、追加パレットの内部参照は自分自身を向きます。
+
+主な操作部品の `xs / sm / md / lg / xl / 2xl` は高さ32 / 36 / 40 / 44 / 48 / 64px。Checkbox・Radio・Switchは16 / 18 / 20 / 22 / 24 / 32pxです。Badgeは公式レシピに合わせて sm〜2xl が18 / 20 / 22 / 24 / 28pxで、一般図の32pxとは異なります。Buttonには公式の2xs（24px）もあります。Park UIにない部品や追加サイズはKiso側の拡張です。
+
+角丸は `l1 → xs (2px)`、`l2 → sm (4px)`、`l3 → md (6px)`。Panda設定の `semanticTokens.radii` で参照を変更できます。プレビューの角丸選択は3段階のCSS変数を変更します。円形部品は `full / pill` を使います。`control / panel / popup` は既存利用のための互換エイリアスです。Buttonの `ghost` は `plain` の互換名、`danger` は赤いsolidの互換名です。
+
+影はモードに対応した `xs`〜`2xl` と `inset`、重なり順は `dropdown`〜`tooltip` の名前付きトークンを使用します。ボーダーや淡い文字を含む全ての公式色の組み合わせが、あらゆる用途でコントラスト基準を満たすわけではありません。本文には `fg / fg.muted` を使い、用途に応じて確認してください。

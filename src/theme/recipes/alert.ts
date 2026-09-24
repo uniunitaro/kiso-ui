@@ -9,7 +9,7 @@ export const alert = defineSlotRecipe({
       gridTemplateColumns: 'auto 1fr',
       columnGap: '3',
       p: '4',
-      borderRadius: 'panel',
+      borderRadius: 'l3',
       border: '1px solid',
       borderColor: 'currentColor',
     },

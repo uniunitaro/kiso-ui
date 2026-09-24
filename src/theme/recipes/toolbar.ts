@@ -15,7 +15,7 @@ export const toolbar = defineSlotRecipe({
       border: '1px solid',
       borderColor: 'border',
       bg: 'surface',
-      borderRadius: 'panel',
+      borderRadius: 'l3',
       p: '1',
       '&[data-orientation=vertical]': { flexDirection: 'column' },
     },
@@ -46,12 +46,12 @@ export const toolbar = defineSlotRecipe({
   variants: {
     size: {
       sm: {
-        button: { minW: '7', h: '7', px: '2', fontSize: 'xs' },
-        link: { minW: '7', h: '7', px: '2', fontSize: 'xs' },
+        button: { minW: '9', h: '9', px: '2', fontSize: 'xs' },
+        link: { minW: '9', h: '9', px: '2', fontSize: 'xs' },
       },
       md: {
-        button: { minW: '9', h: '9', px: '3', fontSize: 'sm' },
-        link: { minW: '9', h: '9', px: '3', fontSize: 'sm' },
+        button: { minW: '10', h: '10', px: '3', fontSize: 'sm' },
+        link: { minW: '10', h: '10', px: '3', fontSize: 'sm' },
       },
       lg: {
         button: { minW: '11', h: '11', px: '4', fontSize: 'sm' },

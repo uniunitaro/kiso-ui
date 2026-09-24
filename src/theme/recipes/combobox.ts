@@ -48,7 +48,7 @@ export const combobox = defineSlotRecipe({
       flex: 1,
       bg: 'transparent',
       outline: 'none',
-      _placeholder: { color: 'fg.subtle' },
+      _placeholder: { color: 'fg.muted' },
       _disabled: { opacity: 0.5 },
     },
     trigger: {
@@ -57,7 +57,7 @@ export const combobox = defineSlotRecipe({
       alignItems: 'center',
       justifyContent: 'center',
       color: 'fg.muted',
-      borderRadius: '4px',
+      borderRadius: 'l1',
       w: '6',
       h: '6',
       '& svg': { w: '3.5', h: '3.5' },
@@ -68,17 +68,17 @@ export const combobox = defineSlotRecipe({
       alignItems: 'center',
       justifyContent: 'center',
       color: 'fg.muted',
-      borderRadius: '4px',
+      borderRadius: 'l1',
       w: '6',
       h: '6',
       '& svg': { w: '3', h: '3' },
     },
-    positioner: { zIndex: 50 },
+    positioner: { zIndex: 'popover' },
     popup: { ...popup, minWidth: 'var(--anchor-width)', maxWidth: 'calc(100vw - 24px)' },
     list: { maxHeight: 'min(300px, var(--available-height))', overflowY: 'auto', outline: 'none' },
     item,
     itemIndicator: { ml: 'auto', '& svg': { w: '3.5', h: '3.5' } },
-    groupLabel: { px: '3', py: '2', fontSize: 'xs', color: 'fg.subtle' },
+    groupLabel: { px: '3', py: '2', fontSize: 'xs', color: 'fg.muted' },
     empty: { fontSize: 'sm', color: 'fg.muted', textAlign: 'center', '&:not(:empty)': { p: '5' } },
     chips: {
       display: 'flex',
@@ -97,16 +97,55 @@ export const combobox = defineSlotRecipe({
       color: 'accent.fg',
       px: '2',
       py: '1',
-      borderRadius: 'control',
+      borderRadius: 'l2',
     },
-    chipRemove: { ...focusRing, borderRadius: '2px', color: 'accent.fg', display: 'flex' },
+    chipRemove: { ...focusRing, borderRadius: 'l1', color: 'accent.fg', display: 'flex' },
     separator: { h: '1px', bg: 'border', my: '1' },
   },
   variants: {
     size: {
-      sm: { inputGroup: { minH: '8', fontSize: 'xs' } },
-      md: { inputGroup: { minH: '9', fontSize: 'sm' } },
-      lg: { inputGroup: { minH: '11', fontSize: 'md' } },
+      xs: {
+        inputGroup: {
+          minH: '8',
+          px: '2',
+          fontSize: 'sm',
+        },
+      },
+      sm: {
+        inputGroup: {
+          minH: '9',
+          px: '2.5',
+          fontSize: 'sm',
+        },
+      },
+      md: {
+        inputGroup: {
+          minH: '10',
+          px: '3',
+          fontSize: 'md',
+        },
+      },
+      lg: {
+        inputGroup: {
+          minH: '11',
+          px: '3.5',
+          fontSize: 'md',
+        },
+      },
+      xl: {
+        inputGroup: {
+          minH: '12',
+          px: '4',
+          fontSize: 'lg',
+        },
+      },
+      '2xl': {
+        inputGroup: {
+          minH: '16',
+          px: '4.5',
+          fontSize: '3xl',
+        },
+      },
     },
   },
   defaultVariants: { size: 'md' },

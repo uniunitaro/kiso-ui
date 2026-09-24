@@ -10,7 +10,7 @@ export const dialog = defineSlotRecipe({
       inset: 0,
       bg: 'overlay',
       backdropFilter: 'blur(3px)',
-      zIndex: 60,
+      zIndex: 'overlay',
       transition: 'opacity 180ms',
       _startingStyle: { opacity: 0 },
       _endingStyle: { opacity: 0 },
@@ -25,7 +25,7 @@ export const dialog = defineSlotRecipe({
       maxHeight: 'calc(100dvh - 48px)',
       overflowY: 'auto',
       p: '6',
-      zIndex: 61,
+      zIndex: 'modal',
       _startingStyle: { opacity: 0, transform: 'translate(-50%, -48%) scale(.98)' },
       _endingStyle: { opacity: 0, transform: 'translate(-50%, -48%) scale(.98)' },
     },
@@ -35,9 +35,31 @@ export const dialog = defineSlotRecipe({
   },
   variants: {
     size: {
-      sm: { popup: { maxWidth: '360px' } },
-      md: { popup: { maxWidth: '460px' } },
-      lg: { popup: { maxWidth: '640px' } },
+      xs: {
+        popup: {
+          maxWidth: 'xs',
+        },
+      },
+      sm: {
+        popup: {
+          maxWidth: 'sm',
+        },
+      },
+      md: {
+        popup: {
+          maxWidth: 'md',
+        },
+      },
+      lg: {
+        popup: {
+          maxWidth: 'lg',
+        },
+      },
+      xl: {
+        popup: {
+          maxWidth: 'xl',
+        },
+      },
     },
   },
   defaultVariants: { size: 'md' },

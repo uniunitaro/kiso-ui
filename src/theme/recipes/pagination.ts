@@ -11,6 +11,6 @@ export const pagination = defineSlotRecipe({
       gap: '1',
       flexWrap: 'wrap',
     },
-    ellipsis: { px: '1', color: 'fg.subtle' },
+    ellipsis: { px: '1', color: 'fg.muted' },
   },
 })

@@ -17,7 +17,7 @@ export const styles = {
     insetBlock: 0,
     insetInlineStart: 0,
     width: '224px',
-    zIndex: 20,
+    zIndex: 'docked',
   }),
   brand: css({
     display: 'flex',
@@ -51,7 +51,7 @@ export const styles = {
     fontSize: '10px',
     fontWeight: 'medium',
     letterSpacing: '.08em',
-    color: 'fg.subtle',
+    color: 'fg.muted',
     textTransform: 'uppercase',
   }),
   navLink: css({
@@ -103,7 +103,7 @@ export const styles = {
     gap: '2',
     color: 'fg.muted',
     fontSize: '12px',
-    '& svg': { w: '3', h: '3', color: 'fg.subtle' },
+    '& svg': { w: '3', h: '3', color: 'fg.muted' },
   }),
   topActions: css({ display: 'flex', gap: '2', alignItems: 'center' }),
   search: css({
@@ -117,7 +117,7 @@ export const styles = {
     borderColor: 'border',
     bg: 'surface',
     borderRadius: 'control',
-    color: 'fg.subtle',
+    color: 'fg.muted',
     fontSize: '11px',
     textAlign: 'start',
     mt: '6',
@@ -242,7 +242,7 @@ export const styles = {
     px: '4',
     py: '2.5',
     fontSize: '10px',
-    color: 'fg.subtle',
+    color: 'fg.muted',
     '& a': {
       display: 'inline-flex',
       gap: '1.5',
@@ -308,7 +308,7 @@ export const styles = {
     mt: '9',
     pt: '5',
     fontSize: '11px',
-    color: 'fg.subtle',
+    color: 'fg.muted',
   }),
   pageTitle: css({
     fontSize: { base: '32px', md: '40px' },
@@ -401,7 +401,7 @@ export const styles = {
     fontSize: 'xs',
     borderCollapse: 'collapse',
     '& th': {
-      color: 'fg.subtle',
+      color: 'fg.muted',
       fontWeight: 'normal',
       py: '3',
       borderBottomWidth: '1px',

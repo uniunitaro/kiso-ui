@@ -9,7 +9,7 @@ export const disabled = {
 } satisfies SystemStyleObject
 
 export const control = {
-  borderRadius: 'control',
+  borderRadius: 'l2',
   transition: 'background 120ms, border-color 120ms, box-shadow 120ms',
   ...focusRing,
   ...disabled,
@@ -20,10 +20,10 @@ export const popup = {
   color: 'fg',
   border: '1px solid',
   borderColor: 'border',
-  borderRadius: 'panel',
-  boxShadow: 'popup',
+  borderRadius: 'l3',
+  boxShadow: 'lg',
   p: '1',
-  zIndex: 50,
+  zIndex: 'popover',
   outline: 'none',
   transformOrigin: 'var(--transform-origin)',
   transition: 'opacity 150ms, transform 150ms',
@@ -38,7 +38,7 @@ export const item = {
   px: '3',
   py: '2',
   fontSize: 'sm',
-  borderRadius: 'control',
+  borderRadius: 'l2',
   cursor: 'default',
   outline: 'none',
   _highlighted: { bg: 'accent.subtle', color: 'accent.fg' },

@@ -19,10 +19,10 @@ export const breadcrumb = defineSlotRecipe({
       ...focusRing,
       color: 'fg.muted',
       textDecoration: 'none',
-      borderRadius: '2px',
+      borderRadius: 'l1',
       _hover: { color: 'fg', textDecoration: 'underline', textUnderlineOffset: '3px' },
     },
     current: { color: 'fg', fontWeight: 'medium' },
-    separator: { color: 'fg.subtle', userSelect: 'none', px: '1' },
+    separator: { color: 'fg.muted', userSelect: 'none', px: '1' },
   },
 })

@@ -18,9 +18,42 @@ export const spinner = defineRecipe({
   },
   variants: {
     size: {
-      sm: { '& [data-spinner]': { w: '3', h: '3' } },
-      md: { '& [data-spinner]': { w: '4', h: '4' } },
-      lg: { '& [data-spinner]': { w: '6', h: '6' } },
+      xs: {
+        '& [data-spinner]': {
+          w: '3',
+          h: '3',
+        },
+      },
+      sm: {
+        '& [data-spinner]': {
+          w: '4',
+          h: '4',
+        },
+      },
+      md: {
+        '& [data-spinner]': {
+          w: '5',
+          h: '5',
+        },
+      },
+      lg: {
+        '& [data-spinner]': {
+          w: '6',
+          h: '6',
+        },
+      },
+      xl: {
+        '& [data-spinner]': {
+          w: '7',
+          h: '7',
+        },
+      },
+      '2xl': {
+        '& [data-spinner]': {
+          w: '8',
+          h: '8',
+        },
+      },
     },
   },
   defaultVariants: { size: 'md' },

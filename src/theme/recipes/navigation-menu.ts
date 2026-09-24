@@ -36,7 +36,7 @@ export const navigationMenu = defineSlotRecipe({
       '& svg': { w: '3', h: '3', transition: 'transform 150ms' },
       _open: { transform: 'rotate(180deg)' },
     },
-    positioner: { zIndex: 50 },
+    positioner: { zIndex: 'popover' },
     popup: { ...popup, maxWidth: 'min(480px, calc(100vw - 24px))' },
     viewport: { position: 'relative', overflow: 'hidden' },
     content: { p: '3' },

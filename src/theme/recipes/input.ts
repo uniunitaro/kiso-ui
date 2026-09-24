@@ -9,12 +9,12 @@ export const input = defineRecipe({
     ...control,
     width: 'full',
     minWidth: 0,
-    bg: 'surface',
+    bg: 'transparent',
     color: 'fg',
     border: '1px solid',
     borderColor: 'border.strong',
-    boxShadow: 'xs',
-    _placeholder: { color: 'fg.subtle' },
+
+    _placeholder: { color: 'fg.muted' },
     _focus: {
       borderColor: 'accent',
       outline: '2px solid',
@@ -25,12 +25,40 @@ export const input = defineRecipe({
   },
   variants: {
     size: {
-      sm: { h: '8', px: '2.5', fontSize: 'xs' },
-      md: { h: '9', px: '3', fontSize: 'sm' },
-      lg: { h: '11', px: '3.5', fontSize: 'md' },
+      xs: {
+        h: '8',
+        px: '2',
+        fontSize: 'sm',
+      },
+      sm: {
+        h: '9',
+        px: '2.5',
+        fontSize: 'sm',
+      },
+      md: {
+        h: '10',
+        px: '3',
+        fontSize: 'md',
+      },
+      lg: {
+        h: '11',
+        px: '3.5',
+        fontSize: 'md',
+      },
+      xl: {
+        h: '12',
+        px: '4',
+        fontSize: 'lg',
+      },
+      '2xl': {
+        h: '16',
+        px: '4.5',
+        fontSize: '3xl',
+      },
     },
     variant: {
       outline: {},
+      surface: { bg: 'gray.surface.bg', borderColor: 'gray.surface.border' },
       subtle: { bg: 'surface.subtle', borderColor: 'transparent', boxShadow: 'none' },
     },
   },

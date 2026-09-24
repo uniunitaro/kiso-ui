@@ -26,6 +26,7 @@ import { catalog, categories } from './catalog'
 import { CatalogPage, ComponentPage, InstallationPage, PrinciplesPage } from './docs'
 import { Overview } from './demos'
 import { ThemePage, defaultTheme, type ThemeSettings } from './theme-page'
+import { accentNames, grayNames, radiusNames, radiusLevels } from './palettes'
 import { styles as s } from './styles'
 
 function readTheme(): ThemeSettings {
@@ -34,8 +35,9 @@ function readTheme(): ThemeSettings {
     if (
       parsed &&
       ['light', 'dark'].includes(parsed.mode) &&
-      ['iris', 'ocean', 'forest'].includes(parsed.accent) &&
-      ['0', '4', '8', '12', '16'].includes(parsed.radius)
+      accentNames.includes(parsed.accent) &&
+      grayNames.includes(parsed.gray) &&
+      radiusNames.includes(parsed.radius)
     )
       return parsed
   } catch {
@@ -72,7 +74,10 @@ export function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme.mode
     document.documentElement.dataset.accent = theme.accent
-    document.documentElement.style.setProperty('--kiso-radius', `${theme.radius}px`)
+    document.documentElement.dataset.gray = theme.gray
+    radiusLevels[theme.radius].forEach((value, index) =>
+      document.documentElement.style.setProperty(`--kiso-radius-l${index + 1}`, `${value}px`),
+    )
     try {
       localStorage.setItem('kiso-theme', JSON.stringify(theme))
     } catch {
@@ -125,7 +130,7 @@ export function App() {
             position: 'fixed',
             top: '3',
             left: '3',
-            zIndex: 100,
+            zIndex: 'skipLink',
             bg: 'surface',
             p: '3',
             border: '2px solid',
@@ -144,7 +149,7 @@ export function App() {
               className={css({
                 fontSize: '11px',
                 letterSpacing: '0',
-                color: 'fg.subtle',
+                color: 'fg.muted',
                 fontWeight: 'normal',
                 ml: '1',
               })}
@@ -183,7 +188,7 @@ export function App() {
                     ml: 'auto',
                     fontFamily: 'mono',
                     fontSize: '10px',
-                    color: 'fg.subtle',
+                    color: 'fg.muted',
                   })}
                 >
                   {catalog.length}
@@ -308,7 +313,7 @@ export function App() {
                   <h1 className={s.heroTitle}>
                     Your next foundation.
                     <br />
-                    <span className={css({ color: 'fg.subtle' })}>Entirely your own.</span>
+                    <span className={css({ color: 'fg.muted' })}>Entirely your own.</span>
                   </h1>
                   <p className={s.heroDescription}>
                     Thoughtfully crafted components for the things you’re here to build.
@@ -365,7 +370,7 @@ export function App() {
                   </a>
                   <a href="#/components">
                     Components{' '}
-                    <span className={css({ fontSize: '10px', color: 'fg.subtle' })}>
+                    <span className={css({ fontSize: '10px', color: 'fg.muted' })}>
                       {catalog.length}
                     </span>
                   </a>
@@ -376,7 +381,7 @@ export function App() {
                     display: { base: 'none', md: 'flex' },
                     alignItems: 'center',
                     gap: '1.5',
-                    color: 'fg.subtle',
+                    color: 'fg.muted',
                     fontSize: '10px',
                   })}
                 >
@@ -467,7 +472,7 @@ export function App() {
                   })}
                 >
                   <span>{item.name}</span>
-                  <span className={css({ fontSize: 'xs', color: 'fg.subtle' })}>
+                  <span className={css({ fontSize: 'xs', color: 'fg.muted' })}>
                     {item.category}
                   </span>
                 </a>

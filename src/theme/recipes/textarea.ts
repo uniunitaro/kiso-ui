@@ -9,9 +9,30 @@ export const textarea = defineRecipe({
   variants: {
     variant: input.variants!.variant,
     size: {
-      sm: { px: '2.5', fontSize: 'xs' },
-      md: { px: '3', fontSize: 'sm' },
-      lg: { px: '3.5', fontSize: 'md' },
+      xs: {
+        px: '2',
+        fontSize: 'sm',
+      },
+      sm: {
+        px: '2.5',
+        fontSize: 'sm',
+      },
+      md: {
+        px: '3',
+        fontSize: 'md',
+      },
+      lg: {
+        px: '3.5',
+        fontSize: 'md',
+      },
+      xl: {
+        px: '4',
+        fontSize: 'lg',
+      },
+      '2xl': {
+        px: '4.5',
+        fontSize: '3xl',
+      },
     },
   },
   defaultVariants: { size: 'md', variant: 'outline' },

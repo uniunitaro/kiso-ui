@@ -412,7 +412,7 @@ export function TabsDemo({
           <div className={s.metric}>
             2,840
             <span
-              className={css({ fontSize: '12px', letterSpacing: 0, color: 'fg.subtle', ml: '2' })}
+              className={css({ fontSize: '12px', letterSpacing: 0, color: 'fg.muted', ml: '2' })}
             >
               people
             </span>
@@ -453,7 +453,7 @@ export function NotificationDemo({ size = 'md' }: { size?: DemoSize }) {
     <div>
       <div className={s.spread}>
         <h3 className={s.title}>Stay in the loop</h3>
-        <Bell size={15} className={css({ color: 'fg.subtle' })} />
+        <Bell size={15} className={css({ color: 'fg.muted' })} />
       </div>
       <p className={css({ fontSize: 'xs', color: 'fg.muted', mt: '1.5', mb: '3' })}>
         A little signal. Less noise.
@@ -848,7 +848,7 @@ export function Demo({
           <span className={s.small}>Find a component</span>
           <Kbd>⌘</Kbd>
           <Kbd>K</Kbd>
-          <span className={css({ mx: '2', color: 'fg.subtle' })}>or</span>
+          <span className={css({ mx: '2', color: 'fg.muted' })}>or</span>
           <Kbd>Ctrl</Kbd>
           <Kbd>K</Kbd>
         </div>
@@ -910,7 +910,7 @@ export function Overview() {
         <Specimen id="button" label="Button · 5 variants">
           <div className={s.spread}>
             <h3 className={s.title}>Small actions. Big possibilities.</h3>
-            <ArrowUpRight size={15} className={css({ color: 'fg.subtle' })} />
+            <ArrowUpRight size={15} className={css({ color: 'fg.muted' })} />
           </div>
           <div className={css({ mt: '5', display: 'flex', gap: '2', flexWrap: 'wrap' })}>
             <Button render={<a href="#/installation" />} nativeButton={false}>
@@ -955,7 +955,7 @@ export function Overview() {
                 Good things are rarely built alone.
               </p>
             </div>
-            <Globe size={17} className={css({ color: 'fg.subtle' })} />
+            <Globe size={17} className={css({ color: 'fg.muted' })} />
           </div>
           <div
             className={css({

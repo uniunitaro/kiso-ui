@@ -14,7 +14,7 @@ export const fieldset = defineSlotRecipe({
         root: {
           border: '1px solid',
           borderColor: 'border',
-          borderRadius: 'panel',
+          borderRadius: 'l3',
           p: '5',
           bg: 'surface',
         },

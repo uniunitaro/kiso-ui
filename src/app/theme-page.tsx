@@ -8,15 +8,25 @@ import * as Field from '../components/ui/field'
 import * as Switch from '../components/ui/switch'
 import { css } from '../../styled-system/css'
 import { CodeBlock, Choice } from './docs'
+import * as Checkbox from '../components/ui/checkbox'
+import { accentNames, grayNames, radiusNames } from './palettes'
 import { styles as s } from './styles'
 
 export type ThemeSettings = {
   mode: 'light' | 'dark'
-  accent: 'iris' | 'ocean' | 'forest'
+  accent: (typeof accentNames)[number]
+  gray: (typeof grayNames)[number]
   radius: string
 }
-export const defaultTheme: ThemeSettings = { mode: 'light', accent: 'iris', radius: '8' }
-export const accents = { iris: '#5b4ed6', ocean: '#1769b3', forest: '#23774d' }
+export const defaultTheme: ThemeSettings = {
+  mode: 'light',
+  accent: 'iris',
+  gray: 'neutral',
+  radius: 'sm',
+}
+export const accents = Object.fromEntries(
+  accentNames.map((name) => [name, `var(--colors-${name}-9)`]),
+)
 
 export function ThemePage({
   theme,
@@ -115,13 +125,21 @@ export function ThemePage({
                     textTransform: 'capitalize',
                   })}
                 >
-                  {theme.accent} · deliberate, never loud.
+                  {theme.accent} · 12 shades, light and dark.
                 </p>
               </div>
               <Choice
+                label="Gray palette"
+                value={theme.gray}
+                options={[...grayNames]}
+                onChange={(gray) =>
+                  setTheme((prev) => ({ ...prev, gray: gray as ThemeSettings['gray'] }))
+                }
+              />
+              <Choice
                 label="Corner radius"
                 value={theme.radius}
-                options={['0', '4', '8', '12', '16']}
+                options={[...radiusNames]}
                 onChange={(radius) => setTheme((prev) => ({ ...prev, radius }))}
               />
             </div>
@@ -163,6 +181,70 @@ export function ThemePage({
           </Card.Root>
         </div>
       </div>
+      <h2 className={s.docHeading}>Sizes that line up</h2>
+      <p className={s.prose}>
+        Primary controls: 32, 36, 40, 44, 48 and 64px. Supporting controls: 16, 18, 20, 22, 24 and
+        32px.
+      </p>
+      <div className={css({ display: 'flex', flexDirection: 'column', gap: '4', mt: '5' })}>
+        {(['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const).map((size, index) => (
+          <div
+            key={size}
+            className={css({ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4' })}
+          >
+            <span className={css({ w: '12', fontFamily: 'mono', fontSize: 'xs' })}>{size}</span>
+            <Button size={size}>Button</Button>
+            <Input
+              size={size}
+              aria-label={size + ' size input'}
+              placeholder={[32, 36, 40, 44, 48, 64][index] + 'px'}
+              className={css({ w: '40' })}
+            />
+            <Checkbox.Root size={size} defaultChecked aria-label={size + ' checkbox'}>
+              <Checkbox.Indicator>
+                <Check />
+              </Checkbox.Indicator>
+            </Checkbox.Root>
+            <Switch.Root size={size} defaultChecked aria-label={size + ' switch'}>
+              <Switch.Thumb />
+            </Switch.Root>
+          </div>
+        ))}
+      </div>
+      <h2 className={s.docHeading}>Variants & interaction colors</h2>
+      <p className={s.prose}>
+        Each palette owns its backgrounds, foregrounds, borders and interaction colors.
+      </p>
+      <div className={css({ display: 'flex', flexWrap: 'wrap', gap: '3', mt: '5' })}>
+        {(['solid', 'subtle', 'surface', 'outline', 'plain'] as const).map((variant) => (
+          <Button key={variant} variant={variant}>
+            {variant}
+          </Button>
+        ))}
+      </div>
+      <h2 className={s.docHeading}>Nested radii</h2>
+      <div className={css({ p: '4', bg: 'gray.3', borderRadius: 'l3', maxW: 'sm' })}>
+        <div className={css({ p: '4', bg: 'gray.5', borderRadius: 'l2' })}>
+          <div className={css({ p: '4', bg: 'surface', borderRadius: 'l1' })}>l3 → l2 → l1</div>
+        </div>
+      </div>
+      <h2 className={s.docHeading}>Shadows</h2>
+      <div className={css({ display: 'flex', flexWrap: 'wrap', gap: '6', py: '5' })}>
+        {(['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const).map((shadow) => (
+          <div
+            key={shadow}
+            style={{ boxShadow: 'var(--shadows-' + shadow + ')' }}
+            className={css({ p: '6', bg: 'surface', borderRadius: 'l2' })}
+          >
+            {shadow}
+          </div>
+        ))}
+      </div>
+      <h2 className={s.docHeading}>Stacking order</h2>
+      <p className={s.prose}>
+        dropdown 1000 · sticky 1100 · banner 1200 · overlay 1300 · modal 1400 · popover 1500 ·
+        skipLink 1600 · toast 1700 · tooltip 1800
+      </p>
       <h2 className={s.docHeading}>A shared language for your interface</h2>
       <p className={s.prose}>
         Components use semantic roles, so your theme stays coherent as the collection grows. Accent
@@ -212,8 +294,8 @@ export function ThemePage({
       </div>
       <h2 className={s.docHeading}>Take this feeling with you</h2>
       <CodeBlock
-        title="index.html · theme settings"
-        code={`<html\n  data-theme="${theme.mode}"\n  data-accent="${theme.accent}"\n  style="--kiso-radius: ${theme.radius}px"\n>\n  <!-- Your app goes here. Portals inherit this theme too. -->\n</html>`}
+        title="panda.config.ts · theme settings"
+        code={`import { tokens, createSemanticTokens, palettes } from './src/theme/tokens'\n\n// Inside defineConfig({ ... })\nstaticCss: { css: [{ properties: { colorPalette: ['*'] } }] },\ntheme: {\n  extend: {\n    tokens,\n    semanticTokens: createSemanticTokens({\n      accentColor: '${theme.accent}',\n      grayColor: '${theme.gray}',\n      additionalColors: { brand: palettes.blue },\n    }),\n    recipes, slotRecipes,\n  },\n}\n\n// <Button colorPalette="brand" variant="surface">Brand</Button>`}
       />
       <h2 className={s.docHeading}>Go a little deeper</h2>
       <p className={s.prose}>
