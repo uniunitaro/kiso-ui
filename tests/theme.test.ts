@@ -133,4 +133,26 @@ describe('Park design system contracts', () => {
       ),
     ).toEqual([1300, 1400, 1500, 1700, 1800])
   })
+  it('keeps "on" states visible under hover', () => {
+    // _hover's :not(disabled) guard outranks a bare state selector, so a state that changes a
+    // property _hover also sets must repeat it under its own _hover.
+    const states = ['_pressed', '_checked', '_selected', '_open', '_highlighted', '_expanded']
+    const missing: string[] = []
+    const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
+    function walk(style: unknown, path: string) {
+      if (!style || typeof style !== 'object') return
+      const node = style as Record<string, Record<string, unknown> | undefined>
+      const hover = node._hover
+      for (const state of hover ? states : []) {
+        for (const [prop, value] of Object.entries(node[state] ?? {})) {
+          if (prop.startsWith('_') || !(prop in hover!) || same(value, hover![prop])) continue
+          if (!(prop in ((node[state]!._hover ?? {}) as object)))
+            missing.push(`${path}.${state}.${prop}`)
+        }
+      }
+      for (const [key, value] of Object.entries(node)) walk(value, `${path}.${key}`)
+    }
+    for (const [name, recipe] of Object.entries(all)) walk(recipe, name)
+    expect(missing).toEqual([])
+  })
 })

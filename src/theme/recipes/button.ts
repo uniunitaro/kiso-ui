@@ -40,6 +40,7 @@ export const button = defineRecipe({
   },
   defaultVariants: { variant: 'solid', size: 'md' },
   variants: {
+    // Hover outranks a bare state selector, so each pressed look repeats itself under _hover.
     variant: {
       solid: {
         bg: 'colorPalette.solid.bg',
@@ -60,7 +61,10 @@ export const button = defineRecipe({
         color: 'colorPalette.subtle.fg',
         _hover: { bg: 'colorPalette.subtle.bg.hover' },
         _active: { bg: 'colorPalette.subtle.bg.active' },
-        _pressed: { bg: 'colorPalette.subtle.bg.active' },
+        _pressed: {
+          bg: 'colorPalette.subtle.bg.active',
+          _hover: { bg: 'colorPalette.subtle.bg.active' },
+        },
       },
       outline: {
         borderWidth: '1px',
@@ -68,13 +72,19 @@ export const button = defineRecipe({
         color: 'colorPalette.outline.fg',
         _hover: { bg: 'colorPalette.outline.bg.hover' },
         _active: { bg: 'colorPalette.outline.bg.active' },
-        _pressed: { bg: 'colorPalette.outline.bg.active' },
+        _pressed: {
+          bg: 'colorPalette.outline.bg.active',
+          _hover: { bg: 'colorPalette.outline.bg.active' },
+        },
       },
       plain: {
         color: 'colorPalette.plain.fg',
         _hover: { bg: 'colorPalette.plain.bg.hover' },
         _active: { bg: 'colorPalette.plain.bg.active' },
-        _pressed: { bg: 'colorPalette.plain.bg.active' },
+        _pressed: {
+          bg: 'colorPalette.plain.bg.active',
+          _hover: { bg: 'colorPalette.plain.bg.active' },
+        },
       },
     },
     /** Icon-only: equal width and height. */

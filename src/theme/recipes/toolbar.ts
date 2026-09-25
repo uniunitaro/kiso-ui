@@ -16,7 +16,12 @@ const action = {
   transitionDuration: 'fast',
   focusVisibleRing: 'outside',
   _hover: { bg: 'gray.plain.bg.hover', color: 'fg.default' },
-  _pressed: { bg: 'colorPalette.subtle.bg', color: 'colorPalette.subtle.fg' },
+  // Hover outranks a bare state selector, so the pressed look repeats its own hover.
+  _pressed: {
+    bg: 'colorPalette.subtle.bg',
+    color: 'colorPalette.subtle.fg',
+    _hover: { bg: 'colorPalette.subtle.bg.hover', color: 'colorPalette.subtle.fg' },
+  },
   _disabled: { layerStyle: 'disabled' },
 } as const
 

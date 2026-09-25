@@ -1,9 +1,9 @@
 {
-  "date": "2026-09-25T23:39:19.337Z",
+  "date": "2026-09-25T23:45:26.299Z",
   "status": "passed",
   "components": 48,
   "examples": 48,
-  "fixture": ".test-workspaces\\consumer-DQ3V0Y",
+  "fixture": ".test-workspaces\\consumer-Tp5n5a",
   "checks": [
     "offline installation",
     "source dependency closure",
