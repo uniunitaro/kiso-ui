@@ -1,7 +1,16 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { popup, item } from '../shared'
+import { item, popup } from '../shared'
+
+const indicator = {
+  display: 'flex',
+  marginInlineStart: 'auto',
+  color: 'colorPalette.plain.fg',
+} as const
+
+// Shared by Menu and ContextMenu.
 export const menu = defineSlotRecipe({
   className: 'kiso-menu',
+  jsx: ['Menu', /^Menu\./, 'ContextMenu', /^ContextMenu\./],
   slots: [
     'positioner',
     'popup',
@@ -18,25 +27,71 @@ export const menu = defineSlotRecipe({
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     positioner: { zIndex: 'popover' },
-    popup: { ...popup, minWidth: '190px', maxHeight: 'var(--available-height)', overflowY: 'auto' },
+    popup: {
+      ...popup,
+      display: 'flex',
+      flexDirection: 'column',
+      minWidth: 'max(var(--anchor-width), {sizes.40})',
+      maxHeight: 'min(var(--available-height), {sizes.96})',
+      overflowY: 'auto',
+    },
     item,
     checkboxItem: item,
     radioItem: item,
-    submenuTrigger: item,
-    groupLabel: { px: '3', py: '2', fontSize: 'xs', color: 'fg.muted', fontWeight: 'medium' },
-    separator: { h: '1px', bg: 'border', my: '1' },
-    checkboxItemIndicator: { marginInlineStart: 'auto' },
-    radioItemIndicator: { marginInlineStart: 'auto' },
-  },
-  variants: {
-    size: {
-      sm: {
-        item: { fontSize: 'xs', py: '1.5' },
-        checkboxItem: { fontSize: 'xs', py: '1.5' },
-        radioItem: { fontSize: 'xs', py: '1.5' },
-      },
-      md: {},
-    },
+    submenuTrigger: { ...item, _open: { bg: 'gray.surface.bg.hover' } },
+    groupLabel: { display: 'flex', alignItems: 'center', color: 'fg.muted', fontWeight: 'medium' },
+    separator: { h: '1px', bg: 'border', flexShrink: '0' },
+    checkboxItemIndicator: indicator,
+    radioItemIndicator: indicator,
   },
   defaultVariants: { size: 'md' },
+  variants: {
+    size: {
+      xs: {
+        popup: { p: '1', gap: '0.5', textStyle: 'sm' },
+        item: { px: '1', minH: '8', gap: '2', _icon: { boxSize: '3.5' } },
+        checkboxItem: { px: '1', minH: '8', gap: '2', _icon: { boxSize: '3.5' } },
+        radioItem: { px: '1', minH: '8', gap: '2', _icon: { boxSize: '3.5' } },
+        submenuTrigger: { px: '1', minH: '8', gap: '2', _icon: { boxSize: '3.5' } },
+        groupLabel: { px: '1', minH: '8', textStyle: 'xs' },
+        separator: { mx: '-1', my: '0.5' },
+      },
+      sm: {
+        popup: { p: '1', gap: '0.5', textStyle: 'sm' },
+        item: { px: '1.5', minH: '9', gap: '2', _icon: { boxSize: '4' } },
+        checkboxItem: { px: '1.5', minH: '9', gap: '2', _icon: { boxSize: '4' } },
+        radioItem: { px: '1.5', minH: '9', gap: '2', _icon: { boxSize: '4' } },
+        submenuTrigger: { px: '1.5', minH: '9', gap: '2', _icon: { boxSize: '4' } },
+        groupLabel: { px: '1.5', minH: '9', textStyle: 'xs' },
+        separator: { mx: '-1', my: '0.5' },
+      },
+      md: {
+        popup: { p: '1', gap: '0.5', textStyle: 'md' },
+        item: { px: '2', minH: '10', gap: '2', _icon: { boxSize: '4' } },
+        checkboxItem: { px: '2', minH: '10', gap: '2', _icon: { boxSize: '4' } },
+        radioItem: { px: '2', minH: '10', gap: '2', _icon: { boxSize: '4' } },
+        submenuTrigger: { px: '2', minH: '10', gap: '2', _icon: { boxSize: '4' } },
+        groupLabel: { px: '2', minH: '10', textStyle: 'sm' },
+        separator: { mx: '-1', my: '0.5' },
+      },
+      lg: {
+        popup: { p: '1', gap: '0.5', textStyle: 'md' },
+        item: { px: '2.5', minH: '11', gap: '2', _icon: { boxSize: '4.5' } },
+        checkboxItem: { px: '2.5', minH: '11', gap: '2', _icon: { boxSize: '4.5' } },
+        radioItem: { px: '2.5', minH: '11', gap: '2', _icon: { boxSize: '4.5' } },
+        submenuTrigger: { px: '2.5', minH: '11', gap: '2', _icon: { boxSize: '4.5' } },
+        groupLabel: { px: '2.5', minH: '11', textStyle: 'sm' },
+        separator: { mx: '-1', my: '0.5' },
+      },
+      xl: {
+        popup: { p: '1', gap: '1', textStyle: 'lg' },
+        item: { px: '3', minH: '12', gap: '3', _icon: { boxSize: '5' } },
+        checkboxItem: { px: '3', minH: '12', gap: '3', _icon: { boxSize: '5' } },
+        radioItem: { px: '3', minH: '12', gap: '3', _icon: { boxSize: '5' } },
+        submenuTrigger: { px: '3', minH: '12', gap: '3', _icon: { boxSize: '5' } },
+        groupLabel: { px: '3', minH: '12', textStyle: 'md' },
+        separator: { mx: '-1', my: '1' },
+      },
+    },
+  },
 })

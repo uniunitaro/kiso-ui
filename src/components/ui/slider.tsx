@@ -1,20 +1,31 @@
 'use client'
 import { Slider as Base } from '@base-ui/react/slider'
 import { slider, type SliderVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext, mergeClassName } from './style-context'
+import { cx } from '../../../styled-system/css'
+import {
+  createStyleContext,
+  mergeClassName,
+  paletteClass,
+  type ColorPaletteProp,
+} from './style-context'
 
 const { Provider, withContext } = createStyleContext(slider)
 
 export function Root<Value extends number | readonly number[]>(
-  props: Base.Root.Props<Value> & SliderVariantProps & { ref?: React.Ref<HTMLDivElement> },
+  props: Base.Root.Props<Value> &
+    SliderVariantProps &
+    ColorPaletteProp & { ref?: React.Ref<HTMLDivElement> },
 ) {
-  const [variants, rest] = slider.splitVariantProps(props)
+  const [variants, { colorPalette, ...rest }] = slider.splitVariantProps(props)
   return (
     <Provider {...variants}>
       <Base.Root
         {...rest}
         data-slot="root"
-        className={mergeClassName(slider(variants).root, rest.className)}
+        className={mergeClassName(
+          cx(slider(variants).root, paletteClass(colorPalette)),
+          rest.className,
+        )}
       />
     </Provider>
   )

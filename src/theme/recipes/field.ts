@@ -1,20 +1,23 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+
 export const field = defineSlotRecipe({
   className: 'kiso-field',
+  jsx: ['Field', /^Field\./],
   slots: ['root', 'label', 'description', 'error'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
+  staticCss: ['*'],
   base: {
-    root: { display: 'flex', flexDirection: 'column', gap: '2', width: 'full' },
-    label: { fontWeight: 'medium', color: 'fg', _disabled: { opacity: 0.5 } },
-    description: { color: 'fg.muted', lineHeight: '1.5' },
-    error: { color: 'danger', lineHeight: '1.5' },
-  },
-  variants: {
-    size: {
-      sm: { label: { fontSize: 'xs' }, description: { fontSize: 'xs' }, error: { fontSize: 'xs' } },
-      md: { label: { fontSize: 'sm' }, description: { fontSize: 'xs' }, error: { fontSize: 'xs' } },
-      lg: { label: { fontSize: 'md' }, description: { fontSize: 'sm' }, error: { fontSize: 'sm' } },
+    root: { display: 'flex', flexDirection: 'column', gap: '1.5', width: 'full' },
+    label: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5',
+      textAlign: 'start',
+      userSelect: 'none',
+      color: 'fg.default',
+      textStyle: 'label',
+      _disabled: { layerStyle: 'disabled' },
     },
+    description: { color: 'fg.muted', textStyle: 'sm', _disabled: { layerStyle: 'disabled' } },
+    error: { color: 'fg.error', textStyle: 'sm' },
   },
-  defaultVariants: { size: 'md' },
 })

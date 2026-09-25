@@ -47,7 +47,8 @@ export function Pagination({
   return (
     <nav aria-label="Pagination" {...props} className={cx(pagination().root, className)}>
       <Button
-        variant="ghost"
+        variant="plain"
+        colorPalette="gray"
         size={size}
         square
         disabled={active <= 1 || total === 0}
@@ -62,7 +63,8 @@ export function Pagination({
             key={item}
             size={size}
             square
-            variant={item === active ? 'subtle' : 'ghost'}
+            variant={item === active ? 'subtle' : 'plain'}
+            colorPalette={item === active ? undefined : 'gray'}
             aria-label={`Page ${item}`}
             aria-current={item === active ? 'page' : undefined}
             onClick={() => change(item)}
@@ -76,7 +78,8 @@ export function Pagination({
         ),
       )}
       <Button
-        variant="ghost"
+        variant="plain"
+        colorPalette="gray"
         size={size}
         square
         disabled={active >= total || total === 0}

@@ -1,4 +1,6 @@
 import { defineRecipe } from '@pandacss/dev'
+
+// Inherits currentColor; set color on the spinner or its parent to tint it.
 export const spinner = defineRecipe({
   className: 'kiso-spinner',
   jsx: ['Spinner'],
@@ -9,52 +11,27 @@ export const spinner = defineRecipe({
     gap: '2',
     '& [data-spinner]': {
       display: 'inline-block',
-      border: '2px solid currentColor',
-      borderInlineEndColor: 'transparent',
+      flexShrink: '0',
+      width: 'var(--spinner-size)',
+      height: 'var(--spinner-size)',
+      borderWidth: '2px',
+      borderStyle: 'solid',
+      borderColor: 'currentColor',
+      borderBottomColor: 'transparent',
+      borderInlineStartColor: 'transparent',
       borderRadius: 'full',
-      animation: 'spin 800ms linear infinite',
-      flexShrink: 0,
-    },
-  },
-  variants: {
-    size: {
-      xs: {
-        '& [data-spinner]': {
-          w: '3',
-          h: '3',
-        },
-      },
-      sm: {
-        '& [data-spinner]': {
-          w: '4',
-          h: '4',
-        },
-      },
-      md: {
-        '& [data-spinner]': {
-          w: '5',
-          h: '5',
-        },
-      },
-      lg: {
-        '& [data-spinner]': {
-          w: '6',
-          h: '6',
-        },
-      },
-      xl: {
-        '& [data-spinner]': {
-          w: '7',
-          h: '7',
-        },
-      },
-      '2xl': {
-        '& [data-spinner]': {
-          w: '8',
-          h: '8',
-        },
-      },
+      animation: 'spin 0.8s linear infinite',
     },
   },
   defaultVariants: { size: 'md' },
+  variants: {
+    size: {
+      xs: { '--spinner-size': 'sizes.3' },
+      sm: { '--spinner-size': 'sizes.4' },
+      md: { '--spinner-size': 'sizes.5' },
+      lg: { '--spinner-size': 'sizes.6' },
+      xl: { '--spinner-size': 'sizes.7' },
+      '2xl': { '--spinner-size': 'sizes.8' },
+    },
+  },
 })

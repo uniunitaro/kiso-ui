@@ -1,79 +1,75 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { focusRing, disabled } from '../shared'
+
+// Works with Base UI's anatomy: Control > Track > (Indicator, Thumb). Nothing clips the thumb.
 export const slider = defineSlotRecipe({
   className: 'kiso-slider',
+  jsx: ['Slider', /^Slider\./],
   slots: ['root', 'label', 'value', 'control', 'track', 'indicator', 'thumb'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
-      ...disabled,
-      width: 'full',
       display: 'grid',
       gridTemplateColumns: '1fr auto',
-      gap: '3',
-      '&[data-orientation=vertical]': { width: 'fit-content', justifyItems: 'center' },
+      alignItems: 'center',
+      columnGap: '3',
+      rowGap: '1',
+      width: 'full',
+      textStyle: 'sm',
+      _disabled: { layerStyle: 'disabled' },
+      _vertical: { width: 'fit-content', justifyItems: 'center' },
     },
-    label: { fontSize: 'sm', fontWeight: 'medium' },
-    value: { fontFamily: 'mono', fontSize: 'xs', color: 'fg.muted' },
+    label: { fontWeight: 'medium' },
+    value: { textStyle: 'xs', fontVariantNumeric: 'tabular-nums', color: 'fg.muted' },
     control: {
+      gridColumn: '1 / -1',
       display: 'flex',
       alignItems: 'center',
       position: 'relative',
-      h: '5',
-      gridColumn: '1 / -1',
       touchAction: 'none',
       userSelect: 'none',
-      '&[data-orientation=vertical]': { h: '40', w: '5', justifyContent: 'center' },
+      _horizontal: { width: 'full', minHeight: 'var(--slider-thumb-size)' },
+      _vertical: {
+        flexDirection: 'column',
+        height: '40',
+        minWidth: 'var(--slider-thumb-size)',
+      },
     },
     track: {
-      width: 'full',
-      height: 'var(--slider-thickness)',
-      bg: 'surface.hover',
-      borderRadius: 'pill',
-      overflow: 'hidden',
-      '&[data-orientation=vertical]': { h: 'full', w: 'var(--slider-thickness)' },
+      position: 'relative',
+      flex: '1',
+      borderRadius: 'full',
+      _horizontal: { height: 'var(--slider-track-size)' },
+      _vertical: { width: 'var(--slider-track-size)', height: 'full' },
     },
-    indicator: { bg: 'accent', borderRadius: 'pill' },
+    indicator: { borderRadius: 'full' },
     thumb: {
-      ...focusRing,
       display: 'block',
-      bg: 'surface',
-      border: '2px solid',
-      borderColor: 'accent',
-      borderRadius: 'pill',
-      boxShadow: 'xs',
+      width: 'var(--slider-thumb-size)',
+      height: 'var(--slider-thumb-size)',
+      borderRadius: 'full',
+      outline: '0',
+      focusVisibleRing: 'outside',
     },
   },
+  defaultVariants: { variant: 'outline', size: 'md' },
   variants: {
-    size: {
-      sm: {
-        track: {
-          '--slider-thickness': 'token(spacing.2)',
-        },
+    variant: {
+      outline: {
+        track: { bg: 'gray.a4' },
+        indicator: { bg: 'colorPalette.solid.bg' },
         thumb: {
-          w: '5',
-          h: '5',
-        },
-      },
-      md: {
-        track: {
-          '--slider-thickness': 'token(spacing.2)',
-        },
-        thumb: {
-          w: '5',
-          h: '5',
-        },
-      },
-      lg: {
-        track: {
-          '--slider-thickness': 'token(spacing.2)',
-        },
-        thumb: {
-          w: '5',
-          h: '5',
+          bg: 'gray.surface.bg',
+          borderWidth: '2px',
+          borderColor: 'colorPalette.solid.bg',
+          boxShadow: 'xs',
         },
       },
     },
+    // Park UI keeps one scale for every size; Kiso scales the thumb and track.
+    size: {
+      sm: { root: { '--slider-thumb-size': 'sizes.4', '--slider-track-size': 'sizes.1.5' } },
+      md: { root: { '--slider-thumb-size': 'sizes.5', '--slider-track-size': 'sizes.2' } },
+      lg: { root: { '--slider-thumb-size': 'sizes.6', '--slider-track-size': 'sizes.2.5' } },
+    },
   },
-  defaultVariants: { size: 'md' },
 })

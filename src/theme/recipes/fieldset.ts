@@ -1,26 +1,22 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+
 export const fieldset = defineSlotRecipe({
   className: 'kiso-fieldset',
+  jsx: ['Fieldset', /^Fieldset\./],
   slots: ['root', 'legend'],
   staticCss: ['*'],
   base: {
-    root: { display: 'flex', flexDirection: 'column', gap: '5', minWidth: 0, border: 0 },
-    legend: { fontSize: 'md', fontWeight: 'medium', mb: '5' },
+    root: { display: 'flex', flexDirection: 'column', gap: '5', minWidth: '0', width: 'full' },
+    legend: { color: 'fg.default', fontWeight: 'semibold', textStyle: 'md', mb: '1' },
   },
+  defaultVariants: { variant: 'plain' },
   variants: {
     variant: {
       plain: {},
-      card: {
-        root: {
-          border: '1px solid',
-          borderColor: 'border',
-          borderRadius: 'l3',
-          p: '5',
-          bg: 'surface',
-        },
-        legend: { px: '1' },
+      outline: {
+        root: { borderWidth: '1px', borderRadius: 'l3', bg: 'gray.surface.bg', p: '5' },
+        legend: { px: '1', mx: '-1' },
       },
     },
   },
-  defaultVariants: { variant: 'plain' },
 })

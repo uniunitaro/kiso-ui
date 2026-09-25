@@ -131,11 +131,11 @@ export function App() {
             top: '3',
             left: '3',
             zIndex: 'skipLink',
-            bg: 'surface',
+            bg: 'gray.surface.bg',
             p: '3',
             border: '2px solid',
-            borderColor: 'accent',
-            borderRadius: 'control',
+            borderColor: 'colorPalette.solid.bg',
+            borderRadius: 'l2',
           },
         })}
       >
@@ -167,7 +167,7 @@ export function App() {
             <Search />
             Find a component
             <span className={css({ ml: 'auto' })}>
-              <Kbd>⌘K</Kbd>
+              <Kbd size="sm">⌘K</Kbd>
             </span>
           </button>
         </div>
@@ -216,7 +216,12 @@ export function App() {
         </nav>
         <div className={s.sidebarFoot}>
           <span
-            className={css({ width: '1.5', height: '1.5', borderRadius: 'pill', bg: 'success' })}
+            className={css({
+              width: '1.5',
+              height: '1.5',
+              borderRadius: 'full',
+              bg: 'success.solid.bg',
+            })}
           />
           <span>Thoughtfully made. Openly yours.</span>
         </div>
@@ -242,7 +247,7 @@ export function App() {
               The component collection
             </span>
             <ChevronRight />
-            <span className={css({ color: 'fg' })}>{pageName}</span>
+            <span className={css({ color: 'fg.default' })}>{pageName}</span>
           </div>
           <div className={s.topActions}>
             <div className={s.mobileNav}>
@@ -286,11 +291,11 @@ export function App() {
               The philosophy
               <ArrowUpRight size={12} />
             </a>
-            <Badge>v0.1</Badge>
+            <Badge colorPalette="gray">v0.1</Badge>
             <Button
               size="sm"
-              variant="ghost"
-              colorPalette="neutral"
+              variant="plain"
+              colorPalette="gray"
               square
               aria-label={theme.mode === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
               onClick={() =>
@@ -325,7 +330,7 @@ export function App() {
                       render={<a href="#/installation" />}
                       nativeButton={false}
                       variant="outline"
-                      colorPalette="neutral"
+                      colorPalette="gray"
                     >
                       Start building
                       <ArrowRight />
@@ -333,8 +338,8 @@ export function App() {
                     <Button
                       render={<a href="#/components" />}
                       nativeButton={false}
-                      variant="ghost"
-                      colorPalette="neutral"
+                      variant="plain"
+                      colorPalette="gray"
                     >
                       Explore components
                       <ArrowUpRight />
@@ -348,7 +353,7 @@ export function App() {
                       top: 0,
                       left: 40,
                       transform: 'rotate(12deg)',
-                      background: 'var(--colors-surface-subtle)',
+                      background: 'var(--colors-gray-subtle-bg)',
                     }}
                   />
                   <div
@@ -460,14 +465,14 @@ export function App() {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     p: '3',
-                    borderRadius: 'control',
+                    borderRadius: 'l2',
                     fontSize: 'sm',
                     textDecoration: 'none',
-                    _hover: { bg: 'surface.subtle' },
+                    _hover: { bg: 'gray.subtle.bg' },
                     _focusVisible: {
                       outline: '2px solid',
-                      outlineColor: 'accent',
-                      bg: 'accent.subtle',
+                      outlineColor: 'colorPalette.solid.bg',
+                      bg: 'colorPalette.subtle.bg',
                     },
                   })}
                 >
@@ -489,8 +494,8 @@ export function App() {
                 justifyContent: 'flex-end',
               })}
             >
-              <Dialog.Close render={<Button size="xs" variant="ghost" colorPalette="neutral" />}>
-                Close<Kbd>Esc</Kbd>
+              <Dialog.Close render={<Button size="xs" variant="plain" colorPalette="gray" />}>
+                Close<Kbd size="sm">Esc</Kbd>
               </Dialog.Close>
             </div>
           </Dialog.Popup>

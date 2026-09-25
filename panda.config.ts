@@ -1,7 +1,19 @@
 import { defineConfig } from '@pandacss/dev'
-import { tokens, createSemanticTokens } from './src/theme/tokens'
+import { tokens, semanticColors, aliasPalette, removePandaPresetColors } from './src/theme/tokens'
+import { shadows } from './src/theme/shadows'
+import { blue } from './src/theme/colors/blue'
+import { green } from './src/theme/colors/green'
+import { amber } from './src/theme/colors/amber'
+import { red } from './src/theme/colors/red'
 import { recipes, slotRecipes } from './src/theme/recipes'
 import { conditions } from './src/theme/conditions'
+import { globalCss } from './src/theme/global-css'
+import { textStyles } from './src/theme/text-styles'
+import { layerStyles } from './src/theme/layer-styles'
+import { keyframes } from './src/theme/keyframes'
+// Preview only: the Theming page switches accent, gray and radii at runtime.
+import { runtimeColors, runtimeConditions, runtimeRadii } from './src/app/theme-runtime'
+import { accentNames } from './src/app/palettes'
 
 export default defineConfig({
   preflight: true,
@@ -9,38 +21,49 @@ export default defineConfig({
   exclude: [],
   outdir: 'styled-system',
   jsxFramework: 'react',
-  conditions: { extend: conditions },
+  conditions: { extend: { ...conditions, ...runtimeConditions } },
+  globalCss: {
+    extend: {
+      ...globalCss,
+      // Preview shell only.
+      body: { ...globalCss.body, margin: 0, minWidth: 0, fontSize: '14px' },
+      '#root': { isolation: 'isolate', minHeight: '100dvh' },
+      'button, input, textarea, select': { font: 'inherit' },
+    },
+  },
   theme: {
     extend: {
       tokens,
-      semanticTokens: createSemanticTokens({ accentColor: 'iris', grayColor: 'neutral' }),
+      semanticTokens: {
+        colors: {
+          ...semanticColors,
+          // Every palette, with accent and gray picked at runtime. Apps list only what they use
+          // and add `...aliases({ accent, info, success, warning, danger })` instead.
+          ...runtimeColors({ accent: 'iris', gray: 'neutral' }),
+          info: aliasPalette('blue', blue),
+          success: aliasPalette('green', green),
+          warning: aliasPalette('amber', amber),
+          danger: aliasPalette('red', red),
+        },
+        radii: runtimeRadii,
+        shadows,
+      },
+      textStyles,
+      layerStyles,
+      keyframes,
       recipes,
       slotRecipes,
     },
   },
-  staticCss: { css: [{ properties: { colorPalette: ['*'] } }] },
-  globalCss: {
-    html: {
-      bg: 'canvas',
-      color: 'fg',
-      fontFamily: 'sans',
-      fontSize: '16px',
-      colorScheme: 'light',
-      '&[data-theme=dark]': { colorScheme: 'dark' },
-    },
-    body: { margin: 0, minWidth: 0, fontSize: '14px' },
-    '#root': { isolation: 'isolate', minHeight: '100dvh' },
-    'button, input, textarea, select': { font: 'inherit' },
-    button: { cursor: 'pointer' },
-    'button:disabled': { cursor: 'not-allowed' },
-    '::selection': { bg: 'accent.subtle', color: 'accent.fg' },
-    svg: { flexShrink: 0 },
-    '@media (prefers-reduced-motion: reduce)': {
-      '*, *::before, *::after': {
-        animationDuration: '0.01ms!',
-        transitionDuration: '0.01ms!',
-        scrollBehavior: 'auto!',
+  plugins: [removePandaPresetColors],
+  // The docs preview picks colorPalette values at runtime, so it cannot be extracted statically.
+  staticCss: {
+    css: [
+      {
+        properties: {
+          colorPalette: [...accentNames, 'accent', 'gray', 'info', 'success', 'warning', 'danger'],
+        },
       },
-    },
+    ],
   },
 })

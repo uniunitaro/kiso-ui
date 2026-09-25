@@ -1,28 +1,64 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { focusRing } from '../shared'
+
 export const breadcrumb = defineSlotRecipe({
   className: 'kiso-breadcrumb',
+  jsx: ['Breadcrumb', /^Breadcrumb\./],
   slots: ['root', 'list', 'item', 'link', 'current', 'separator'],
-  staticCss: ['*'],
+  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     list: {
       display: 'flex',
       alignItems: 'center',
-      gap: '2',
       flexWrap: 'wrap',
       listStyle: 'none',
-      fontSize: 'sm',
+      wordBreak: 'break-word',
       color: 'fg.muted',
     },
     item: { display: 'inline-flex', alignItems: 'center' },
     link: {
-      ...focusRing,
-      color: 'fg.muted',
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '1.5',
+      color: 'inherit',
       textDecoration: 'none',
       borderRadius: 'l1',
-      _hover: { color: 'fg', textDecoration: 'underline', textUnderlineOffset: '3px' },
+      outline: '0',
+      transitionProperty: 'color',
+      transitionDuration: 'fast',
+      focusVisibleRing: 'outside',
+      _hover: { color: 'fg.default' },
     },
-    current: { color: 'fg', fontWeight: 'medium' },
-    separator: { color: 'fg.muted', userSelect: 'none', px: '1' },
+    current: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '1.5',
+      color: 'fg.default',
+      fontWeight: 'medium',
+    },
+    separator: {
+      display: 'flex',
+      color: 'fg.subtle',
+      userSelect: 'none',
+      _icon: { boxSize: '1em' },
+    },
+  },
+  defaultVariants: { variant: 'plain', size: 'md' },
+  variants: {
+    variant: {
+      plain: {},
+      underline: {
+        link: {
+          textDecoration: 'underline',
+          textUnderlineOffset: '0.2em',
+          textDecorationColor: 'gray.a6',
+          _hover: { textDecorationColor: 'currentColor' },
+        },
+      },
+    },
+    size: {
+      sm: { list: { gap: '1', textStyle: 'sm' } },
+      md: { list: { gap: '1.5', textStyle: 'md' } },
+      lg: { list: { gap: '2', textStyle: 'lg' } },
+    },
   },
 })

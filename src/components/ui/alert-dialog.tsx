@@ -1,14 +1,16 @@
 'use client'
 import { AlertDialog as Base } from '@base-ui/react/alert-dialog'
 import { dialog, type DialogVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext } from './style-context'
+import { createStyleContext, type ColorPaletteProp } from './style-context'
 
 const { Provider: StyleProvider, withContext } = createStyleContext(dialog)
 
-export function Root<Payload = unknown>(props: Base.Root.Props<Payload> & DialogVariantProps) {
-  const [variants, rest] = dialog.splitVariantProps(props)
+export function Root<Payload = unknown>(
+  props: Base.Root.Props<Payload> & DialogVariantProps & ColorPaletteProp,
+) {
+  const [variants, { colorPalette, ...rest }] = dialog.splitVariantProps(props)
   return (
-    <StyleProvider {...variants}>
+    <StyleProvider {...variants} colorPalette={colorPalette}>
       <Base.Root {...rest} />
     </StyleProvider>
   )
@@ -18,6 +20,11 @@ export const Popup = withContext(Base.Popup, 'popup')
 export const Title = withContext(Base.Title, 'title')
 export const Description = withContext(Base.Description, 'description')
 export const Close = withContext(Base.Close, 'close')
+/** Corner close button; pair with render={<Button variant="plain" colorPalette="gray" square />}. */
+export const CloseTrigger = withContext(Base.Close, 'closeTrigger')
+export const Header = withContext('div', 'header')
+export const Body = withContext('div', 'body')
+export const Footer = withContext('div', 'footer')
 export const Trigger = Base.Trigger
 export const Portal = Base.Portal
 export const Viewport = Base.Viewport

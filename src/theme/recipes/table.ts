@@ -1,57 +1,94 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { focusRing } from '../shared'
+
+// Slots follow the element: header = thead, head = th (Park UI names them the other way round).
 export const table = defineSlotRecipe({
   className: 'kiso-table',
+  jsx: ['Table', /^Table\./],
   slots: ['root', 'container', 'header', 'body', 'footer', 'row', 'head', 'cell', 'caption'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     container: {
-      ...focusRing,
       width: 'full',
       overflowX: 'auto',
-      border: '1px solid',
-      borderColor: 'border',
+      borderWidth: '1px',
       borderRadius: 'l3',
-      bg: 'surface',
+      focusVisibleRing: 'outside',
     },
-    root: { width: 'full', borderCollapse: 'collapse', textAlign: 'start', fontSize: 'sm' },
+    root: {
+      width: 'full',
+      borderCollapse: 'collapse',
+      fontVariantNumeric: 'lining-nums tabular-nums',
+      textAlign: 'start',
+      color: 'fg.default',
+    },
     head: {
       textAlign: 'start',
-      fontWeight: 'medium',
-      color: 'fg.muted',
-      bg: 'surface.subtle',
+      verticalAlign: 'middle',
       whiteSpace: 'nowrap',
+      color: 'fg.muted',
+      fontWeight: 'semibold',
+      textStyle: 'xs',
+      boxShadow: 'inset 0 -1px 0 0 {colors.border}',
+    },
+    cell: {
+      textAlign: 'start',
+      verticalAlign: 'middle',
+      boxShadow: 'inset 0 -1px 0 0 {colors.border}',
     },
     row: {
-      borderBottomWidth: '1px',
-      borderBottomStyle: 'solid',
-      borderColor: 'border',
-      _last: { borderBottom: 0 },
-      _selected: { bg: 'accent.subtle' },
+      _last: { '& > td': { boxShadow: 'none' } },
+      _selected: { bg: 'colorPalette.subtle.bg' },
     },
-    cell: { color: 'fg', verticalAlign: 'middle' },
-    footer: { bg: 'surface.subtle', fontWeight: 'medium' },
+    footer: {
+      fontWeight: 'medium',
+      '& td': { boxShadow: 'inset 0 1px 0 0 {colors.border}!' },
+    },
     caption: {
       captionSide: 'bottom',
       color: 'fg.muted',
-      fontSize: 'xs',
-      p: '4',
-      textAlign: 'start',
+      fontWeight: 'medium',
+      textStyle: 'xs',
+      py: '3',
     },
   },
+  defaultVariants: { variant: 'plain', size: 'md' },
   variants: {
-    size: {
-      sm: {
-        head: { px: '3', py: '2', fontSize: 'xs' },
-        cell: { px: '3', py: '2', fontSize: 'xs' },
-      },
-      md: { head: { px: '4', py: '3', fontSize: 'xs' }, cell: { px: '4', py: '3' } },
-      lg: { head: { px: '5', py: '4' }, cell: { px: '5', py: '4' } },
-    },
     variant: {
-      line: {},
-      striped: { body: { '& > tr:nth-child(even)': { bg: 'surface.subtle' } } },
+      plain: {},
+      surface: {
+        container: { bg: 'gray.surface.bg' },
+        header: { bg: 'gray.surface.bg.hover' },
+        row: { bg: 'gray.surface.bg' },
+      },
+    },
+    striped: {
+      true: { body: { '& > tr:nth-of-type(odd) > td': { bg: 'gray.surface.bg.hover' } } },
+    },
+    interactive: {
+      true: { body: { '& > tr': { _hover: { bg: 'gray.surface.bg.hover' } } } },
+    },
+    columnBorder: {
+      true: {
+        head: { '&:not(:last-of-type)': { borderInlineEndWidth: '1px' } },
+        cell: { '&:not(:last-of-type)': { borderInlineEndWidth: '1px' } },
+      },
+    },
+    stickyHeader: {
+      true: {
+        header: {
+          '& > tr': {
+            position: 'sticky',
+            top: 'var(--table-sticky-offset, 0)',
+            zIndex: '2',
+            bg: 'inherit',
+          },
+        },
+      },
+    },
+    size: {
+      sm: { root: { textStyle: 'xs' }, head: { px: '2', py: '2' }, cell: { px: '2', py: '2' } },
+      md: { root: { textStyle: 'sm' }, head: { px: '3', py: '3' }, cell: { px: '3', py: '3' } },
+      lg: { root: { textStyle: 'md' }, head: { px: '4', py: '4' }, cell: { px: '4', py: '4' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'line' },
 })

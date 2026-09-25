@@ -1,29 +1,25 @@
-import type { ComponentPropsWithRef } from 'react'
-import { cx } from '../../../styled-system/css'
+'use client'
+import type { ComponentProps } from 'react'
 import { breadcrumb } from '../../../styled-system/recipes'
-export function Root(props: ComponentPropsWithRef<'nav'>) {
+import { createStyleContext } from './style-context'
+const { withProvider, withContext } = createStyleContext(breadcrumb)
+
+const StyledRoot = withProvider('nav', 'root')
+export function Root(props: ComponentProps<typeof StyledRoot>) {
+  return <StyledRoot aria-label="Breadcrumb" {...props} />
+}
+export const List = withContext('ol', 'list')
+export const Item = withContext('li', 'item')
+export const Link = withContext('a', 'link')
+const StyledCurrent = withContext('span', 'current')
+export function Current(props: ComponentProps<typeof StyledCurrent>) {
+  return <StyledCurrent aria-current="page" {...props} />
+}
+const StyledSeparator = withContext('li', 'separator')
+export function Separator({ children = '/', ...props }: ComponentProps<typeof StyledSeparator>) {
   return (
-    <nav aria-label="Breadcrumb" {...props} className={cx(breadcrumb().root, props.className)} />
-  )
-}
-export function List(props: ComponentPropsWithRef<'ol'>) {
-  return <ol {...props} className={cx(breadcrumb().list, props.className)} />
-}
-export function Item(props: ComponentPropsWithRef<'li'>) {
-  return <li {...props} className={cx(breadcrumb().item, props.className)} />
-}
-export function Link(props: ComponentPropsWithRef<'a'>) {
-  return <a {...props} className={cx(breadcrumb().link, props.className)} />
-}
-export function Current(props: ComponentPropsWithRef<'span'>) {
-  return (
-    <span aria-current="page" {...props} className={cx(breadcrumb().current, props.className)} />
-  )
-}
-export function Separator({ children = '/', ...props }: ComponentPropsWithRef<'li'>) {
-  return (
-    <li aria-hidden="true" {...props} className={cx(breadcrumb().separator, props.className)}>
+    <StyledSeparator aria-hidden="true" {...props}>
       {children}
-    </li>
+    </StyledSeparator>
   )
 }

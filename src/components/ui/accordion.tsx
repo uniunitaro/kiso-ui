@@ -1,18 +1,29 @@
 'use client'
 import { Accordion as Base } from '@base-ui/react/accordion'
 import { accordion, type AccordionVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext, mergeClassName } from './style-context'
+import { cx } from '../../../styled-system/css'
+import {
+  createStyleContext,
+  mergeClassName,
+  paletteClass,
+  type ColorPaletteProp,
+} from './style-context'
 
 const { Provider, withContext } = createStyleContext(accordion)
 
-export function Root<Value>(props: Base.Root.Props<Value> & AccordionVariantProps) {
-  const [variants, rest] = accordion.splitVariantProps(props)
+export function Root<Value>(
+  props: Base.Root.Props<Value> & AccordionVariantProps & ColorPaletteProp,
+) {
+  const [variants, { colorPalette, ...rest }] = accordion.splitVariantProps(props)
   return (
     <Provider {...variants}>
       <Base.Root
         {...rest}
         data-slot="root"
-        className={mergeClassName(accordion(variants).root, rest.className)}
+        className={mergeClassName(
+          cx(accordion(variants).root, paletteClass(colorPalette)),
+          rest.className,
+        )}
       />
     </Provider>
   )

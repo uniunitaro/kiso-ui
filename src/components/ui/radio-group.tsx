@@ -2,16 +2,27 @@
 import { RadioGroup as BaseGroup } from '@base-ui/react/radio-group'
 import { Radio as Base } from '@base-ui/react/radio'
 import { radioGroup, type RadioGroupVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext, mergeClassName } from './style-context'
+import { cx } from '../../../styled-system/css'
+import {
+  createStyleContext,
+  mergeClassName,
+  paletteClass,
+  type ColorPaletteProp,
+} from './style-context'
 const { Provider, withContext } = createStyleContext(radioGroup)
-export function Root<Value>(props: BaseGroup.Props<Value> & RadioGroupVariantProps) {
-  const [variants, rest] = radioGroup.splitVariantProps(props)
+export function Root<Value>(
+  props: BaseGroup.Props<Value> & RadioGroupVariantProps & ColorPaletteProp,
+) {
+  const [variants, { colorPalette, ...rest }] = radioGroup.splitVariantProps(props)
   return (
     <Provider {...variants}>
       <BaseGroup
         {...rest}
         data-slot="root"
-        className={mergeClassName(radioGroup(variants).root, rest.className)}
+        className={mergeClassName(
+          cx(radioGroup(variants).root, paletteClass(colorPalette)),
+          rest.className,
+        )}
       />
     </Provider>
   )

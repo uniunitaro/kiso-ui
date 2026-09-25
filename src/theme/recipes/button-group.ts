@@ -3,7 +3,7 @@ export const buttonGroup = defineRecipe({
   className: 'kiso-button-group',
   jsx: ['ButtonGroup'],
   staticCss: ['*'],
-  base: { display: 'inline-flex', gap: '2', '& > *:focus-visible': { zIndex: 1 } },
+  base: { display: 'inline-flex', gap: '2', '& > *:focus-visible': { zIndex: '1' } },
   variants: {
     orientation: {
       horizontal: { flexDirection: 'row' },

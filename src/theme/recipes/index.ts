@@ -24,7 +24,7 @@ import { radioGroup } from './radio-group'
 import { avatar } from './avatar'
 import { progress } from './progress'
 import { tooltip } from './tooltip'
-import { toggle } from './toggle'
+import { toggle, toggleGroup } from './toggle'
 import { card } from './card'
 import { alert } from './alert'
 import { numberField } from './number-field'
@@ -54,6 +54,7 @@ export const recipes = {
   input,
   badge,
   toggle,
+  toggleGroup,
   spinner,
   buttonGroup,
 }

@@ -9,7 +9,7 @@ import * as Switch from '../components/ui/switch'
 import { css } from '../../styled-system/css'
 import { CodeBlock, Choice } from './docs'
 import * as Checkbox from '../components/ui/checkbox'
-import { accentNames, grayNames, radiusNames } from './palettes'
+import { accentNames, grayNames, radiusLevels, radiusNames } from './palettes'
 import { styles as s } from './styles'
 
 export type ThemeSettings = {
@@ -58,8 +58,8 @@ export function ThemePage({
             <div className={s.spread}>
               <h2 className={s.title}>Your foundation</h2>
               <Button
-                variant="ghost"
-                colorPalette="neutral"
+                variant="plain"
+                colorPalette="gray"
                 size="xs"
                 square
                 aria-label="Reset theme"
@@ -106,11 +106,14 @@ export function ThemePage({
                         placeItems: 'center',
                         w: '9',
                         h: '9',
-                        borderRadius: 'pill',
+                        borderRadius: 'full',
                         color: 'white',
                         outlineOffset: '3px',
                         '&[aria-pressed=true]': { outline: '1px solid', outlineColor: 'fg.subtle' },
-                        _focusVisible: { outline: '2px solid', outlineColor: 'accent' },
+                        _focusVisible: {
+                          outline: '2px solid',
+                          outlineColor: 'colorPalette.solid.bg',
+                        },
                       })}
                     >
                       {theme.accent === name && <Check size={15} />}
@@ -148,7 +151,7 @@ export function ThemePage({
         <div className={s.preview}>
           <Card.Root className={css({ width: 'full', maxWidth: '380px' })}>
             <Card.Header>
-              <Badge tone="accent">Your space</Badge>
+              <Badge>Your space</Badge>
               <Card.Title className={css({ fontSize: 'xl', mt: '4' })}>
                 Something that feels like you.
               </Card.Title>
@@ -225,7 +228,9 @@ export function ThemePage({
       <h2 className={s.docHeading}>Nested radii</h2>
       <div className={css({ p: '4', bg: 'gray.3', borderRadius: 'l3', maxW: 'sm' })}>
         <div className={css({ p: '4', bg: 'gray.5', borderRadius: 'l2' })}>
-          <div className={css({ p: '4', bg: 'surface', borderRadius: 'l1' })}>l3 → l2 → l1</div>
+          <div className={css({ p: '4', bg: 'gray.surface.bg', borderRadius: 'l1' })}>
+            l3 → l2 → l1
+          </div>
         </div>
       </div>
       <h2 className={s.docHeading}>Shadows</h2>
@@ -234,7 +239,7 @@ export function ThemePage({
           <div
             key={shadow}
             style={{ boxShadow: 'var(--shadows-' + shadow + ')' }}
-            className={css({ p: '6', bg: 'surface', borderRadius: 'l2' })}
+            className={css({ p: '6', bg: 'gray.surface.bg', borderRadius: 'l2' })}
           >
             {shadow}
           </div>
@@ -260,13 +265,13 @@ export function ThemePage({
       >
         {[
           'canvas',
-          'surface',
-          'surface.subtle',
-          'fg',
+          'gray.surface.bg',
+          'gray.subtle.bg',
+          'fg.default',
           'fg.muted',
           'border',
-          'accent',
-          'accent.subtle',
+          'accent.solid.bg',
+          'accent.subtle.bg',
         ].map((token) => (
           <div key={token} className={s.specimen}>
             <div
@@ -295,7 +300,7 @@ export function ThemePage({
       <h2 className={s.docHeading}>Take this feeling with you</h2>
       <CodeBlock
         title="panda.config.ts · theme settings"
-        code={`import { tokens, createSemanticTokens, palettes } from './src/theme/tokens'\n\n// Inside defineConfig({ ... })\nstaticCss: { css: [{ properties: { colorPalette: ['*'] } }] },\ntheme: {\n  extend: {\n    tokens,\n    semanticTokens: createSemanticTokens({\n      accentColor: '${theme.accent}',\n      grayColor: '${theme.gray}',\n      additionalColors: { brand: palettes.blue },\n    }),\n    recipes, slotRecipes,\n  },\n}\n\n// <Button colorPalette="brand" variant="surface">Brand</Button>`}
+        code={`import { semanticColors, aliases } from './src/theme/tokens'\nimport { ${theme.accent} } from './src/theme/colors/${theme.accent}'\nimport { ${theme.gray} } from './src/theme/colors/${theme.gray}'\nimport { blue } from './src/theme/colors/blue'\nimport { green } from './src/theme/colors/green'\nimport { amber } from './src/theme/colors/amber'\nimport { red } from './src/theme/colors/red'\n\n// defineConfig > theme.extend.semanticTokens\ncolors: {\n  ...semanticColors,\n  ${theme.accent}, blue, green, amber, red,\n  gray: ${theme.gray},\n  ...aliases({ accent: ${theme.accent}, info: blue, success: green, warning: amber, danger: red }),\n},\nradii: { l1: { value: '${radiusLevels[theme.radius][0]}px' }, l2: { value: '${radiusLevels[theme.radius][1]}px' }, l3: { value: '${radiusLevels[theme.radius][2]}px' } },\n\n// <Button colorPalette="red" variant="surface">Remove</Button>\n// <div className={css({ colorPalette: 'green' })}>…</div>`}
       />
       <h2 className={s.docHeading}>Go a little deeper</h2>
       <p className={s.prose}>

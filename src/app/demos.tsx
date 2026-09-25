@@ -21,7 +21,9 @@ import {
   Layers,
   Globe,
   CheckCircle2,
+  CircleAlert,
   Mail,
+  X,
 } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
@@ -54,6 +56,8 @@ import { css } from '../../styled-system/css'
 import { styles as s } from './styles'
 
 export type DemoSize = 'sm' | 'md' | 'lg'
+/** Docs controls offer each recipe's own values (catalog.ts), so they pass straight through. */
+export const pass = (value?: string) => value as never
 export function Checkmark() {
   return <Check aria-hidden="true" size={12} />
 }
@@ -62,15 +66,22 @@ export function CheckControl({
   defaultChecked = false,
   disabled = false,
   size = 'md',
+  variant,
 }: {
   label: string
   defaultChecked?: boolean
   disabled?: boolean
-  size?: DemoSize
+  size?: string
+  variant?: string
 }) {
   return (
     <label className={s.labelRow}>
-      <Checkbox.Root defaultChecked={defaultChecked} disabled={disabled} size={size}>
+      <Checkbox.Root
+        defaultChecked={defaultChecked}
+        disabled={disabled}
+        size={pass(size)}
+        variant={pass(variant)}
+      >
         <Checkbox.Indicator>
           <Checkmark />
         </Checkbox.Indicator>
@@ -83,19 +94,29 @@ export function Person({
   initials,
   name,
   size = 'md',
+  variant,
 }: {
   initials: string
   name: string
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  size?: string
+  variant?: string
 }) {
   return (
-    <Avatar.Root role="img" size={size} aria-label={name}>
+    <Avatar.Root role="img" size={pass(size)} variant={pass(variant)} aria-label={name}>
       <Avatar.Fallback>{initials}</Avatar.Fallback>
     </Avatar.Root>
   )
 }
 
-export function SelectDemo({ size = 'md' }: { size?: DemoSize }) {
+export function SelectDemo({
+  size = 'md',
+  variant,
+  palette,
+}: {
+  size?: string
+  variant?: string
+  palette?: string
+}) {
   const options = [
     { label: 'Design', value: 'design' },
     { label: 'Engineering', value: 'engineering' },
@@ -103,7 +124,13 @@ export function SelectDemo({ size = 'md' }: { size?: DemoSize }) {
     { label: 'Marketing', value: 'marketing' },
   ]
   return (
-    <Select.Root size={size} items={options} defaultValue="design">
+    <Select.Root
+      size={pass(size)}
+      variant={pass(variant)}
+      colorPalette={pass(palette)}
+      items={options}
+      defaultValue="design"
+    >
       <Select.Trigger aria-label="Team">
         <Select.Value />
         <Select.Icon>
@@ -199,64 +226,64 @@ export function WorkspaceForm({
   )
 }
 
-export function DialogDemo({ size = 'md' }: { size?: DemoSize }) {
+export function DialogDemo({ size = 'md', palette }: { size?: string; palette?: string }) {
   const [open, setOpen] = useState(false)
   return (
-    <Dialog.Root size={size} open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger render={<Button variant="outline" colorPalette="neutral" />}>
+    <Dialog.Root size={pass(size)} colorPalette={pass(palette)} open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger render={<Button variant="outline" colorPalette="gray" />}>
         <Plus size={14} />
         New workspace
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Backdrop />
         <Dialog.Popup>
-          <Dialog.Title>Create a workspace</Dialog.Title>
-          <Dialog.Description>Bring your people and projects together.</Dialog.Description>
-          <div className={css({ mt: '6' })}>
+          <Dialog.Header>
+            <Dialog.Title>Create a workspace</Dialog.Title>
+            <Dialog.Description>Bring your people and projects together.</Dialog.Description>
+          </Dialog.Header>
+          <Dialog.Body>
             <WorkspaceForm compact onComplete={() => setOpen(false)} />
-          </div>
-          <Dialog.Close
-            render={
-              <Button
-                variant="ghost"
-                colorPalette="neutral"
-                className={css({ mt: '3', width: 'full' })}
-              />
-            }
+          </Dialog.Body>
+          <Dialog.CloseTrigger
+            aria-label="Close"
+            render={<Button variant="plain" colorPalette="gray" size="sm" square />}
           >
-            Cancel
-          </Dialog.Close>
+            <X />
+          </Dialog.CloseTrigger>
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
   )
 }
 
-export function AlertDialogDemo({ size = 'md' }: { size?: DemoSize }) {
+export function AlertDialogDemo({ size = 'md' }: { size?: string }) {
   const [archived, setArchived] = useState(false)
   return (
     <div className={s.stack}>
-      <AlertDialog.Root size={size}>
-        <AlertDialog.Trigger render={<Button variant="outline" colorPalette="neutral" />}>
+      <AlertDialog.Root size={pass(size)}>
+        <AlertDialog.Trigger render={<Button variant="outline" colorPalette="gray" />}>
           Archive project
         </AlertDialog.Trigger>
         <AlertDialog.Portal>
           <AlertDialog.Backdrop />
           <AlertDialog.Popup>
-            <AlertDialog.Title>Archive this project?</AlertDialog.Title>
-            <AlertDialog.Description>
-              The project will move out of your active list. You can restore it at any time.
-            </AlertDialog.Description>
-            <div
-              className={css({ display: 'flex', justifyContent: 'flex-end', gap: '2', mt: '6' })}
-            >
-              <AlertDialog.Close render={<Button variant="outline" colorPalette="neutral" />}>
+            <AlertDialog.Header>
+              <AlertDialog.Title>Archive this project?</AlertDialog.Title>
+              <AlertDialog.Description>
+                The project will move out of your active list. You can restore it at any time.
+              </AlertDialog.Description>
+            </AlertDialog.Header>
+            <AlertDialog.Footer>
+              <AlertDialog.Close render={<Button variant="outline" colorPalette="gray" />}>
                 Cancel
               </AlertDialog.Close>
-              <AlertDialog.Close render={<Button />} onClick={() => setArchived(true)}>
+              <AlertDialog.Close
+                render={<Button colorPalette="danger" />}
+                onClick={() => setArchived(true)}
+              >
                 Archive project
               </AlertDialog.Close>
-            </div>
+            </AlertDialog.Footer>
           </AlertDialog.Popup>
         </AlertDialog.Portal>
       </AlertDialog.Root>
@@ -269,12 +296,12 @@ export function AlertDialogDemo({ size = 'md' }: { size?: DemoSize }) {
   )
 }
 
-export function MenuDemo({ size = 'md' }: { size?: 'sm' | 'md' }) {
+export function MenuDemo({ size = 'md', palette }: { size?: string; palette?: string }) {
   const [action, setAction] = useState('')
   return (
     <div className={s.stack}>
-      <Menu.Root size={size}>
-        <Menu.Trigger render={<Button variant="outline" colorPalette="neutral" />}>
+      <Menu.Root size={pass(size)} colorPalette={pass(palette)}>
+        <Menu.Trigger render={<Button variant="outline" colorPalette="gray" />}>
           Project actions
           <ChevronDown size={14} />
         </Menu.Trigger>
@@ -284,11 +311,14 @@ export function MenuDemo({ size = 'md' }: { size?: 'sm' | 'md' }) {
               <Menu.Group>
                 <Menu.GroupLabel>Project</Menu.GroupLabel>
                 <Menu.Item onClick={() => setAction('Project duplicated')}>
-                  <Copy size={14} />
-                  Duplicate <Kbd>⌘D</Kbd>
+                  <Copy />
+                  Duplicate
+                  <Kbd size="sm" className={css({ ml: 'auto' })}>
+                    ⌘D
+                  </Kbd>
                 </Menu.Item>
                 <Menu.Item onClick={() => setAction('Project settings opened')}>
-                  <Settings2 size={14} />
+                  <Settings2 />
                   Settings
                 </Menu.Item>
               </Menu.Group>
@@ -302,9 +332,9 @@ export function MenuDemo({ size = 'md' }: { size?: 'sm' | 'md' }) {
               <Menu.Separator />
               <Menu.Item
                 onClick={() => setAction('Project archived')}
-                className={css({ color: 'danger' })}
+                className={css({ color: 'fg.error' })}
               >
-                <Trash2 size={14} />
+                <Trash2 />
                 Archive project
               </Menu.Item>
             </Menu.Popup>
@@ -320,16 +350,17 @@ export function MenuDemo({ size = 'md' }: { size?: 'sm' | 'md' }) {
   )
 }
 
-export function PopoverDemo({ size = 'md' }: { size?: DemoSize }) {
+export function PopoverDemo({ size = 'md' }: { size?: string }) {
   return (
-    <Popover.Root size={size}>
-      <Popover.Trigger render={<Button variant="outline" colorPalette="neutral" />}>
+    <Popover.Root size={pass(size)}>
+      <Popover.Trigger render={<Button variant="outline" colorPalette="gray" />}>
         <Bell size={14} />
         Notifications
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={8}>
           <Popover.Popup>
+            <Popover.Arrow />
             <Popover.Title>All caught up.</Popover.Title>
             <Popover.Description>
               Your next big idea can have your full attention. We’ll let you know when something
@@ -347,13 +378,7 @@ export function PopoverDemo({ size = 'md' }: { size?: DemoSize }) {
   )
 }
 
-export function AccordionDemo({
-  size = 'md',
-  variant = 'line',
-}: {
-  size?: DemoSize
-  variant?: 'line' | 'enclosed'
-}) {
+export function AccordionDemo({ size = 'md', variant }: { size?: string; variant?: string }) {
   const questions = [
     [
       'Is this really my code?',
@@ -369,7 +394,7 @@ export function AccordionDemo({
     ],
   ]
   return (
-    <Accordion.Root size={size} variant={variant} defaultValue={[0]}>
+    <Accordion.Root size={pass(size)} variant={pass(variant)} defaultValue={[0]}>
       {questions.map(([question, answer], index) => (
         <Accordion.Item key={question} value={index}>
           <Accordion.Header>
@@ -389,25 +414,31 @@ export function AccordionDemo({
 
 export function TabsDemo({
   size = 'md',
-  variant = 'enclosed',
+  variant,
   orientation = 'horizontal',
 }: {
-  size?: DemoSize
-  variant?: 'enclosed' | 'line'
+  size?: string
+  variant?: string
   orientation?: 'horizontal' | 'vertical'
 }) {
   return (
-    <Tabs.Root size={size} variant={variant} orientation={orientation} defaultValue="overview">
+    <Tabs.Root
+      size={pass(size)}
+      variant={pass(variant)}
+      orientation={orientation}
+      defaultValue="overview"
+    >
       <Tabs.List aria-label="Project views">
         <Tabs.Tab value="overview">Overview</Tabs.Tab>
         <Tabs.Tab value="activity">Activity</Tabs.Tab>
         <Tabs.Tab value="settings">Settings</Tabs.Tab>
+        <Tabs.Indicator />
       </Tabs.List>
       <Tabs.Panel value="overview">
         <div className={s.stack}>
           <div className={s.spread}>
             <span className={s.small}>Monthly active users</span>
-            <Badge tone="success">+12.8%</Badge>
+            <Badge colorPalette="success">+12.8%</Badge>
           </div>
           <div className={s.metric}>
             2,840
@@ -448,7 +479,7 @@ export function TabsDemo({
   )
 }
 
-export function NotificationDemo({ size = 'md' }: { size?: DemoSize }) {
+export function NotificationDemo({ size = 'md' }: { size?: string }) {
   return (
     <div>
       <div className={s.spread}>
@@ -474,7 +505,7 @@ export function NotificationDemo({ size = 'md' }: { size?: DemoSize }) {
               {String(detail)}
             </span>
           </span>
-          <Switch.Root size={size} defaultChecked={Boolean(checked)}>
+          <Switch.Root size={pass(size)} defaultChecked={Boolean(checked)}>
             <Switch.Thumb />
           </Switch.Root>
         </label>
@@ -487,27 +518,27 @@ export function SliderDemo({
   size = 'md',
   orientation = 'horizontal',
 }: {
-  size?: DemoSize
+  size?: string
   orientation?: 'horizontal' | 'vertical'
 }) {
   return (
-    <Slider.Root size={size} orientation={orientation} defaultValue={64}>
+    <Slider.Root size={pass(size)} orientation={orientation} defaultValue={64}>
       <Slider.Label>Creative energy</Slider.Label>
       <Slider.Value />
       <Slider.Control>
         <Slider.Track>
           <Slider.Indicator />
+          <Slider.Thumb aria-label="Creative energy" />
         </Slider.Track>
-        <Slider.Thumb aria-label="Creative energy" />
       </Slider.Control>
     </Slider.Root>
   )
 }
-export function NumberDemo({ size = 'md' }: { size?: DemoSize }) {
+export function NumberDemo({ size = 'md', variant }: { size?: string; variant?: string }) {
   return (
     <Field.Root>
       <Field.Label>Team seats</Field.Label>
-      <NumberField.Root defaultValue={5} min={1} max={50} size={size}>
+      <NumberField.Root defaultValue={5} min={1} max={50} size={pass(size)} variant={pass(variant)}>
         <NumberField.Group>
           <NumberField.Decrement aria-label="Remove a seat">
             <Minus size={14} />
@@ -526,14 +557,12 @@ export function NumberDemo({ size = 'md' }: { size?: DemoSize }) {
 export function Demo({
   id,
   size = 'md',
-  rawSize,
   variant,
-  palette = 'accent',
+  palette,
   orientation = 'horizontal',
 }: {
   id: string
-  size?: DemoSize
-  rawSize?: string
+  size?: string
   variant?: string
   palette?: string
   orientation?: 'horizontal' | 'vertical'
@@ -544,21 +573,21 @@ export function Demo({
       return (
         <div className={s.row}>
           <Button
-            size={rawSize === 'xs' ? 'xs' : size}
-            variant={variant as 'solid' | undefined}
-            colorPalette={palette as 'accent'}
+            size={pass(size)}
+            variant={pass(variant)}
+            colorPalette={pass(palette)}
             onClick={() => setSaved(!saved)}
           >
             {saved ? <Check size={14} /> : <Plus size={14} />}
             {saved ? 'Added to your project' : 'Add to project'}
           </Button>
-          <Button size={size} variant="outline" colorPalette="neutral" disabled>
+          <Button size={pass(size)} variant="outline" colorPalette="gray" disabled>
             Disabled
           </Button>
           <Button
-            size={size}
-            variant="ghost"
-            colorPalette="neutral"
+            size={pass(size)}
+            variant="plain"
+            colorPalette="gray"
             square
             aria-label="More actions"
             onClick={() => setSaved(!saved)}
@@ -572,8 +601,8 @@ export function Demo({
         <Field.Root>
           <Field.Label>Email address</Field.Label>
           <Input
-            size={size}
-            variant={variant as 'outline' | undefined}
+            size={pass(size)}
+            variant={pass(variant)}
             placeholder="you@studio.design"
             type="email"
           />
@@ -587,8 +616,8 @@ export function Demo({
           <Field.Control
             render={
               <Textarea
-                size={size}
-                variant={variant as 'outline' | undefined}
+                size={pass(size)}
+                variant={pass(variant)}
                 placeholder="It starts with a thought…"
               />
             }
@@ -605,7 +634,7 @@ export function Demo({
             setSaved(true)
           }}
         >
-          <Field.Root name="email" size={size}>
+          <Field.Root name="email">
             <Field.Label>Email address</Field.Label>
             <Input type="email" required placeholder="you@studio.design" />
             <Field.Description>We’ll only use this for your account.</Field.Description>
@@ -625,11 +654,16 @@ export function Demo({
     case 'checkbox':
       return (
         <div className={s.stack}>
-          <CheckControl size={size} label="Keep me in the loop" defaultChecked />
-          <CheckControl size={size} label="Send a weekly digest" />
-          <CheckControl size={size} label="Managed by your organization" disabled />
+          <CheckControl size={size} variant={variant} label="Keep me in the loop" defaultChecked />
+          <CheckControl size={size} variant={variant} label="Send a weekly digest" />
+          <CheckControl
+            size={size}
+            variant={variant}
+            label="Managed by your organization"
+            disabled
+          />
           <label className={s.labelRow}>
-            <Checkbox.Root size={size} indeterminate>
+            <Checkbox.Root size={pass(size)} variant={pass(variant)} indeterminate>
               <Checkbox.Indicator>
                 <Minus size={12} />
               </Checkbox.Indicator>
@@ -642,7 +676,12 @@ export function Demo({
       return <NotificationDemo size={size} />
     case 'radio-group':
       return (
-        <RadioGroup.Root defaultValue="personal" size={size} aria-label="Workspace type">
+        <RadioGroup.Root
+          defaultValue="personal"
+          size={pass(size)}
+          variant={pass(variant)}
+          aria-label="Workspace type"
+        >
           {['Personal', 'Team', 'Organization'].map((value) => (
             <label key={value} className={s.labelRow}>
               <RadioGroup.Item value={value.toLowerCase()}>
@@ -654,39 +693,24 @@ export function Demo({
         </RadioGroup.Root>
       )
     case 'select':
-      return <SelectDemo size={size} />
+      return <SelectDemo size={size} variant={variant} palette={palette} />
     case 'slider':
       return <SliderDemo size={size} orientation={orientation} />
     case 'number-field':
-      return <NumberDemo size={size} />
+      return <NumberDemo size={size} variant={variant} />
     case 'toggle':
       return (
-        <ToggleGroup
-          defaultValue={['bold']}
-          multiple
-          aria-label="Text formatting"
-          className={s.row}
-        >
-          <Toggle
-            value="bold"
-            size={size}
-            variant={variant as 'ghost' | undefined}
-            aria-label="Bold"
-          >
+        <ToggleGroup defaultValue={['bold']} multiple aria-label="Text formatting">
+          <Toggle value="bold" size={pass(size)} variant={pass(variant)} aria-label="Bold">
             <Bold />
           </Toggle>
-          <Toggle
-            value="italic"
-            size={size}
-            variant={variant as 'ghost' | undefined}
-            aria-label="Italic"
-          >
+          <Toggle value="italic" size={pass(size)} variant={pass(variant)} aria-label="Italic">
             <Italic />
           </Toggle>
           <Toggle
             value="underline"
-            size={size}
-            variant={variant as 'ghost' | undefined}
+            size={pass(size)}
+            variant={pass(variant)}
             aria-label="Underline"
           >
             <Underline />
@@ -696,41 +720,52 @@ export function Demo({
     case 'badge':
       return (
         <div className={s.row}>
-          {(['neutral', 'accent', 'success', 'warning', 'danger'] as const).map((tone) => (
+          {[
+            ['gray', 'Draft'],
+            [palette ?? 'accent', 'In progress'],
+            ['success', 'Published'],
+            ['warning', 'In review'],
+            ['danger', 'Needs attention'],
+          ].map(([colorPalette, label]) => (
             <Badge
-              key={tone}
-              size={size === 'lg' ? 'md' : size}
-              tone={tone}
-              variant={variant as 'subtle' | undefined}
+              key={label}
+              size={pass(size)}
+              colorPalette={pass(colorPalette)}
+              variant={pass(variant)}
             >
-              {
-                {
-                  neutral: 'Draft',
-                  accent: 'In progress',
-                  success: 'Published',
-                  warning: 'In review',
-                  danger: 'Needs attention',
-                }[tone]
-              }
+              {label}
             </Badge>
           ))}
         </div>
       )
     case 'alert':
       return (
-        <Alert.Root tone="success">
-          <Alert.Icon>
-            <CheckCircle2 />
-          </Alert.Icon>
-          <Alert.Title>You’re all set.</Alert.Title>
-          <Alert.Description>
-            Your changes have been saved. A little progress, made real.
-          </Alert.Description>
-        </Alert.Root>
+        <div className={s.stack}>
+          <Alert.Root status="success" size={pass(size)} variant={pass(variant)}>
+            <Alert.Icon>
+              <CheckCircle2 />
+            </Alert.Icon>
+            <Alert.Content>
+              <Alert.Title>You’re all set.</Alert.Title>
+              <Alert.Description>
+                Your changes have been saved. A little progress, made real.
+              </Alert.Description>
+            </Alert.Content>
+          </Alert.Root>
+          <Alert.Root status="error" size={pass(size)} variant={pass(variant)}>
+            <Alert.Icon>
+              <CircleAlert />
+            </Alert.Icon>
+            <Alert.Content>
+              <Alert.Title>We couldn’t publish that.</Alert.Title>
+              <Alert.Description>Check your connection and try again.</Alert.Description>
+            </Alert.Content>
+          </Alert.Root>
+        </div>
       )
     case 'progress':
       return (
-        <Progress.Root value={68} size={size}>
+        <Progress.Root value={68} size={pass(size)} variant={pass(variant)}>
           <Progress.Label>Getting things ready</Progress.Label>
           <Progress.Value />
           <Progress.Track>
@@ -742,33 +777,27 @@ export function Demo({
       return (
         <div className={s.stack}>
           <div className={s.row}>
-            <Skeleton className={css({ w: '10', h: '10', borderRadius: 'pill' })} />
+            <Skeleton variant={pass(variant)} circle className={css({ w: '10', h: '10' })} />
             <div className={css({ flex: 1 })}>
-              <Skeleton className={css({ w: '50%', mb: '2' })} />
-              <Skeleton className={css({ w: '80%', h: '3' })} />
+              <Skeleton variant={pass(variant)} className={css({ w: '50%', mb: '2' })} />
+              <Skeleton variant={pass(variant)} className={css({ w: '80%', h: '3' })} />
             </div>
           </div>
-          <Skeleton className={css({ h: '24' })} />
+          <Skeleton variant={pass(variant)} className={css({ h: '24' })} />
         </div>
       )
     case 'tabs':
-      return (
-        <TabsDemo
-          size={size}
-          variant={variant as 'enclosed' | undefined}
-          orientation={orientation}
-        />
-      )
+      return <TabsDemo size={size} variant={variant} orientation={orientation} />
     case 'accordion':
-      return <AccordionDemo size={size} variant={variant as 'line' | undefined} />
+      return <AccordionDemo size={size} variant={variant} />
     case 'dialog':
-      return <DialogDemo size={size} />
+      return <DialogDemo size={size} palette={palette} />
     case 'alert-dialog':
       return <AlertDialogDemo size={size} />
     case 'popover':
       return <PopoverDemo size={size} />
     case 'menu':
-      return <MenuDemo size={size === 'lg' ? 'md' : size} />
+      return <MenuDemo size={size} palette={palette} />
     case 'tooltip':
       return (
         <Tooltip.Provider delay={200}>
@@ -777,7 +806,7 @@ export function Demo({
               render={
                 <Button
                   variant="outline"
-                  colorPalette="neutral"
+                  colorPalette="gray"
                   square
                   aria-label="About this component"
                 />
@@ -796,14 +825,16 @@ export function Demo({
     case 'avatar':
       return (
         <div className={s.row}>
-          <Person
-            initials="AK"
-            name="Alex Kim"
-            size={rawSize === 'xl' ? 'xl' : rawSize === 'xs' ? 'xs' : size}
-          />
-          <Person initials="SJ" name="Sam Jones" size={size} />
-          <Person initials="MN" name="Morgan North" size={size} />
-          <Avatar.Root role="img" size={size} shape="square" aria-label="Studio North">
+          <Person initials="AK" name="Alex Kim" size={size} variant={variant} />
+          <Person initials="SJ" name="Sam Jones" size={size} variant={variant} />
+          <Person initials="MN" name="Morgan North" size={size} variant={variant} />
+          <Avatar.Root
+            role="img"
+            size={pass(size)}
+            variant={pass(variant)}
+            shape="rounded"
+            aria-label="Studio North"
+          >
             <Avatar.Fallback>
               <Layers size={18} />
             </Avatar.Fallback>
@@ -812,13 +843,13 @@ export function Demo({
       )
     case 'card':
       return (
-        <Card.Root size={size} variant={variant as 'outline' | undefined}>
+        <Card.Root size={pass(size)} variant={pass(variant)}>
           <Card.Header>
             <Card.Title>A place to start.</Card.Title>
             <Card.Description>Thoughtful defaults. Room to make it yours.</Card.Description>
           </Card.Header>
           <Card.Body>
-            <Badge tone="success">Ready when you are</Badge>
+            <Badge colorPalette="success">Ready when you are</Badge>
           </Card.Body>
           <Card.Footer>
             <Button size="sm" onClick={() => setSaved(!saved)}>
@@ -832,12 +863,12 @@ export function Demo({
       return (
         <div className={s.stack}>
           <p className={s.title}>Some things belong together.</p>
-          <Separator />
+          <Separator variant={pass(variant)} />
           <div className={s.row}>
             <span className={s.small}>Design</span>
-            <Separator orientation="vertical" />
+            <Separator variant={pass(variant)} orientation="vertical" />
             <span className={s.small}>Engineering</span>
-            <Separator orientation="vertical" />
+            <Separator variant={pass(variant)} orientation="vertical" />
             <span className={s.small}>Something good</span>
           </div>
         </div>
@@ -846,17 +877,25 @@ export function Demo({
       return (
         <div className={s.row}>
           <span className={s.small}>Find a component</span>
-          <Kbd>⌘</Kbd>
-          <Kbd>K</Kbd>
+          <Kbd size={pass(size)} variant={pass(variant)}>
+            ⌘
+          </Kbd>
+          <Kbd size={pass(size)} variant={pass(variant)}>
+            K
+          </Kbd>
           <span className={css({ mx: '2', color: 'fg.muted' })}>or</span>
-          <Kbd>Ctrl</Kbd>
-          <Kbd>K</Kbd>
+          <Kbd size={pass(size)} variant={pass(variant)}>
+            Ctrl
+          </Kbd>
+          <Kbd size={pass(size)} variant={pass(variant)}>
+            K
+          </Kbd>
         </div>
       )
     default:
       return (
         <Suspense fallback={<p role="status">Loading component…</p>}>
-          <AdvancedDemo id={id} size={size} variant={variant} />
+          <AdvancedDemo id={id} size={size} variant={variant} palette={palette} />
         </Suspense>
       )
   }
@@ -919,7 +958,7 @@ export function Overview() {
             </Button>
             <Button
               variant="outline"
-              colorPalette="neutral"
+              colorPalette="gray"
               render={<a href="#/components/button" />}
               nativeButton={false}
             >
@@ -939,12 +978,12 @@ export function Overview() {
           </div>
           <Separator className={css({ my: '5' })} />
           <div className={s.row}>
-            <Badge tone="success">Published</Badge>
-            <Badge tone="accent">In progress</Badge>
-            <Badge tone="neutral">Draft</Badge>
+            <Badge colorPalette="success">Published</Badge>
+            <Badge>In progress</Badge>
+            <Badge colorPalette="gray">Draft</Badge>
           </div>
         </Specimen>
-        <Specimen id="tabs" label="Tabs · enclosed">
+        <Specimen id="tabs" label="Tabs · line">
           <TabsDemo size="sm" />
         </Specimen>
         <Specimen id="dialog" label="Avatar + Dialog">
@@ -966,16 +1005,21 @@ export function Overview() {
               gap: '3',
             })}
           >
-            <div className={css({ display: 'flex', '& > * + *': { ml: '-2' } })}>
+            <div
+              className={css({
+                display: 'flex',
+                // A ring in the surface color separates overlapping avatars.
+                '& > *': { boxShadow: '0 0 0 2px {colors.gray.surface.bg}' },
+                '& > * + *': { ml: '-2' },
+              })}
+            >
               <Person initials="AK" name="Alex Kim" size="sm" />
               <Person initials="SJ" name="Sam Jones" size="sm" />
               <Person initials="MN" name="Morgan North" size="sm" />
               <Person initials="+2" name="Two more teammates" size="sm" />
             </div>
             <Popover.Root>
-              <Popover.Trigger
-                render={<Button size="sm" variant="outline" colorPalette="neutral" />}
-              >
+              <Popover.Trigger render={<Button size="sm" variant="outline" colorPalette="gray" />}>
                 <Mail />
                 Invite
               </Popover.Trigger>
@@ -1005,7 +1049,7 @@ export function Overview() {
         <Specimen id="checkbox" label="Checkbox · md">
           <div className={s.spread}>
             <h3 className={s.title}>The little things add up.</h3>
-            <Badge>{checklist.filter(Boolean).length} of 3</Badge>
+            <Badge colorPalette="gray">{checklist.filter(Boolean).length} of 3</Badge>
           </div>
           <div className={css({ display: 'flex', flexDirection: 'column', gap: '4', mt: '5' })}>
             {[
@@ -1042,7 +1086,7 @@ export function Overview() {
                 <p className={s.small}>A work in progress.</p>
               </div>
             </div>
-            <Badge tone="accent">Building</Badge>
+            <Badge>Building</Badge>
           </div>
           <div className={css({ mt: '5' })}>
             <Progress.Root value={72} size="sm">
@@ -1057,9 +1101,9 @@ export function Overview() {
           </div>
           <div
             className={css({
-              bg: 'success.subtle',
-              color: 'success',
-              borderRadius: 'control',
+              bg: 'success.subtle.bg',
+              color: 'success.plain.fg',
+              borderRadius: 'l2',
               px: '3',
               py: '2.5',
               display: 'flex',

@@ -1,6 +1,9 @@
 import type { ComponentPropsWithRef } from 'react'
-import { skeleton } from '../../../styled-system/recipes'
 import { cx } from '../../../styled-system/css'
-export function Skeleton(props: ComponentPropsWithRef<'div'>) {
-  return <div aria-hidden="true" {...props} className={cx(skeleton(), props.className)} />
+import { skeleton, type SkeletonVariantProps } from '../../../styled-system/recipes'
+
+export type SkeletonProps = ComponentPropsWithRef<'div'> & SkeletonVariantProps
+export function Skeleton(props: SkeletonProps) {
+  const [variants, rest] = skeleton.splitVariantProps(props)
+  return <div aria-hidden="true" {...rest} className={cx(skeleton(variants), rest.className)} />
 }

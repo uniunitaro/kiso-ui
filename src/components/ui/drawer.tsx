@@ -1,14 +1,15 @@
 'use client'
 import { Drawer as Base } from '@base-ui/react/drawer'
 import { drawer, type DrawerVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext } from './style-context'
+import { createStyleContext, type ColorPaletteProp } from './style-context'
 const { Provider: StyleProvider, withContext } = createStyleContext(drawer)
 export function Root<Payload = unknown>({
   size,
+  colorPalette,
   ...props
-}: Base.Root.Props<Payload> & DrawerVariantProps) {
+}: Base.Root.Props<Payload> & DrawerVariantProps & ColorPaletteProp) {
   return (
-    <StyleProvider size={size}>
+    <StyleProvider size={size} colorPalette={colorPalette}>
       <Base.Root {...props} />
     </StyleProvider>
   )
@@ -20,6 +21,10 @@ export const Content = withContext(Base.Content, 'content')
 export const Title = withContext(Base.Title, 'title')
 export const Description = withContext(Base.Description, 'description')
 export const Close = withContext(Base.Close, 'close')
+export const CloseTrigger = withContext(Base.Close, 'closeTrigger')
+export const Header = withContext('div', 'header')
+export const Body = withContext('div', 'body')
+export const Footer = withContext('div', 'footer')
 export const Portal = Base.Portal
 export const Trigger = Base.Trigger
 export const Provider = Base.Provider

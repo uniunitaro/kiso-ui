@@ -1,28 +1,53 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+
 export const card = defineSlotRecipe({
   className: 'kiso-card',
+  jsx: ['Card', /^Card\./],
   slots: ['root', 'header', 'title', 'description', 'body', 'footer'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
-      borderRadius: 'l3',
-      border: '1px solid',
-      borderColor: 'border',
-      bg: 'surface',
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'relative',
       overflow: 'hidden',
+      borderRadius: 'l3',
+      color: 'fg.default',
     },
-    header: { pb: '4' },
-    title: { fontWeight: 'semibold', fontSize: 'md', letterSpacing: '-.02em' },
-    description: { color: 'fg.muted', fontSize: 'sm', lineHeight: '1.6', mt: '1' },
-    footer: { pt: '4', display: 'flex', gap: '2', alignItems: 'center' },
+    header: { display: 'flex', flexDirection: 'column', gap: '1', p: 'var(--card-padding)' },
+    body: {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: '1',
+      px: 'var(--card-padding)',
+      pb: 'var(--card-padding)',
+      // Without a header, the body opens the card.
+      '&:first-child': { pt: 'var(--card-padding)' },
+    },
+    footer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      gap: '3',
+      px: 'var(--card-padding)',
+      pb: 'var(--card-padding)',
+      pt: '2',
+    },
+    title: { fontWeight: 'semibold' },
+    description: { color: 'fg.muted', textStyle: 'sm' },
   },
+  defaultVariants: { variant: 'outline', size: 'md' },
   variants: {
-    size: { sm: { root: { p: '4' } }, md: { root: { p: '5' } }, lg: { root: { p: '7' } } },
     variant: {
-      outline: {},
-      elevated: { root: { boxShadow: 'lg' } },
-      subtle: { root: { bg: 'surface.subtle', borderColor: 'transparent' } },
+      elevated: { root: { bg: 'gray.surface.bg', boxShadow: 'lg' } },
+      outline: { root: { bg: 'gray.surface.bg', borderWidth: '1px' } },
+      subtle: { root: { bg: 'gray.subtle.bg' } },
+    },
+    // Park UI has one spacing (md); sm and lg are Kiso additions.
+    size: {
+      sm: { root: { '--card-padding': 'spacing.4' }, title: { textStyle: 'md' } },
+      md: { root: { '--card-padding': 'spacing.6' }, title: { textStyle: 'lg' } },
+      lg: { root: { '--card-padding': 'spacing.8' }, title: { textStyle: 'xl' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
 })

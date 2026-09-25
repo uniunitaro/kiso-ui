@@ -1,39 +1,34 @@
 import { defineRecipe } from '@pandacss/dev'
-import { input } from './input'
+import { fieldControl, fieldVariants } from '../shared'
 
 export const textarea = defineRecipe({
   className: 'kiso-textarea',
   jsx: ['Textarea'],
   staticCss: ['*', { size: ['*'], responsive: true }],
-  base: { ...input.base, height: 'auto', minHeight: '100px', py: '2.5', resize: 'vertical' },
+  base: { ...fieldControl, minHeight: '20', resize: 'vertical' },
+  defaultVariants: { size: 'md', variant: 'outline' },
   variants: {
-    variant: input.variants!.variant,
-    size: {
-      xs: {
-        px: '2',
-        fontSize: 'sm',
-      },
-      sm: {
-        px: '2.5',
-        fontSize: 'sm',
-      },
-      md: {
-        px: '3',
-        fontSize: 'md',
-      },
-      lg: {
-        px: '3.5',
-        fontSize: 'md',
-      },
-      xl: {
-        px: '4',
-        fontSize: 'lg',
-      },
-      '2xl': {
-        px: '4.5',
-        fontSize: '3xl',
+    variant: {
+      ...fieldVariants,
+      flushed: {
+        bg: 'transparent',
+        borderBottomWidth: '1px',
+        borderBottomColor: 'gray.outline.border',
+        borderRadius: '0',
+        px: '0!',
+        _focusVisible: {
+          borderColor: 'colorPalette.solid.bg',
+          boxShadow: '0 1px 0 0 {colors.colorPalette.solid.bg}',
+        },
+        _invalid: { borderColor: 'error' },
       },
     },
+    size: {
+      xs: { textStyle: 'sm', px: '2', py: '5px', scrollPaddingBottom: '5px' },
+      sm: { textStyle: 'sm', px: '2.5', py: '7px', scrollPaddingBottom: '7px' },
+      md: { textStyle: 'md', px: '3', py: '7px', scrollPaddingBottom: '7px' },
+      lg: { textStyle: 'md', px: '3.5', py: '9px', scrollPaddingBottom: '9px' },
+      xl: { textStyle: 'lg', px: '4', py: '9px', scrollPaddingBottom: '9px' },
+    },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
 })

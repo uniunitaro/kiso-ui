@@ -1,9 +1,19 @@
 'use client'
 import { ContextMenu as Base } from '@base-ui/react/context-menu'
-import { menu } from '../../../styled-system/recipes'
-import { createStyleContext } from './style-context'
-const { withProvider, withContext } = createStyleContext(menu)
-export const Root = withProvider(Base.Root)
+import { menu, type MenuVariantProps } from '../../../styled-system/recipes'
+import { createStyleContext, type ColorPaletteProp } from './style-context'
+const { Provider, withContext } = createStyleContext(menu)
+export function Root({
+  size,
+  colorPalette,
+  ...props
+}: Base.Root.Props & MenuVariantProps & ColorPaletteProp) {
+  return (
+    <Provider size={size} colorPalette={colorPalette}>
+      <Base.Root {...props} />
+    </Provider>
+  )
+}
 export const Positioner = withContext(Base.Positioner, 'positioner')
 export const Popup = withContext(Base.Popup, 'popup')
 export const Item = withContext(Base.Item, 'item')

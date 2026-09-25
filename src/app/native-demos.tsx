@@ -10,7 +10,7 @@ import { Spinner } from '../components/ui/spinner'
 import * as Table from '../components/ui/table'
 import { css } from '../../styled-system/css'
 import { styles as s } from './styles'
-import type { DemoSize } from './demos'
+import { pass } from './demos'
 
 export function NativeDemo({
   id,
@@ -18,7 +18,7 @@ export function NativeDemo({
   variant,
 }: {
   id: string
-  size?: DemoSize
+  size?: string
   variant?: string
 }) {
   const [page, setPage] = useState(1)
@@ -27,7 +27,7 @@ export function NativeDemo({
     case 'table':
       return (
         <Table.Container>
-          <Table.Root size={size} variant={variant as 'line' | undefined}>
+          <Table.Root size={pass(size)} variant={pass(variant)}>
             <Table.Caption>Projects in your workspace.</Table.Caption>
             <Table.Header>
               <Table.Row>
@@ -46,12 +46,8 @@ export function NativeDemo({
                   <Table.Cell>{name}</Table.Cell>
                   <Table.Cell>
                     <Badge
-                      tone={
-                        status === 'Published'
-                          ? 'success'
-                          : status === 'Draft'
-                            ? 'neutral'
-                            : 'accent'
+                      colorPalette={
+                        status === 'Published' ? 'success' : status === 'Draft' ? 'gray' : 'accent'
                       }
                     >
                       {status}
@@ -68,7 +64,7 @@ export function NativeDemo({
       )
     case 'breadcrumb':
       return (
-        <Breadcrumb.Root>
+        <Breadcrumb.Root size={pass(size)} variant={pass(variant)}>
           <Breadcrumb.List>
             <Breadcrumb.Item>
               <Breadcrumb.Link href="#/">Home</Breadcrumb.Link>
@@ -87,7 +83,7 @@ export function NativeDemo({
     case 'pagination':
       return (
         <div className={s.stack}>
-          <Pagination count={12} page={page} onPageChange={setPage} size={size} />
+          <Pagination count={12} page={page} onPageChange={setPage} size={pass(size)} />
           <p
             role="status"
             className={css({ textAlign: 'center', fontSize: 'xs', color: 'fg.muted' })}
@@ -99,13 +95,13 @@ export function NativeDemo({
     case 'spinner':
       return (
         <div className={s.row}>
-          <Spinner size={size} label="Preparing your project" />
+          <Spinner size={pass(size)} label="Preparing your project" />
           <span className={s.small}>Making room for your next idea…</span>
         </div>
       )
     case 'empty-state':
       return (
-        <EmptyState.Root size={size} variant={variant as 'outline' | undefined}>
+        <EmptyState.Root size={pass(size)} variant={pass(variant)}>
           <EmptyState.Icon>
             <FolderPlus />
           </EmptyState.Icon>
@@ -131,7 +127,7 @@ export function NativeDemo({
           <ButtonGroup attached aria-label="Browse pages">
             <Button
               variant="outline"
-              colorPalette="neutral"
+              colorPalette="gray"
               size="sm"
               disabled={page === 1}
               onClick={() => setPage((n) => n - 1)}
@@ -141,7 +137,7 @@ export function NativeDemo({
             </Button>
             <Button
               variant="outline"
-              colorPalette="neutral"
+              colorPalette="gray"
               size="sm"
               disabled={page === 5}
               onClick={() => setPage((n) => n + 1)}

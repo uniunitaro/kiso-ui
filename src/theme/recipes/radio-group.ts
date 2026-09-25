@@ -1,75 +1,79 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { control } from '../shared'
+
+// Item is the circle (Base UI Radio.Root); Indicator is the dot and scales with the size.
 export const radioGroup = defineSlotRecipe({
   className: 'kiso-radio',
+  jsx: ['RadioGroup', /^RadioGroup\./],
   slots: ['root', 'item', 'indicator'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: { display: 'flex', flexDirection: 'column', gap: '3' },
     item: {
-      ...control,
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      bg: 'surface',
-      border: '1px solid',
-      borderColor: 'border.strong',
-      borderRadius: 'pill',
-      flexShrink: 0,
-      _checked: { borderColor: 'accent', borderWidth: '5px' },
-      _invalid: { borderColor: 'danger' },
+      flexShrink: '0',
+      verticalAlign: 'top',
+      borderRadius: 'full',
+      borderWidth: '1px',
+      borderColor: 'transparent',
+      cursor: 'pointer',
+      transitionProperty: 'background-color, border-color',
+      transitionDuration: 'fast',
+      focusVisibleRing: 'outside',
+      _disabled: { layerStyle: 'disabled' },
     },
-    indicator: { display: 'none' },
+    indicator: { display: 'block', boxSize: '40%', borderRadius: 'full', bg: 'currentColor' },
   },
+  defaultVariants: { variant: 'solid', size: 'md', orientation: 'vertical' },
   variants: {
+    variant: {
+      solid: {
+        item: {
+          borderColor: 'gray.a9',
+          _checked: {
+            bg: 'colorPalette.solid.bg',
+            borderColor: 'colorPalette.solid.bg',
+            color: 'colorPalette.solid.fg',
+          },
+          _invalid: { borderColor: 'error' },
+        },
+      },
+      surface: {
+        item: {
+          bg: 'colorPalette.surface.bg',
+          borderColor: 'colorPalette.surface.border',
+          color: 'colorPalette.surface.fg',
+          _invalid: { borderColor: 'error' },
+        },
+      },
+      subtle: {
+        item: {
+          bg: 'colorPalette.subtle.bg',
+          color: 'colorPalette.subtle.fg',
+          _invalid: { borderColor: 'error' },
+        },
+      },
+      outline: {
+        item: {
+          borderColor: 'colorPalette.outline.border',
+          color: 'colorPalette.outline.fg',
+          _checked: { borderColor: 'colorPalette.solid.bg', color: 'colorPalette.solid.bg' },
+          _invalid: { borderColor: 'error' },
+        },
+      },
+    },
     size: {
-      xs: {
-        item: {
-          w: '4',
-          h: '4',
-          fontSize: 'sm',
-        },
-      },
-      sm: {
-        item: {
-          w: '4.5',
-          h: '4.5',
-          fontSize: 'sm',
-        },
-      },
-      md: {
-        item: {
-          w: '5',
-          h: '5',
-          fontSize: 'md',
-        },
-      },
-      lg: {
-        item: {
-          w: '5.5',
-          h: '5.5',
-          fontSize: 'lg',
-        },
-      },
-      xl: {
-        item: {
-          w: '6',
-          h: '6',
-          fontSize: 'xl',
-        },
-      },
-      '2xl': {
-        item: {
-          w: '8',
-          h: '8',
-          fontSize: '2xl',
-        },
-      },
+      xs: { item: { boxSize: '4' } },
+      sm: { item: { boxSize: '4.5' } },
+      md: { item: { boxSize: '5' } },
+      lg: { item: { boxSize: '5.5' } },
+      xl: { item: { boxSize: '6' } },
+      '2xl': { item: { boxSize: '8' } },
     },
     orientation: {
       horizontal: { root: { flexDirection: 'row', flexWrap: 'wrap', gap: '5' } },
       vertical: {},
     },
   },
-  defaultVariants: { size: 'md', orientation: 'vertical' },
 })

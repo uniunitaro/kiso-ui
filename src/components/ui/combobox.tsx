@@ -1,15 +1,17 @@
 'use client'
 import { Combobox as Base } from '@base-ui/react/combobox'
 import { combobox, type ComboboxVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext } from './style-context'
+import { createStyleContext, type ColorPaletteProp } from './style-context'
 const { Provider, withContext } = createStyleContext(combobox)
 
 export function Root<Value, Multiple extends boolean | undefined = false, Item = Value>({
   size,
+  variant,
+  colorPalette,
   ...props
-}: Base.Root.Props<Value, Multiple, Item> & ComboboxVariantProps) {
+}: Base.Root.Props<Value, Multiple, Item> & ComboboxVariantProps & ColorPaletteProp) {
   return (
-    <Provider size={size}>
+    <Provider size={size} variant={variant} colorPalette={colorPalette}>
       <Base.Root {...props} />
     </Provider>
   )

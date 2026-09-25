@@ -1,14 +1,16 @@
 'use client'
 import { Popover as Base } from '@base-ui/react/popover'
 import { popover, type PopoverVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext } from './style-context'
+import { createStyleContext, type ColorPaletteProp } from './style-context'
 
 const { Provider: StyleProvider, withContext } = createStyleContext(popover)
 
-export function Root<Payload = unknown>(props: Base.Root.Props<Payload> & PopoverVariantProps) {
-  const [variants, rest] = popover.splitVariantProps(props)
+export function Root<Payload = unknown>(
+  props: Base.Root.Props<Payload> & PopoverVariantProps & ColorPaletteProp,
+) {
+  const [variants, { colorPalette, ...rest }] = popover.splitVariantProps(props)
   return (
-    <StyleProvider {...variants}>
+    <StyleProvider {...variants} colorPalette={colorPalette}>
       <Base.Root {...rest} />
     </StyleProvider>
   )
@@ -19,6 +21,7 @@ export const Title = withContext(Base.Title, 'title')
 export const Description = withContext(Base.Description, 'description')
 export const Arrow = withContext(Base.Arrow, 'arrow')
 export const Close = withContext(Base.Close, 'close')
+export const CloseTrigger = withContext(Base.Close, 'closeTrigger')
 export const Trigger = Base.Trigger
 export const Portal = Base.Portal
 

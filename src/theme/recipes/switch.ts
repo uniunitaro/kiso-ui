@@ -1,104 +1,65 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { focusRing, disabled } from '../shared'
+
 export const switchRecipe = defineSlotRecipe({
   className: 'kiso-switch',
+  jsx: ['Switch', /^Switch\./],
   slots: ['root', 'thumb'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
-      ...focusRing,
-      ...disabled,
-      position: 'relative',
+      '--switch-diff': 'calc(var(--switch-width) - var(--switch-height))',
       display: 'inline-flex',
       alignItems: 'center',
-      bg: 'gray.subtle.bg',
-      borderRadius: 'pill',
-      flexShrink: 0,
+      flexShrink: '0',
+      position: 'relative',
+      verticalAlign: 'middle',
+      width: 'var(--switch-width)',
+      height: 'var(--switch-height)',
+      borderRadius: 'full',
       cursor: 'pointer',
-      transition: 'background 150ms',
-      padding: '0',
-      _checked: { bg: 'accent' },
+      transitionProperty: 'background-color, box-shadow',
+      transitionDuration: 'fast',
+      focusVisibleRing: 'outside',
+      _disabled: { layerStyle: 'disabled' },
+      _invalid: { outline: '2px solid', outlineColor: 'error', outlineOffset: '2px' },
     },
     thumb: {
-      bg: 'white',
-      borderRadius: 'pill',
-      boxShadow: 'xs',
-      scale: '0.8',
-      _checked: { bg: 'accent.contrast', transform: 'translateX(var(--switch-travel))' },
-      transition: 'transform 150ms',
-      transform: 'translateX(0)',
-      '&:dir(rtl)[data-checked]': { transform: 'translateX(calc(-1 * var(--switch-travel)))' },
+      display: 'block',
+      flexShrink: '0',
+      width: 'var(--switch-height)',
+      height: 'var(--switch-height)',
+      borderRadius: 'full',
+      transitionProperty: 'translate, background-color',
+      transitionDuration: 'fast',
+      _checked: { translate: 'var(--switch-diff) 0' },
+      '&:dir(rtl)[data-checked]': { translate: 'calc(var(--switch-diff) * -1) 0' },
     },
   },
+  defaultVariants: { variant: 'solid', size: 'md' },
   variants: {
-    size: {
-      xs: {
+    variant: {
+      solid: {
         root: {
-          w: '32px',
-          h: '16px',
-          '--switch-travel': '16px',
+          // An inset ring keeps the off state visible on any surface.
+          bg: 'gray.a5',
+          boxShadow: 'inset 0 0 0 1px {colors.gray.a6}',
+          _checked: { bg: 'colorPalette.solid.bg', boxShadow: 'none' },
         },
         thumb: {
-          w: '16px',
-          h: '16px',
-        },
-      },
-      sm: {
-        root: {
-          w: '36px',
-          h: '18px',
-          '--switch-travel': '18px',
-        },
-        thumb: {
-          w: '18px',
-          h: '18px',
-        },
-      },
-      md: {
-        root: {
-          w: '40px',
-          h: '20px',
-          '--switch-travel': '20px',
-        },
-        thumb: {
-          w: '20px',
-          h: '20px',
-        },
-      },
-      lg: {
-        root: {
-          w: '44px',
-          h: '22px',
-          '--switch-travel': '22px',
-        },
-        thumb: {
-          w: '22px',
-          h: '22px',
-        },
-      },
-      xl: {
-        root: {
-          w: '48px',
-          h: '24px',
-          '--switch-travel': '24px',
-        },
-        thumb: {
-          w: '24px',
-          h: '24px',
-        },
-      },
-      '2xl': {
-        root: {
-          w: '64px',
-          h: '32px',
-          '--switch-travel': '32px',
-        },
-        thumb: {
-          w: '32px',
-          h: '32px',
+          bg: 'white',
+          scale: '0.8',
+          boxShadow: 'xs',
+          _checked: { bg: 'colorPalette.solid.fg' },
         },
       },
     },
+    size: {
+      xs: { root: { '--switch-width': 'sizes.8', '--switch-height': 'sizes.4' } },
+      sm: { root: { '--switch-width': 'sizes.9', '--switch-height': 'sizes.4.5' } },
+      md: { root: { '--switch-width': 'sizes.10', '--switch-height': 'sizes.5' } },
+      lg: { root: { '--switch-width': 'sizes.11', '--switch-height': 'sizes.5.5' } },
+      xl: { root: { '--switch-width': 'sizes.12', '--switch-height': 'sizes.6' } },
+      '2xl': { root: { '--switch-width': 'sizes.16', '--switch-height': 'sizes.8' } },
+    },
   },
-  defaultVariants: { size: 'md' },
 })

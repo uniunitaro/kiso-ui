@@ -5,7 +5,8 @@ import { Badge } from '../components/ui/badge'
 import { Input } from '../components/ui/input'
 import * as Field from '../components/ui/field'
 import * as Select from '../components/ui/select'
-import { css } from '../../styled-system/css'
+import { css, cx } from '../../styled-system/css'
+import { paletteClass } from '../components/ui/style-context'
 import { catalog, type ComponentEntry } from './catalog'
 import { Demo, type DemoSize } from './demos'
 import { examples } from './examples'
@@ -40,8 +41,8 @@ export function CodeBlock({ code, title = 'example.tsx' }: { code: string; title
           {title}
         </span>
         <Button
-          variant="ghost"
-          colorPalette="neutral"
+          variant="plain"
+          colorPalette="gray"
           size="xs"
           onClick={copy}
           aria-label={`Copy ${title}`}
@@ -54,7 +55,7 @@ export function CodeBlock({ code, title = 'example.tsx' }: { code: string; title
         <code>{code}</code>
       </pre>
       {status === 'failed' && (
-        <p role="status" className={css({ px: '4', pb: '3', fontSize: 'xs', color: 'danger' })}>
+        <p role="status" className={css({ px: '4', pb: '3', fontSize: 'xs', color: 'fg.error' })}>
           Clipboard unavailable. Select and copy the code above.
         </p>
       )}
@@ -150,9 +151,9 @@ export function ComponentPage({ entry }: { entry: ComponentEntry }) {
       <h1 className={s.pageTitle}>{entry.name}</h1>
       <p className={s.pageIntro}>{entry.description}</p>
       <div className={s.row}>
-        <Badge tone="accent">Panda CSS</Badge>
-        {entry.base && <Badge>Base UI</Badge>}
-        <Badge>React 19</Badge>
+        <Badge>Panda CSS</Badge>
+        {entry.base && <Badge colorPalette="gray">Base UI</Badge>}
+        <Badge colorPalette="gray">React 19</Badge>
         {entry.base && (
           <a
             className={css({
@@ -175,11 +176,11 @@ export function ComponentPage({ entry }: { entry: ComponentEntry }) {
       <div className={s.detailGrid}>
         <div>
           <div className={s.preview}>
-            <div className={css({ width: 'full', maxWidth: '420px' })}>
+            {/* The chosen palette is inherited by every part rendered in place. */}
+            <div className={cx(css({ width: 'full', maxWidth: '420px' }), paletteClass(palette))}>
               <Demo
                 id={entry.id}
-                rawSize={size}
-                size={(size === 'xs' ? 'sm' : size === 'xl' ? 'lg' : size) as DemoSize}
+                size={size}
                 variant={variant || undefined}
                 palette={palette}
                 orientation={orientation as 'horizontal' | 'vertical'}
@@ -247,7 +248,7 @@ export function ComponentPage({ entry }: { entry: ComponentEntry }) {
         First time?{' '}
         <a
           href="#/installation"
-          className={css({ color: 'accent.fg', textDecoration: 'underline' })}
+          className={css({ color: 'colorPalette.plain.fg', textDecoration: 'underline' })}
         >
           Set up the foundation
         </a>
@@ -264,7 +265,7 @@ export function ComponentPage({ entry }: { entry: ComponentEntry }) {
           <Button
             key={tab}
             size="sm"
-            variant={codeTab === tab ? 'subtle' : 'ghost'}
+            variant={codeTab === tab ? 'subtle' : 'plain'}
             aria-pressed={codeTab === tab}
             onClick={() => setCodeTab(tab)}
           >
@@ -294,8 +295,8 @@ export function ComponentPage({ entry }: { entry: ComponentEntry }) {
               fontSize: '11px',
               px: '2.5',
               py: '1.5',
-              bg: 'surface.subtle',
-              borderRadius: 'control',
+              bg: 'gray.subtle.bg',
+              borderRadius: 'l2',
               color: 'fg.muted',
             })}
           >
@@ -435,7 +436,7 @@ export function CatalogPage() {
             >
               {entry.description}
             </p>
-            <Badge>{entry.category}</Badge>
+            <Badge colorPalette="gray">{entry.category}</Badge>
           </a>
         ))}
       </div>
@@ -477,18 +478,19 @@ export function InstallationPage() {
       <h2 className={s.docHeading}>03 / Register the local theme</h2>
       <CodeBlock
         title="panda.config.ts"
-        code={`import { defineConfig } from '@pandacss/dev'\nimport { tokens, createSemanticTokens } from './src/theme/tokens'\nimport { conditions } from './src/theme/conditions'\nimport { recipes, slotRecipes } from './src/theme/recipes'\n\nexport default defineConfig({\n  preflight: true,\n  jsxFramework: 'react',\n  include: ['./src/**/*.{ts,tsx}'],\n  outdir: 'styled-system',\n  staticCss: { css: [{ properties: { colorPalette: ['*'] } }] },\n  conditions: { extend: conditions },\n  theme: { extend: { tokens, semanticTokens: createSemanticTokens({ accentColor: 'iris', grayColor: 'neutral' }), recipes, slotRecipes } },\n})`}
+        code={`import { defineConfig } from '@pandacss/dev'\nimport { tokens, semanticColors, aliases, radii, removePandaPresetColors } from './src/theme/tokens'\nimport { shadows } from './src/theme/shadows'\nimport { iris } from './src/theme/colors/iris'\nimport { neutral } from './src/theme/colors/neutral'\nimport { blue } from './src/theme/colors/blue'\nimport { green } from './src/theme/colors/green'\nimport { amber } from './src/theme/colors/amber'\nimport { red } from './src/theme/colors/red'\nimport { conditions } from './src/theme/conditions'\nimport { globalCss } from './src/theme/global-css'\nimport { textStyles } from './src/theme/text-styles'\nimport { layerStyles } from './src/theme/layer-styles'\nimport { keyframes } from './src/theme/keyframes'\nimport { recipes, slotRecipes } from './src/theme/recipes'\n\nexport default defineConfig({\n  preflight: true,\n  jsxFramework: 'react',\n  include: ['./src/**/*.{ts,tsx}'],\n  outdir: 'styled-system',\n  conditions: { extend: conditions },\n  globalCss: { extend: globalCss },\n  theme: {\n    extend: {\n      tokens,\n      semanticTokens: {\n        colors: {\n          ...semanticColors,\n          // Only the palettes listed here exist. Add one: import it and list it.\n          iris,\n          blue,\n          green,\n          amber,\n          red,\n          gray: neutral,\n          ...aliases({ accent: iris, info: blue, success: green, warning: amber, danger: red }),\n        },\n        radii,\n        shadows,\n      },\n      textStyles,\n      layerStyles,\n      keyframes,\n      recipes,\n      slotRecipes,\n    },\n  },\n  plugins: [removePandaPresetColors],\n})`}
       />
       <h2 className={s.docHeading}>04 / Set up the page</h2>
       <p className={s.prose}>
-        Import the copied src/theme/global.css in your application entry so tokens, cascade layers
-        and reduced-motion preferences apply.
+        Import the copied src/theme/global.css in your application entry. It declares the cascade
+        layers; page-level rules (canvas, text color, focus ring color, reduced motion) come from
+        globalCss in the config above.
       </p>
       <CodeBlock title="src/theme/global.css" code={foundationCss} />
       <div className={css({ mt: '4' })}>
         <CodeBlock
           title="app.tsx"
-          code={`import { Button } from './components/ui/button'\n\n// Set data-theme="light" or "dark" on <html>.\n// Optional: data-accent="iris" | "blue" | "green".\n// Optional: data-gray="slate".\n\nexport function App() {\n  return <Button variant="solid" size="md">Make something good</Button>\n}`}
+          code={`import { Button } from './components/ui/button'\n\n// Set data-theme="light" or "dark" on <html>.\n// Every component inherits colorPalette="accent"; pass colorPalette to change one,\n// or set it on an ancestor to recolor everything inside.\n\nexport function App() {\n  return <Button variant="solid" size="md">Make something good</Button>\n}`}
         />
       </div>
       <h2 className={s.docHeading}>A note about generation</h2>

@@ -1,22 +1,30 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+import { arrow } from '../shared'
+
 export const tooltip = defineSlotRecipe({
   className: 'kiso-tooltip',
+  jsx: ['Tooltip', /^Tooltip\./],
   slots: ['positioner', 'popup', 'arrow'],
   staticCss: ['*'],
   base: {
     positioner: { zIndex: 'tooltip' },
     popup: {
-      bg: 'fg',
-      color: 'fg.inverse',
-      px: '2.5',
-      py: '1.5',
-      fontSize: 'xs',
+      position: 'relative',
+      bg: 'gray.solid.bg',
+      color: 'gray.solid.fg',
       borderRadius: 'l2',
-      maxWidth: '240px',
-      boxShadow: 'xs',
-      transition: 'opacity 120ms',
-      _startingStyle: { opacity: 0 },
-      _endingStyle: { opacity: 0 },
+      boxShadow: 'sm',
+      fontWeight: 'semibold',
+      px: '2',
+      py: '1.5',
+      textStyle: 'xs',
+      maxWidth: 'xs',
+      transformOrigin: 'var(--transform-origin)',
+      transitionProperty: 'opacity, scale',
+      transitionDuration: 'fast',
+      _startingStyle: { opacity: 0, scale: '0.96' },
+      _endingStyle: { opacity: 0, scale: '0.96' },
     },
+    arrow: { ...arrow, width: '2', height: '2' },
   },
 })

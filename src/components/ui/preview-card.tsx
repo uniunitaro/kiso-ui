@@ -1,14 +1,15 @@
 'use client'
 import { PreviewCard as Base } from '@base-ui/react/preview-card'
 import { popover, type PopoverVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext } from './style-context'
+import { createStyleContext, type ColorPaletteProp } from './style-context'
 const { Provider, withContext } = createStyleContext(popover)
 export function Root<Payload = unknown>({
   size,
+  colorPalette,
   ...props
-}: Base.Root.Props<Payload> & PopoverVariantProps) {
+}: Base.Root.Props<Payload> & PopoverVariantProps & ColorPaletteProp) {
   return (
-    <Provider size={size}>
+    <Provider size={size} colorPalette={colorPalette}>
       <Base.Root {...props} />
     </Provider>
   )

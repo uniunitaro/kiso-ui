@@ -37,7 +37,49 @@ execFileSync(
 )
 await writeFile(
   path.join(target, 'panda.config.ts'),
-  `import { defineConfig } from '@pandacss/dev'\nimport { tokens, createSemanticTokens, palettes } from './src/theme/tokens'\nimport { conditions } from './src/theme/conditions'\nimport { recipes, slotRecipes } from './src/theme/recipes'\nexport default defineConfig({preflight:true,jsxFramework:'react',include:['./src/**/*.{ts,tsx}'],outdir:'styled-system',conditions:{extend:conditions},staticCss:{css:[{properties:{colorPalette:['*']}}]},theme:{extend:{tokens,semanticTokens:createSemanticTokens({accentColor:'blue',grayColor:'slate',additionalColors:{brand:palettes.blue}}),recipes,slotRecipes}}})\n`,
+  `import { defineConfig } from '@pandacss/dev'
+import { tokens, semanticColors, aliases, definePalette, radii, removePandaPresetColors } from './src/theme/tokens'
+import { shadows } from './src/theme/shadows'
+import { blue } from './src/theme/colors/blue'
+import { green } from './src/theme/colors/green'
+import { orange } from './src/theme/colors/orange'
+import { red } from './src/theme/colors/red'
+import { slate } from './src/theme/colors/slate'
+import { conditions } from './src/theme/conditions'
+import { globalCss } from './src/theme/global-css'
+import { textStyles } from './src/theme/text-styles'
+import { layerStyles } from './src/theme/layer-styles'
+import { keyframes } from './src/theme/keyframes'
+import { recipes, slotRecipes } from './src/theme/recipes'
+
+const brand = definePalette('brand', blue)
+
+export default defineConfig({
+  preflight: true,
+  jsxFramework: 'react',
+  include: ['./src/**/*.{ts,tsx}'],
+  outdir: 'styled-system',
+  conditions: { extend: conditions },
+  globalCss: { extend: globalCss },
+  theme: {
+    extend: {
+      tokens,
+      semanticTokens: {
+        colors: {
+          ...semanticColors,
+          brand, blue, green, orange, red,
+          gray: slate,
+          ...aliases({ accent: brand, info: blue, success: green, warning: orange, danger: red }),
+        },
+        radii,
+        shadows,
+      },
+      textStyles, layerStyles, keyframes, recipes, slotRecipes,
+    },
+  },
+  plugins: [removePandaPresetColors],
+})
+`,
 )
 await writeFile(
   path.join(target, 'tsconfig.json'),
@@ -63,7 +105,13 @@ await writeFile(
 await writeFile(
   path.join(target, 'src', 'brand-example.tsx'),
   `import { Button } from './components/ui/button'
-export const Brand = () => <Button colorPalette="brand" variant="surface" size={{base:'xs',md:'2xl'}}>Brand</Button>
+import * as Checkbox from './components/ui/checkbox'
+export const Brand = () => (
+  <>
+    <Button colorPalette="brand" variant="surface" size={{base:'xs',md:'2xl'}}>Brand</Button>
+    <Checkbox.Root colorPalette="danger" />
+  </>
+)
 `,
 )
 for (const entry of catalog) {
@@ -86,14 +134,22 @@ pnpm(['exec', 'tsc', '--noEmit'])
 pnpm(['exec', 'panda', 'cssgen'])
 const generatedCss = await readFile(path.join(target, 'styled-system', 'styles.css'), 'utf8')
 for (const selector of [
+  // Extracted from JSX props: no staticCss for colorPalette in the consumer config.
   '.color-palette_brand',
+  '.color-palette_danger',
   '--colors-brand-solid-bg',
+  '--colors-warning-subtle-bg: var(--colors-orange-subtle-bg)',
+  '--global-color-focus-ring: var(--colors-color-palette-solid-bg)',
+  '.kiso-button:is(:focus-visible, [data-focus-visible])',
   '.md\\:kiso-button--size_lg',
   '.lg\\:kiso-checkbox__root--size_sm',
   '.sm\\:kiso-spinner--size_lg',
 ]) {
-  if (!generatedCss.includes(selector))
-    throw new Error(`Responsive recipe CSS missing: ${selector}`)
+  if (!generatedCss.includes(selector)) throw new Error(`Generated CSS missing: ${selector}`)
+}
+// Only the palettes listed in the config are emitted; Panda's own 50–950 colors are removed.
+for (const unexpected of ['--colors-tomato-9', '--colors-iris-9', '--colors-red-500']) {
+  if (generatedCss.includes(unexpected)) throw new Error(`Unlisted color in CSS: ${unexpected}`)
 }
 await mkdir(path.join(sourceRoot, 'artifacts'), { recursive: true })
 await writeFile(
@@ -112,6 +168,8 @@ await writeFile(
         'strict TypeScript with every documented example',
         'CSS generation',
         'responsive recipe classes without consumer static usage',
+        'colorPalette extracted from component props (no staticCss)',
+        'only listed palettes emitted; Panda preset colors removed',
       ],
     },
     null,

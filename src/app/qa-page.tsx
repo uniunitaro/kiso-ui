@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { AxeResults } from 'axe-core'
+import { mergeResults, runScenarios, type ScenarioReport } from './qa-scenarios'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { catalog } from './catalog'
@@ -8,7 +8,8 @@ import { css } from '../../styled-system/css'
 import { styles as s } from './styles'
 
 export function QaPage() {
-  const [results, setResults] = useState<AxeResults | null>(null)
+  const [results, setResults] = useState<ReturnType<typeof mergeResults> | null>(null)
+  const [report, setReport] = useState<ScenarioReport[]>([])
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [testedTheme, setTestedTheme] = useState('')
@@ -21,13 +22,22 @@ export function QaPage() {
         requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
       )
       const axe = (await import('axe-core')).default
-      setResults(
-        await axe.run(document.getElementById('qa-specimens')!, {
-          runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa'] },
-        }),
-      )
+      const options = {
+        runOnly: { type: 'tag' as const, values: ['wcag2a', 'wcag2aa', 'wcag21aa'] },
+      }
+      // Closed specimens first, then each overlay opened with its portal content.
+      const closed = await axe.run(document.getElementById('qa-specimens')!, options)
+      const overlays = await runScenarios(axe, options)
+      setResults(mergeResults([closed, ...overlays.results]))
+      setReport(overlays.report)
+      const root = document.documentElement
       setTestedTheme(
-        `${document.documentElement.dataset.theme} / ${document.documentElement.dataset.accent}`,
+        [
+          root.dataset.theme,
+          `accent ${root.dataset.accent}`,
+          `gray ${root.dataset.gray}`,
+          `radius l2 ${getComputedStyle(root).getPropertyValue('--kiso-radius-l2') || 'default'}`,
+        ].join(' / '),
       )
     } catch (e) {
       setError(String(e))
@@ -38,7 +48,7 @@ export function QaPage() {
   function exportReport() {
     if (!results) return
     const url = URL.createObjectURL(
-      new Blob([JSON.stringify({ theme: testedTheme, results }, null, 2)], {
+      new Blob([JSON.stringify({ theme: testedTheme, scenarios: report, results }, null, 2)], {
         type: 'application/json',
       }),
     )
@@ -55,8 +65,9 @@ export function QaPage() {
       </div>
       <h1 className={s.pageTitle}>Quality, in the open.</h1>
       <p className={s.pageIntro}>
-        Every live specimen on one page. Check semantics and contrast with axe, then use the
-        keyboard and your own eyes. An automated scan is a starting point, not a certification.
+        Every live specimen on one page. Check semantics and contrast with axe (each overlay is
+        opened and checked with its portal), then use the keyboard and your own eyes. An automated
+        scan is a starting point, not a certification.
       </p>
       <div className={s.row}>
         <Button onClick={run} disabled={busy}>
@@ -64,19 +75,29 @@ export function QaPage() {
         </Button>
         <Button
           variant="outline"
-          colorPalette="neutral"
+          colorPalette="gray"
           onClick={exportReport}
           disabled={!results || busy}
         >
           Export report
         </Button>
-        <Badge>{catalog.length} specimens</Badge>
+        <Badge colorPalette="gray">{catalog.length} specimens</Badge>
       </div>
       <div role="status" className={css({ my: '5' })}>
         {results && (
           <p>
             {results.violations.length} violations · {results.passes.length} rules passed ·{' '}
             {results.incomplete.length} manual reviews · Tested: {testedTheme}
+          </p>
+        )}
+        {results && (
+          <p className={css({ fontSize: 'xs', color: 'fg.muted', mt: '1' })}>
+            Overlays checked open: {report.filter((item) => item.opened).length} of {report.length}
+            {report.some((item) => !item.opened) &&
+              ` · not opened: ${report
+                .filter((item) => !item.opened)
+                .map((item) => item.label)
+                .join(', ')}`}
           </p>
         )}
         {error && <p>{error}</p>}
@@ -102,9 +123,9 @@ export function QaPage() {
             <section
               key={issue.id}
               className={css({
-                bg: 'danger.subtle',
+                bg: 'danger.subtle.bg',
                 p: '4',
-                borderRadius: 'panel',
+                borderRadius: 'l3',
                 fontSize: 'xs',
               })}
             >

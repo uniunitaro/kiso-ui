@@ -1,14 +1,16 @@
 'use client'
 import { Menu as Base } from '@base-ui/react/menu'
 import { menu, type MenuVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext } from './style-context'
+import { createStyleContext, type ColorPaletteProp } from './style-context'
 
 const { Provider: StyleProvider, withContext } = createStyleContext(menu)
 
-export function Root<Payload = unknown>(props: Base.Root.Props<Payload> & MenuVariantProps) {
-  const [variants, rest] = menu.splitVariantProps(props)
+export function Root<Payload = unknown>(
+  props: Base.Root.Props<Payload> & MenuVariantProps & ColorPaletteProp,
+) {
+  const [variants, { colorPalette, ...rest }] = menu.splitVariantProps(props)
   return (
-    <StyleProvider {...variants}>
+    <StyleProvider {...variants} colorPalette={colorPalette}>
       <Base.Root {...rest} />
     </StyleProvider>
   )

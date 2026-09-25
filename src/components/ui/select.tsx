@@ -1,16 +1,18 @@
 'use client'
 import { Select as Base } from '@base-ui/react/select'
 import { select, type SelectVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext } from './style-context'
+import { createStyleContext, type ColorPaletteProp } from './style-context'
 const { Provider, withContext } = createStyleContext(select)
 
 // Keep value inference, including multiple selection; a generic HOC would erase it.
 export function Root<Value, Multiple extends boolean | undefined = false>({
   size,
+  variant,
+  colorPalette,
   ...props
-}: Base.Root.Props<Value, Multiple> & SelectVariantProps) {
+}: Base.Root.Props<Value, Multiple> & SelectVariantProps & ColorPaletteProp) {
   return (
-    <Provider size={size}>
+    <Provider size={size} variant={variant} colorPalette={colorPalette}>
       <Base.Root {...props} />
     </Provider>
   )

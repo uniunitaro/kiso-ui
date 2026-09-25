@@ -1,14 +1,16 @@
 'use client'
 import { Tooltip as Base } from '@base-ui/react/tooltip'
 import { tooltip, type TooltipVariantProps } from '../../../styled-system/recipes'
-import { createStyleContext } from './style-context'
+import { createStyleContext, type ColorPaletteProp } from './style-context'
 
 const { Provider: StyleProvider, withContext } = createStyleContext(tooltip)
 
-export function Root<Payload = unknown>(props: Base.Root.Props<Payload> & TooltipVariantProps) {
-  const [variants, rest] = tooltip.splitVariantProps(props)
+export function Root<Payload = unknown>(
+  props: Base.Root.Props<Payload> & TooltipVariantProps & ColorPaletteProp,
+) {
+  const [variants, { colorPalette, ...rest }] = tooltip.splitVariantProps(props)
   return (
-    <StyleProvider {...variants}>
+    <StyleProvider {...variants} colorPalette={colorPalette}>
       <Base.Root {...rest} />
     </StyleProvider>
   )

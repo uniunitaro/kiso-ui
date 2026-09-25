@@ -37,16 +37,30 @@ import { Toggle } from '../components/ui/toggle'
 import * as Toolbar from '../components/ui/toolbar'
 import { css } from '../../styled-system/css'
 import { styles as s } from './styles'
-import type { DemoSize } from './demos'
+import { pass } from './demos'
 import { NativeDemo } from './native-demos'
 
 const frameworks = ['React', 'Next.js', 'Remix', 'Astro', 'Vue', 'Svelte', 'Solid', 'Angular']
 
-export function ComboboxDemo({ size = 'md' }: { size?: DemoSize }) {
+export function ComboboxDemo({
+  size = 'md',
+  variant,
+  palette,
+}: {
+  size?: string
+  variant?: string
+  palette?: string
+}) {
   return (
     <Field.Root>
       <Field.Label>Your framework</Field.Label>
-      <Combobox.Root items={frameworks} defaultValue="React" size={size}>
+      <Combobox.Root
+        items={frameworks}
+        defaultValue="React"
+        size={pass(size)}
+        variant={pass(variant)}
+        colorPalette={pass(palette)}
+      >
         <Combobox.InputGroup>
           <Combobox.Input placeholder="Find a framework…" />
           <Combobox.Clear aria-label="Clear framework">
@@ -65,7 +79,7 @@ export function ComboboxDemo({ size = 'md' }: { size?: DemoSize }) {
                   <Combobox.Item key={item} value={item}>
                     {item}
                     <Combobox.ItemIndicator>
-                      <Check size={14} />
+                      <Check />
                     </Combobox.ItemIndicator>
                   </Combobox.Item>
                 )}
@@ -85,7 +99,7 @@ function ToastTrigger() {
     <div className={s.row}>
       <Button
         variant="outline"
-        colorPalette="neutral"
+        colorPalette="gray"
         onClick={() =>
           manager.add({
             title: 'A little progress, saved.',
@@ -97,8 +111,8 @@ function ToastTrigger() {
         Show notification
       </Button>
       <Button
-        variant="ghost"
-        colorPalette="neutral"
+        variant="plain"
+        colorPalette="gray"
         onClick={() =>
           manager.add({
             title: 'Something needs another try.',
@@ -121,19 +135,74 @@ export function ToastDemo() {
   )
 }
 
+function DrawerDemo({ size }: { size?: string }) {
+  return (
+    <div className={s.row}>
+      {(['down', 'right'] as const).map((direction) => (
+        <Drawer.Root key={direction} swipeDirection={direction} size={pass(size)}>
+          <Drawer.Trigger render={<Button variant="outline" colorPalette="gray" />}>
+            {direction === 'down' ? 'Open bottom sheet' : 'Open side panel'}
+          </Drawer.Trigger>
+          <Drawer.Portal>
+            <Drawer.Backdrop />
+            <Drawer.Viewport>
+              <Drawer.Popup>
+                <Drawer.Content>
+                  <Drawer.Header>
+                    <Drawer.Title>A little room to focus.</Drawer.Title>
+                    <Drawer.Description>
+                      Review the details, make your next move, and return to what you were doing.
+                    </Drawer.Description>
+                  </Drawer.Header>
+                  <Drawer.Body>
+                    <div
+                      className={css({
+                        p: '4',
+                        borderWidth: '1px',
+                        borderRadius: 'l3',
+                        display: 'flex',
+                        gap: '3',
+                        alignItems: 'center',
+                      })}
+                    >
+                      <Layers size={20} />
+                      <span className={s.title}>Studio North · Design system</span>
+                    </div>
+                  </Drawer.Body>
+                  <Drawer.Footer>
+                    <Drawer.Close render={<Button />}>Back to the collection</Drawer.Close>
+                  </Drawer.Footer>
+                  <Drawer.CloseTrigger
+                    aria-label="Close"
+                    render={<Button variant="plain" colorPalette="gray" size="sm" square />}
+                  >
+                    <X />
+                  </Drawer.CloseTrigger>
+                </Drawer.Content>
+              </Drawer.Popup>
+            </Drawer.Viewport>
+          </Drawer.Portal>
+        </Drawer.Root>
+      ))}
+    </div>
+  )
+}
+
 export function AdvancedDemo({
   id,
   size = 'md',
   variant,
+  palette,
 }: {
   id: string
-  size?: DemoSize
+  size?: string
   variant?: string
+  palette?: string
 }) {
   const [message, setMessage] = useState('')
   switch (id) {
     case 'combobox':
-      return <ComboboxDemo size={size} />
+      return <ComboboxDemo size={size} variant={variant} palette={palette} />
     case 'autocomplete':
       return (
         <Field.Root>
@@ -146,10 +215,12 @@ export function AdvancedDemo({
               'Product roadmap',
               'Project brief',
             ]}
-            size={size}
+            size={pass(size)}
+            variant={pass(variant)}
+            colorPalette={pass(palette)}
           >
             <Autocomplete.InputGroup>
-              <Search size={14} />
+              <Search size={14} className={css({ color: 'fg.subtle' })} />
               <Autocomplete.Input placeholder="Try “design”…" />
             </Autocomplete.InputGroup>
             <Autocomplete.Portal>
@@ -189,7 +260,7 @@ export function AdvancedDemo({
       )
     case 'fieldset':
       return (
-        <Fieldset.Root variant={variant as 'plain' | undefined}>
+        <Fieldset.Root variant={pass(variant)}>
           <Fieldset.Legend>A little about you</Fieldset.Legend>
           <Field.Root>
             <Field.Label>Display name</Field.Label>
@@ -234,7 +305,8 @@ export function AdvancedDemo({
           <Field.Label>Verification code</Field.Label>
           <OtpField.Root
             length={6}
-            size={size}
+            size={pass(size)}
+            variant={pass(variant)}
             onValueComplete={() => setMessage('All 6 digits entered. This is a local demo.')}
           >
             <OtpField.Input aria-label="Digit 1" />
@@ -257,7 +329,7 @@ export function AdvancedDemo({
       return <ToastDemo />
     case 'meter':
       return (
-        <Meter.Root value={7.2} min={0} max={10} size={size}>
+        <Meter.Root value={7.2} min={0} max={10} size={pass(size)} variant={pass(variant)}>
           <Meter.Label>Storage used</Meter.Label>
           <Meter.Value>{(_value, value) => `${value} / 10 GB`}</Meter.Value>
           <Meter.Track>
@@ -276,7 +348,7 @@ export function AdvancedDemo({
             className={css({
               border: '1px solid',
               borderColor: 'border',
-              borderRadius: 'control',
+              borderRadius: 'l2',
               px: '3',
               py: '2',
               fontSize: 'xs',
@@ -301,7 +373,7 @@ export function AdvancedDemo({
       )
     case 'toolbar':
       return (
-        <Toolbar.Root aria-label="Editor toolbar" size={size}>
+        <Toolbar.Root aria-label="Editor toolbar" size={pass(size)} variant={pass(variant)}>
           <Toolbar.Group>
             <Toolbar.Button render={<Toggle />} aria-label="Bold">
               <Bold size={16} />
@@ -331,18 +403,18 @@ export function AdvancedDemo({
     case 'context-menu':
       return (
         <div className={s.stack}>
-          <ContextMenu.Root size={size === 'lg' ? 'md' : size}>
+          <ContextMenu.Root size={pass(size)} colorPalette={pass(palette)}>
             <ContextMenu.Trigger
               tabIndex={0}
               className={css({
                 border: '1px dashed',
-                borderColor: 'border.strong',
-                borderRadius: 'panel',
+                borderColor: 'gray.outline.border',
+                borderRadius: 'l3',
                 p: '10',
                 textAlign: 'center',
                 color: 'fg.muted',
                 fontSize: 'sm',
-                _focusVisible: { outline: '2px solid', outlineColor: 'accent' },
+                focusVisibleRing: 'outside',
               })}
             >
               Right click here.
@@ -353,11 +425,11 @@ export function AdvancedDemo({
               <ContextMenu.Positioner>
                 <ContextMenu.Popup>
                   <ContextMenu.Item onClick={() => setMessage('Duplicated in this demo.')}>
-                    <Copy size={14} />
+                    <Copy />
                     Duplicate
                   </ContextMenu.Item>
                   <ContextMenu.Item onClick={() => setMessage('Renamed in this demo.')}>
-                    <Settings2 size={14} />
+                    <Settings2 />
                     Rename
                   </ContextMenu.Item>
                   <ContextMenu.Separator />
@@ -374,63 +446,16 @@ export function AdvancedDemo({
         </div>
       )
     case 'drawer':
-      return (
-        <Drawer.Root swipeDirection="down" size={size}>
-          <Drawer.Trigger render={<Button variant="outline" colorPalette="neutral" />}>
-            Open project drawer
-          </Drawer.Trigger>
-          <Drawer.Portal>
-            <Drawer.Backdrop />
-            <Drawer.Viewport>
-              <Drawer.Popup>
-                <Drawer.Content>
-                  <div
-                    className={css({
-                      w: '10',
-                      h: '1',
-                      borderRadius: 'pill',
-                      bg: 'border.strong',
-                      mx: 'auto',
-                      mb: '6',
-                    })}
-                  />
-                  <Drawer.Title>A little room to focus.</Drawer.Title>
-                  <Drawer.Description>
-                    Review the details, make your next move, and return to what you were doing.
-                  </Drawer.Description>
-                  <div
-                    className={css({
-                      my: '6',
-                      p: '4',
-                      border: '1px solid',
-                      borderColor: 'border',
-                      borderRadius: 'panel',
-                      display: 'flex',
-                      gap: '3',
-                      alignItems: 'center',
-                    })}
-                  >
-                    <Layers size={20} />
-                    <span className={s.title}>Studio North · Design system</span>
-                  </div>
-                  <Drawer.Close render={<Button className={css({ width: 'full' })} />}>
-                    Back to the collection
-                  </Drawer.Close>
-                </Drawer.Content>
-              </Drawer.Popup>
-            </Drawer.Viewport>
-          </Drawer.Portal>
-        </Drawer.Root>
-      )
+      return <DrawerDemo size={size} />
     case 'preview-card':
       return (
-        <PreviewCard.Root size={size}>
+        <PreviewCard.Root size={pass(size)}>
           <p className={s.small}>
             Made for a little more{' '}
             <PreviewCard.Trigger
               href="#/principles"
               className={css({
-                color: 'accent.fg',
+                color: 'colorPalette.plain.fg',
                 textDecoration: 'underline',
                 textUnderlineOffset: '3px',
               })}
@@ -465,8 +490,8 @@ export function AdvancedDemo({
             height: '220px',
             border: '1px solid',
             borderColor: 'border',
-            borderRadius: 'panel',
-            bg: 'surface',
+            borderRadius: 'l3',
+            bg: 'gray.surface.bg',
           })}
         >
           <ScrollArea.Viewport role="region" aria-label="Project list">
@@ -518,10 +543,10 @@ export function AdvancedDemo({
     case 'menubar':
       return (
         <div className={s.stack}>
-          <Menubar aria-label="Application menu">
+          <Menubar aria-label="Application menu" variant={pass(variant)}>
             {['File', 'Edit', 'View'].map((name) => (
               <Menu.Root key={name}>
-                <Menu.Trigger render={<Button variant="ghost" colorPalette="neutral" size="sm" />}>
+                <Menu.Trigger render={<Button variant="plain" colorPalette="gray" size="sm" />}>
                   {name}
                 </Menu.Trigger>
                 <Menu.Portal>

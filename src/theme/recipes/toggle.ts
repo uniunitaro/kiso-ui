@@ -1,61 +1,64 @@
 import { defineRecipe } from '@pandacss/dev'
-import { control } from '../shared'
+
+// Pressed state uses the palette's subtle role, so colorPalette tints the "on" state.
 export const toggle = defineRecipe({
   className: 'kiso-toggle',
   jsx: ['Toggle'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
-    ...control,
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '2',
+    flexShrink: '0',
+    borderRadius: 'l2',
     color: 'fg.muted',
-    border: '1px solid transparent',
-    _hover: { bg: 'surface.subtle' },
-    '&[data-pressed]': { bg: 'accent.subtle', color: 'accent.fg' },
-    '& svg': { width: '4', height: '4' },
-  },
-  variants: {
-    size: {
-      xs: {
-        h: '8',
-        minW: '8',
-        px: '2',
-        fontSize: 'sm',
-      },
-      sm: {
-        h: '9',
-        minW: '9',
-        px: '2.5',
-        fontSize: 'sm',
-      },
-      md: {
-        h: '10',
-        minW: '10',
-        px: '3',
-        fontSize: 'md',
-      },
-      lg: {
-        h: '11',
-        minW: '11',
-        px: '3.5',
-        fontSize: 'md',
-      },
-      xl: {
-        h: '12',
-        minW: '12',
-        px: '4',
-        fontSize: 'md',
-      },
-      '2xl': {
-        h: '16',
-        minW: '16',
-        px: '4.5',
-        fontSize: 'md',
-      },
+    fontWeight: 'medium',
+    whiteSpace: 'nowrap',
+    cursor: 'pointer',
+    userSelect: 'none',
+    outline: '0',
+    transitionProperty: 'background-color, border-color, color',
+    transitionDuration: 'fast',
+    focusVisibleRing: 'outside',
+    _hover: { bg: 'gray.plain.bg.hover', color: 'fg.default' },
+    _pressed: {
+      bg: 'colorPalette.subtle.bg',
+      color: 'colorPalette.subtle.fg',
+      _hover: { bg: 'colorPalette.subtle.bg.hover' },
     },
-    variant: { ghost: {}, outline: { borderColor: 'border' } },
+    _disabled: { layerStyle: 'disabled' },
   },
-  defaultVariants: { size: 'md', variant: 'ghost' },
+  defaultVariants: { variant: 'plain', size: 'md' },
+  variants: {
+    variant: {
+      plain: {},
+      outline: { borderWidth: '1px', borderColor: 'gray.outline.border' },
+    },
+    size: {
+      xs: { h: '8', minW: '8', px: '2', gap: '1', textStyle: 'sm', _icon: { boxSize: '4' } },
+      sm: { h: '9', minW: '9', px: '2.5', gap: '2', textStyle: 'sm', _icon: { boxSize: '4' } },
+      md: { h: '10', minW: '10', px: '3', gap: '2', textStyle: 'sm', _icon: { boxSize: '5' } },
+      lg: { h: '11', minW: '11', px: '3.5', gap: '2', textStyle: 'md', _icon: { boxSize: '5' } },
+      xl: { h: '12', minW: '12', px: '4', gap: '2.5', textStyle: 'md', _icon: { boxSize: '5.5' } },
+      '2xl': { h: '16', minW: '16', px: '5', gap: '3', textStyle: 'lg', _icon: { boxSize: '6' } },
+    },
+  },
+})
+
+export const toggleGroup = defineRecipe({
+  className: 'kiso-toggle-group',
+  jsx: ['ToggleGroup'],
+  staticCss: ['*'],
+  base: {
+    display: 'inline-flex',
+    gap: '1',
+    _vertical: { flexDirection: 'column' },
+  },
+  defaultVariants: { variant: 'plain' },
+  variants: {
+    variant: {
+      plain: {},
+      outline: { borderWidth: '1px', borderRadius: 'l3', p: '1' },
+    },
+  },
 })

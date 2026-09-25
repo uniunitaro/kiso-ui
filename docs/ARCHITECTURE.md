@@ -2,13 +2,28 @@
 
 ## 三つの層
 
-1. `src/theme/tokens.ts`: 表面・文字・境界線・アクセント・状態色という意味を定義します。アクセント色と成功・警告・危険の意味を分離します。
-2. `src/theme/recipes`: 単一部品は defineRecipe、複数パーツは defineSlotRecipe。サイズと見た目は独立した軸です。Button は colorPalette も独立しています。
+1. `src/theme/tokens.ts`: Park UI と同じ意味トークン（`fg.default / fg.muted / fg.subtle`・`canvas`・`border`・`error`、Kiso 追加の `fg.error`）と、パレットの別名（`accent`・`gray`・`info`・`success`・`warning`・`danger`）を定義します。
+2. `src/theme/recipes`: 単一部品は defineRecipe、複数パーツは defineSlotRecipe。色（colorPalette）・見た目（variant）・大きさ（size）は独立した軸です。レシピは `colorPalette.*` と `gray.*` だけを参照し、特定のパレット名を書きません。
 3. `src/components/ui`: Base UI の振る舞いを薄く包みます。UI の状態管理やキーボード処理を独自に再実装しません。レイアウト専用部品では適切なネイティブ要素を使います。
 
 ## なぜプリセットにしないか
 
 コピーした後の最終決定権を利用アプリに置くためです。非公開のパッケージを追跡したり複雑な上書きを重ねる必要がなく、ソース・レシピ・トークンを同じ場所で編集できます。レシピの登録ファイルだけは CLI が管理し、部品追加時に必要な登録を維持します。
+
+## 色の流れ
+
+`globalCss` が html に `colorPalette: 'accent'` を置き、部品はそれを継承します。部品の `colorPalette` prop は Root 要素に `css({ colorPalette })` のクラスを付け、その子孫すべてが同じ色になります。Menu・Select・Dialog・Popover・Tooltip・Drawer・Combobox など要素を持たない Root では、`createStyleContext` の `Provider` がパレットのクラスを context で各スロットへ配り、Portal の中にも届けます。
+
+JSX に書いた `colorPalette="red"` は、Panda が各レシピの `jsx`（部品名）から静的に抽出します。そのため `staticCss` で全パレットを生成する必要はありません。値を実行時に決める場合だけ、使う名前を staticCss に列挙します。プレビューはパレット選択のためにこれを使っています。
+
+別名はパレットの役割をそのまま指すだけで、コントラストの自動調整はしません。緑・琥珀の淡い背景の文字や、明るい solid の白文字は4.5:1に届かない場合がありますが、Park UI の見た目を優先します。
+
+## 状態の共通ルール
+
+- disabled: `_disabled: { layerStyle: 'disabled' }`（Park UI と同じ不透明度0.67とグレースケール）。
+- hover / active: `conditions.ts` で disabled の要素を除外します。
+- フォーカス: Panda の `focusVisibleRing`。ボタン類は `outside`、入力類は `inside`、中の input にフォーカスが入る Combobox・NumberField は `_focusWithin` で枠を示します。色は `globalCss` の `--global-color-focus-ring`（その要素の `colorPalette.solid.bg`）、エラー時は `focusRingColor: 'error'`。
+- 文字の大きさと行送りは `textStyles`（Park UI と同じ）で指定します。
 
 ## 合成の契約
 
@@ -20,7 +35,7 @@ Select・Combobox・RadioGroup・Slider・Accordion などの Root はジェネ�
 
 静的な variant 値は各レシピの `staticCss: ['*']` で生成します。size は `responsive: true` で Panda のブレークポイント用 CSS も生成します。したがって実行時のサイズ切り替えや `size={{ base: 'sm', md: 'lg' }}` がコピー先でも動作します。その他のカスタム条件・レスポンシブな variant は Panda が検出できる静的な使用箇所を用意するか、そのレシピの staticCss に必要な条件を追加します。
 
-`@layer reset, base, tokens, recipes, utilities` が優先順位を決めます。部分的な境界線は `borderBottomWidth` と `borderBottomStyle` などで指定します。`borderBottom: '1px solid'` は原子的な utilities の出力順によって borderColor をリセットするため避けます。
+`@layer reset, base, tokens, recipes, utilities` が優先順位を決めます。Panda の preflight が全要素に `border-style: solid` と `--global-color-border` を与えるので、境界線は `borderWidth: '1px'` だけで描けます。`border: '1px solid'` のような一括指定は原子的な utilities の出力順によって borderColor をリセットするため避けます。
 
 Base UI は `data-checked`・`data-selected`・`data-starting-style` などの属性を提供します。他のライブラリの `data-state` を流用しません。
 
@@ -36,8 +51,10 @@ catalog が一覧、anatomy、依存レシピ、注意事項の入口です。re
 
 ## Park UI のテーマ定義
 
-`panda.config.ts` の `createSemanticTokens` でアクセント・グレー・追加パレットを指定します。色データとバリアント状態色は `src/theme/colors` に所有し、出典コミット・ライセンスもコピーします。ランタイムのプレビューにはPanda設定用モジュールをimportせず、名前だけの `src/app/palettes.ts` を使います。
+Park UI と同じく、`panda.config.ts` の `semanticTokens.colors` に使うパレットだけを並べます。`src/theme/colors` の31色はファイルとしてコピーされますが、CSS に出るのは並べた色だけです。`gray` は config で割り当て、Kiso の別名（`accent`・`info`・`success`・`warning`・`danger`）は `aliases()` が作ります。`definePalette('brand', blue)` は参照を付け替えたコピーを作ります。Panda 標準の色は `removePandaPresetColors` で除きます。ランタイムのプレビューにはPanda設定用モジュールをimportせず、名前だけの `src/app/palettes.ts` を使います。
 
-ButtonのcolorPaletteはPandaのユーティリティに渡すため、設定に追加されたパレットも使用できます。DOMへpropsを漏らさず、classNameの状態関数・ref・render合成を保持します。実行時パレット指定は `staticCss.css` の colorPalette を生成対象にしてください。
+実行時にアクセント・グレー・角丸を切り替える仕組みはプレビュー専用で、`src/app/theme-runtime.ts`（CLI のコピー対象外）にあります。全パレットを登録し、`data-accent` / `data-gray` の条件で別名を切り替えます。
+
+すべての部品の colorPalette は Panda のユーティリティに渡すため、設定に追加されたパレットも使用できます。DOMへpropsを漏らさず、classNameの状態関数・ref・render合成を保持します。catalog.ts の variants / sizes はレシピと一致することを `tests/theme.test.ts` で検証しています。
 
 角丸は入れ子の内側l1・操作部品l2・外側l3。オーバーレイは用途別のzIndexトークンを使い、Dialog内で開くSelectやMenuのPortalはmodalより上のpopover層に置きます。

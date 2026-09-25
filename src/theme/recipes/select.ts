@@ -1,7 +1,9 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { control, popup, item } from '../shared'
+import { fieldControl, fieldVariants, item, popup } from '../shared'
+
 export const select = defineSlotRecipe({
   className: 'kiso-select',
+  jsx: ['Select', /^Select\./],
   slots: [
     'trigger',
     'value',
@@ -20,73 +22,78 @@ export const select = defineSlotRecipe({
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     trigger: {
-      ...control,
-      display: 'inline-flex',
+      ...fieldControl,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      gap: '3',
-      width: 'full',
-      border: '1px solid',
-      borderColor: 'border.strong',
-      bg: 'surface',
-      color: 'fg',
-      _invalid: { borderColor: 'danger' },
+      textAlign: 'start',
+      cursor: 'pointer',
+      userSelect: 'none',
     },
-    value: { truncate: true, textAlign: 'start', '&[data-placeholder]': { color: 'fg.muted' } },
-    icon: { color: 'fg.muted', '& svg': { width: '4', height: '4' } },
-    positioner: { zIndex: 'popover', outline: 'none' },
-    popup: { ...popup, minWidth: 'var(--anchor-width)', maxHeight: 'var(--available-height)' },
-    list: { overflowY: 'auto', maxH: 'min(320px, var(--available-height))' },
-    item,
-    itemIndicator: { marginInlineStart: 'auto', '& svg': { w: '3.5', h: '3.5' } },
-    groupLabel: { px: '3', py: '2', fontSize: 'xs', fontWeight: 'medium', color: 'fg.muted' },
+    value: { truncate: true, '&[data-placeholder]': { color: 'fg.muted' } },
+    icon: { display: 'flex', color: 'fg.subtle', flexShrink: '0' },
+    positioner: { zIndex: 'popover', outline: '0' },
+    popup: {
+      ...popup,
+      display: 'flex',
+      flexDirection: 'column',
+      minWidth: 'max(var(--anchor-width), {sizes.40})',
+      maxHeight: 'min(var(--available-height), {sizes.96})',
+      overflowY: 'auto',
+    },
+    list: { display: 'flex', flexDirection: 'column', outline: '0' },
+    item: { ...item, justifyContent: 'space-between', cursor: 'pointer' },
+    itemText: { flex: '1', truncate: true },
+    itemIndicator: { display: 'flex', color: 'colorPalette.plain.fg' },
+    groupLabel: { display: 'flex', alignItems: 'center', color: 'fg.muted', fontWeight: 'medium' },
     separator: { h: '1px', bg: 'border', my: '1' },
+    scrollUpArrow: { display: 'flex', justifyContent: 'center', color: 'fg.subtle', py: '1' },
+    scrollDownArrow: { display: 'flex', justifyContent: 'center', color: 'fg.subtle', py: '1' },
   },
+  defaultVariants: { variant: 'outline', size: 'md' },
   variants: {
+    variant: {
+      outline: { trigger: fieldVariants.outline },
+      surface: { trigger: fieldVariants.surface },
+      subtle: { trigger: fieldVariants.subtle },
+    },
     size: {
       xs: {
-        trigger: {
-          h: '8',
-          px: '2',
-          fontSize: 'sm',
-        },
+        trigger: { h: '8', px: '2', gap: '2', textStyle: 'sm', _icon: { boxSize: '3.5' } },
+        popup: { p: '1', gap: '0.5', textStyle: 'sm' },
+        item: { minH: '8', px: '1', gap: '2', _icon: { boxSize: '3.5' } },
+        groupLabel: { minH: '8', px: '1' },
       },
       sm: {
-        trigger: {
-          h: '9',
-          px: '2.5',
-          fontSize: 'sm',
-        },
+        trigger: { h: '9', px: '2.5', gap: '2', textStyle: 'sm', _icon: { boxSize: '4' } },
+        popup: { p: '1', gap: '0.5', textStyle: 'sm' },
+        item: { minH: '9', px: '1.5', gap: '2', _icon: { boxSize: '4' } },
+        groupLabel: { minH: '9', px: '1.5' },
       },
       md: {
-        trigger: {
-          h: '10',
-          px: '3',
-          fontSize: 'md',
-        },
+        trigger: { h: '10', px: '3', gap: '2', textStyle: 'md', _icon: { boxSize: '4' } },
+        popup: { p: '1', gap: '0.5', textStyle: 'md' },
+        item: { minH: '10', px: '2', gap: '2', _icon: { boxSize: '4' } },
+        groupLabel: { minH: '10', px: '2' },
       },
       lg: {
-        trigger: {
-          h: '11',
-          px: '3.5',
-          fontSize: 'md',
-        },
+        trigger: { h: '11', px: '3.5', gap: '2', textStyle: 'md', _icon: { boxSize: '4.5' } },
+        popup: { p: '1', gap: '0.5', textStyle: 'md' },
+        item: { minH: '11', px: '2.5', gap: '2', _icon: { boxSize: '4.5' } },
+        groupLabel: { minH: '11', px: '2.5' },
       },
       xl: {
-        trigger: {
-          h: '12',
-          px: '4',
-          fontSize: 'lg',
-        },
+        trigger: { h: '12', px: '4', gap: '3', textStyle: 'lg', _icon: { boxSize: '5' } },
+        popup: { p: '1', gap: '1', textStyle: 'lg' },
+        item: { minH: '12', px: '3', gap: '3', _icon: { boxSize: '5' } },
+        groupLabel: { minH: '12', px: '3' },
       },
       '2xl': {
-        trigger: {
-          h: '16',
-          px: '4.5',
-          fontSize: '3xl',
-        },
+        trigger: { h: '16', px: '4.5', gap: '3', textStyle: '3xl', _icon: { boxSize: '6' } },
+        popup: { p: '1', gap: '1', textStyle: 'xl' },
+        item: { minH: '14', px: '3', gap: '3', _icon: { boxSize: '5' } },
+        groupLabel: { minH: '14', px: '3' },
       },
     },
   },
-  defaultVariants: { size: 'md' },
 })

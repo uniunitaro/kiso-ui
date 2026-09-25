@@ -1,21 +1,38 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { popup } from '../shared'
+import { arrow, popup } from '../shared'
+
+// Shared by Popover and PreviewCard.
 export const popover = defineSlotRecipe({
   className: 'kiso-popover',
-  slots: ['positioner', 'popup', 'title', 'description', 'arrow', 'close'],
+  jsx: ['Popover', /^Popover\./, 'PreviewCard', /^PreviewCard\./],
+  slots: ['positioner', 'popup', 'title', 'description', 'arrow', 'close', 'closeTrigger'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
-    positioner: { zIndex: 'popover', maxWidth: 'calc(100vw - 24px)' },
-    popup: { ...popup, p: '4', maxHeight: 'var(--available-height)', overflowY: 'auto' },
-    title: { fontSize: 'sm', fontWeight: 'semibold' },
-    description: { fontSize: 'sm', color: 'fg.muted', mt: '1.5', lineHeight: '1.6' },
-  },
-  variants: {
-    size: {
-      sm: { popup: { width: '220px' } },
-      md: { popup: { width: '300px' } },
-      lg: { popup: { width: '380px', maxWidth: 'calc(100vw - 24px)' } },
+    positioner: { zIndex: 'popover' },
+    popup: {
+      ...popup,
+      boxShadow: 'lg',
+      position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '1',
+      p: '4',
+      textStyle: 'sm',
+      maxWidth: 'var(--available-width)',
+      // No overflow clipping here: the arrow sits outside the popup box.
+      maxHeight: 'var(--available-height)',
     },
+    title: { color: 'fg.default', fontWeight: 'medium', textStyle: 'md' },
+    description: { color: 'fg.muted', textStyle: 'sm' },
+    arrow,
+    closeTrigger: { position: 'absolute', top: '2', insetInlineEnd: '2' },
   },
   defaultVariants: { size: 'md' },
+  variants: {
+    size: {
+      sm: { popup: { width: '60' } },
+      md: { popup: { width: 'xs' } },
+      lg: { popup: { width: 'sm' } },
+    },
+  },
 })

@@ -1,61 +1,75 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { focusRing, disabled } from '../shared'
+
 export const accordion = defineSlotRecipe({
   className: 'kiso-accordion',
+  jsx: ['Accordion', /^Accordion\./],
   slots: ['root', 'item', 'header', 'trigger', 'panel'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: { width: 'full' },
-    item: {
-      borderBottomWidth: '1px',
-      borderBottomStyle: 'solid',
-      borderColor: 'border',
-      _last: { borderBottom: 0 },
-    },
+    item: { overflowAnchor: 'none' },
+    header: { display: 'flex' },
     trigger: {
-      ...focusRing,
-      ...disabled,
       display: 'flex',
+      flex: '1',
       alignItems: 'center',
       justifyContent: 'space-between',
       gap: '3',
-      width: 'full',
       textAlign: 'start',
-      fontWeight: 'medium',
-      _hover: { color: 'accent.fg' },
-      '& svg': { w: '4', h: '4', transition: 'transform 180ms' },
-      '&[data-panel-open] svg': { transform: 'rotate(180deg)' },
+      color: 'fg.default',
+      fontWeight: 'semibold',
+      borderRadius: 'l2',
+      cursor: 'pointer',
+      outline: '0',
+      focusVisibleRing: 'outside',
+      _disabled: { layerStyle: 'disabled' },
+      // Last icon is the chevron; it turns while the panel is open.
+      '& > svg:last-child': {
+        color: 'fg.subtle',
+        boxSize: '1.2em',
+        transitionProperty: 'rotate',
+        transitionDuration: 'normal',
+      },
+      '&[data-panel-open] > svg:last-child': { rotate: '180deg' },
     },
     panel: {
-      color: 'fg.muted',
-      fontSize: 'sm',
-      lineHeight: '1.7',
       overflow: 'hidden',
       height: 'var(--accordion-panel-height)',
-      transition: 'height 180ms',
-      _startingStyle: { height: 0 },
-      _endingStyle: { height: 0 },
-      '& > div': { pb: '4' },
+      color: 'fg.muted',
+      transitionProperty: 'height',
+      transitionDuration: 'normal',
+      _startingStyle: { height: '0' },
+      _endingStyle: { height: '0' },
     },
   },
+  defaultVariants: { variant: 'outline', size: 'md' },
   variants: {
-    size: {
-      sm: { trigger: { py: '3', fontSize: 'xs' } },
-      md: { trigger: { py: '4', fontSize: 'sm' } },
-      lg: { trigger: { py: '5', fontSize: 'md' } },
-    },
     variant: {
-      line: {},
+      outline: { item: { borderBottomWidth: '1px' } },
+      plain: {},
       enclosed: {
         root: {
-          border: '1px solid',
-          borderColor: 'border',
+          borderWidth: '1px',
           borderRadius: 'l3',
+          bg: 'gray.surface.bg',
           px: '4',
-          bg: 'surface',
         },
+        item: { _notLast: { borderBottomWidth: '1px' } },
+      },
+    },
+    size: {
+      sm: {
+        trigger: { py: '2', textStyle: 'sm' },
+        panel: { textStyle: 'sm', '& > *': { pb: '3' } },
+      },
+      md: {
+        trigger: { py: '2.5', textStyle: 'md' },
+        panel: { textStyle: 'sm', '& > *': { pb: '4' } },
+      },
+      lg: {
+        trigger: { py: '3', textStyle: 'lg' },
+        panel: { textStyle: 'md', '& > *': { pb: '5' } },
       },
     },
   },
-  defaultVariants: { size: 'md', variant: 'line' },
 })

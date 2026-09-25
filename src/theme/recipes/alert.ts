@@ -1,29 +1,60 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+
+// status picks the palette (as in Park UI); colorPalette can still override it.
 export const alert = defineSlotRecipe({
   className: 'kiso-alert',
-  slots: ['root', 'icon', 'title', 'description'],
-  staticCss: ['*'],
+  jsx: ['Alert', /^Alert\./],
+  slots: ['root', 'icon', 'content', 'title', 'description'],
+  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
-      display: 'grid',
-      gridTemplateColumns: 'auto 1fr',
-      columnGap: '3',
-      p: '4',
+      display: 'flex',
+      alignItems: 'flex-start',
+      position: 'relative',
+      width: 'full',
       borderRadius: 'l3',
-      border: '1px solid',
-      borderColor: 'currentColor',
     },
-    icon: { gridRow: '1 / 3', pt: '0.5', '& svg': { w: '4', h: '4' } },
-    title: { fontWeight: 'medium', fontSize: 'sm' },
-    description: { fontSize: 'sm', lineHeight: '1.6', mt: '1', gridColumn: 2 },
+    icon: {
+      display: 'inline-flex',
+      flexShrink: '0',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    content: { display: 'flex', flexDirection: 'column', flex: '1', gap: '1', minWidth: '0' },
+    title: { fontWeight: 'semibold' },
+    description: { display: 'inline' },
   },
+  defaultVariants: { status: 'info', variant: 'subtle', size: 'md' },
   variants: {
-    tone: {
-      info: { root: { bg: 'accent.subtle', color: 'accent.fg' } },
-      success: { root: { bg: 'success.subtle', color: 'success' } },
-      warning: { root: { bg: 'warning.subtle', color: 'warning' } },
-      danger: { root: { bg: 'danger.subtle', color: 'danger' } },
+    status: {
+      info: { root: { colorPalette: 'info' } },
+      success: { root: { colorPalette: 'success' } },
+      warning: { root: { colorPalette: 'warning' } },
+      error: { root: { colorPalette: 'danger' } },
+      neutral: { root: { colorPalette: 'gray' } },
+    },
+    variant: {
+      solid: { root: { bg: 'colorPalette.solid.bg', color: 'colorPalette.solid.fg' } },
+      surface: {
+        root: {
+          bg: 'colorPalette.surface.bg',
+          borderWidth: '1px',
+          borderColor: 'colorPalette.surface.border',
+          color: 'colorPalette.surface.fg',
+        },
+      },
+      subtle: { root: { bg: 'colorPalette.subtle.bg', color: 'colorPalette.subtle.fg' } },
+      outline: {
+        root: {
+          borderWidth: '1px',
+          borderColor: 'colorPalette.outline.border',
+          color: 'colorPalette.outline.fg',
+        },
+      },
+    },
+    size: {
+      md: { root: { gap: '3', p: '4', textStyle: 'sm' }, icon: { _icon: { boxSize: '5' } } },
+      lg: { root: { gap: '4', p: '4', textStyle: 'md' }, icon: { _icon: { boxSize: '6' } } },
     },
   },
-  defaultVariants: { tone: 'info' },
 })

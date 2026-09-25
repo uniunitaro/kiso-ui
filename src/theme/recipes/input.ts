@@ -1,66 +1,44 @@
 import { defineRecipe } from '@pandacss/dev'
-import { control } from '../shared'
+import { fieldControl, fieldVariants } from '../shared'
 
 export const input = defineRecipe({
   className: 'kiso-input',
   jsx: ['Input'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
-    ...control,
-    width: 'full',
-    minWidth: 0,
-    bg: 'transparent',
-    color: 'fg',
-    border: '1px solid',
-    borderColor: 'border.strong',
-
-    _placeholder: { color: 'fg.muted' },
-    _focus: {
-      borderColor: 'accent',
-      outline: '2px solid',
-      outlineColor: 'accent.subtle',
-      outlineOffset: '1px',
-    },
-    _invalid: { borderColor: 'danger', _focus: { outlineColor: 'danger.subtle' } },
-  },
-  variants: {
-    size: {
-      xs: {
-        h: '8',
-        px: '2',
-        fontSize: 'sm',
-      },
-      sm: {
-        h: '9',
-        px: '2.5',
-        fontSize: 'sm',
-      },
-      md: {
-        h: '10',
-        px: '3',
-        fontSize: 'md',
-      },
-      lg: {
-        h: '11',
-        px: '3.5',
-        fontSize: 'md',
-      },
-      xl: {
-        h: '12',
-        px: '4',
-        fontSize: 'lg',
-      },
-      '2xl': {
-        h: '16',
-        px: '4.5',
-        fontSize: '3xl',
-      },
-    },
-    variant: {
-      outline: {},
-      surface: { bg: 'gray.surface.bg', borderColor: 'gray.surface.border' },
-      subtle: { bg: 'surface.subtle', borderColor: 'transparent', boxShadow: 'none' },
-    },
+    ...fieldControl,
+    height: 'var(--input-height)',
+    minHeight: 'var(--input-height)',
+    textAlign: 'start',
   },
   defaultVariants: { size: 'md', variant: 'outline' },
+  variants: {
+    variant: {
+      ...fieldVariants,
+      flushed: {
+        bg: 'transparent',
+        borderBottomWidth: '1px',
+        borderBottomColor: 'gray.outline.border',
+        borderRadius: '0',
+        px: '0!',
+        _focusVisible: {
+          borderColor: 'colorPalette.solid.bg',
+          boxShadow: '0 1px 0 0 {colors.colorPalette.solid.bg}',
+        },
+        _invalid: {
+          borderColor: 'error',
+          _focusVisible: { borderColor: 'error', boxShadow: '0 1px 0 0 {colors.error}' },
+        },
+      },
+    },
+    size: {
+      '2xs': { textStyle: 'xs', px: '1.5', '--input-height': 'sizes.7' },
+      xs: { textStyle: 'sm', px: '2', '--input-height': 'sizes.8' },
+      sm: { textStyle: 'sm', px: '2.5', '--input-height': 'sizes.9' },
+      md: { textStyle: 'md', px: '3', '--input-height': 'sizes.10' },
+      lg: { textStyle: 'md', px: '3.5', '--input-height': 'sizes.11' },
+      xl: { textStyle: 'lg', px: '4', '--input-height': 'sizes.12' },
+      '2xl': { textStyle: '3xl', px: '4.5', '--input-height': 'sizes.16' },
+    },
+  },
 })

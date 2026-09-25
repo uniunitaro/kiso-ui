@@ -1,32 +1,62 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { focusRing } from '../shared'
+
 export const scrollArea = defineSlotRecipe({
   className: 'kiso-scroll-area',
+  jsx: ['ScrollArea', /^ScrollArea\./],
   slots: ['root', 'viewport', 'content', 'scrollbar', 'thumb', 'corner'],
-  staticCss: ['*'],
+  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
-    root: { position: 'relative', overflow: 'hidden', width: 'full', height: 'full' },
+    root: {
+      '--scrollbar-margin': '2px',
+      position: 'relative',
+      overflow: 'hidden',
+      width: 'full',
+      height: 'full',
+    },
     viewport: {
-      ...focusRing,
       width: 'full',
       height: 'full',
       overscrollBehavior: 'contain',
       borderRadius: 'inherit',
+      outline: '0',
+      focusVisibleRing: 'inside',
     },
     scrollbar: {
       display: 'flex',
-      justifyContent: 'center',
-      bg: 'transparent',
-      p: '2px',
-      opacity: 0,
-      transition: 'opacity 150ms',
+      p: 'var(--scrollbar-margin)',
       userSelect: 'none',
       touchAction: 'none',
-      '&[data-hovering], &[data-scrolling]': { opacity: 1 },
-      '&[data-orientation=vertical]': { w: '2.5' },
-      '&[data-orientation=horizontal]': { h: '2.5', flexDirection: 'column' },
+      opacity: '0',
+      transitionProperty: 'opacity',
+      transitionDuration: 'normal',
+      '&[data-hovering], &[data-scrolling]': { opacity: '1' },
+      _vertical: {
+        width: 'calc(var(--thumb-size) + var(--scrollbar-margin) * 2)',
+        justifyContent: 'center',
+      },
+      _horizontal: {
+        height: 'calc(var(--thumb-size) + var(--scrollbar-margin) * 2)',
+        flexDirection: 'column',
+      },
     },
-    thumb: { width: 'full', bg: 'border.strong', borderRadius: 'pill' },
-    corner: { bg: 'surface.subtle' },
+    thumb: {
+      bg: 'gray.a6',
+      borderRadius: 'full',
+      transitionProperty: 'background-color',
+      transitionDuration: 'fast',
+      _hover: { bg: 'gray.a8' },
+      _vertical: { width: 'var(--thumb-size)' },
+      _horizontal: { height: 'var(--thumb-size)' },
+    },
+    corner: { bg: 'transparent' },
+  },
+  defaultVariants: { size: 'md' },
+  variants: {
+    size: {
+      xs: { root: { '--thumb-size': 'sizes.1' } },
+      sm: { root: { '--thumb-size': 'sizes.1.5' } },
+      md: { root: { '--thumb-size': 'sizes.2' } },
+      lg: { root: { '--thumb-size': 'sizes.2.5' } },
+    },
   },
 })

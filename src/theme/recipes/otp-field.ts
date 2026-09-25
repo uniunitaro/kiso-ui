@@ -1,82 +1,38 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { control } from '../shared'
+import { fieldControl, fieldVariants } from '../shared'
+
 export const otpField = defineSlotRecipe({
   className: 'kiso-otp',
+  jsx: ['OtpField', /^OtpField\./],
   slots: ['root', 'input', 'separator'],
   staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
-    root: { display: 'flex', width: 'full', gap: '1.5', alignItems: 'center' },
+    root: { display: 'flex', alignItems: 'center', gap: '2' },
     input: {
-      ...control,
-      minWidth: 0,
-      flex: '1 1 0',
-      border: '1px solid',
-      borderColor: 'border.strong',
-      bg: 'surface',
-      color: 'fg',
+      ...fieldControl,
+      width: 'var(--otp-size)',
+      height: 'var(--otp-size)',
+      flexShrink: '0',
+      px: '0',
       textAlign: 'center',
-      fontFamily: 'mono',
-      _focus: {
-        borderColor: 'accent',
-        outline: '2px solid',
-        outlineColor: 'accent.subtle',
-        outlineOffset: '1px',
-      },
-      _invalid: { borderColor: 'danger' },
+      fontVariantNumeric: 'tabular-nums',
     },
-    separator: { w: '2', h: '1px', bg: 'border.strong', mx: '1' },
+    separator: { w: '2', h: '0.5', borderRadius: 'full', bg: 'gray.a7' },
   },
+  defaultVariants: { variant: 'outline', size: 'md' },
   variants: {
+    variant: {
+      outline: { input: fieldVariants.outline },
+      surface: { input: fieldVariants.surface },
+      subtle: { input: fieldVariants.subtle },
+    },
     size: {
-      xs: {
-        input: {
-          h: '8',
-          px: '0',
-          fontSize: 'sm',
-          maxW: '8',
-        },
-      },
-      sm: {
-        input: {
-          h: '9',
-          px: '0',
-          fontSize: 'sm',
-          maxW: '9',
-        },
-      },
-      md: {
-        input: {
-          h: '10',
-          px: '0',
-          fontSize: 'md',
-          maxW: '10',
-        },
-      },
-      lg: {
-        input: {
-          h: '11',
-          px: '0',
-          fontSize: 'md',
-          maxW: '11',
-        },
-      },
-      xl: {
-        input: {
-          h: '12',
-          px: '0',
-          fontSize: 'lg',
-          maxW: '12',
-        },
-      },
-      '2xl': {
-        input: {
-          h: '16',
-          px: '0',
-          fontSize: '3xl',
-          maxW: '16',
-        },
-      },
+      xs: { root: { gap: '1' }, input: { '--otp-size': 'sizes.8', textStyle: 'sm' } },
+      sm: { root: { gap: '1.5' }, input: { '--otp-size': 'sizes.9', textStyle: 'sm' } },
+      md: { root: { gap: '2' }, input: { '--otp-size': 'sizes.10', textStyle: 'md' } },
+      lg: { root: { gap: '2' }, input: { '--otp-size': 'sizes.11', textStyle: 'md' } },
+      xl: { root: { gap: '2.5' }, input: { '--otp-size': 'sizes.12', textStyle: 'lg' } },
+      '2xl': { root: { gap: '3' }, input: { '--otp-size': 'sizes.16', textStyle: '3xl' } },
     },
   },
-  defaultVariants: { size: 'md' },
 })
