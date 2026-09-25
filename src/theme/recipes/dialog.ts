@@ -15,7 +15,6 @@ export const dialog = defineSlotRecipe({
     'close',
     'closeTrigger',
   ],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     backdrop: {
       position: 'fixed',

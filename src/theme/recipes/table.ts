@@ -5,7 +5,6 @@ export const table = defineSlotRecipe({
   className: 'kiso-table',
   jsx: ['Table', /^Table\./],
   slots: ['root', 'container', 'header', 'body', 'footer', 'row', 'head', 'cell', 'caption'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     container: {
       width: 'full',

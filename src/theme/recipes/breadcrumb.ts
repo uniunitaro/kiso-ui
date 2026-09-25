@@ -4,7 +4,6 @@ export const breadcrumb = defineSlotRecipe({
   className: 'kiso-breadcrumb',
   jsx: ['Breadcrumb', /^Breadcrumb\./],
   slots: ['root', 'list', 'item', 'link', 'current', 'separator'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     list: {
       display: 'flex',

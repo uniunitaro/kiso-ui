@@ -3,7 +3,6 @@ export const pagination = defineSlotRecipe({
   className: 'kiso-pagination',
   jsx: ['Pagination'],
   slots: ['root', 'ellipsis'],
-  staticCss: ['*'],
   base: {
     root: {
       display: 'flex',

@@ -25,7 +25,6 @@ export const numberField = defineSlotRecipe({
   className: 'kiso-number',
   jsx: ['NumberField', /^NumberField\./],
   slots: ['root', 'group', 'input', 'increment', 'decrement', 'scrubArea', 'scrubAreaCursor'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: { display: 'flex', flexDirection: 'column', gap: '1.5', width: 'full' },
     group: {

@@ -18,7 +18,6 @@ export const navigationMenu = defineSlotRecipe({
     'arrow',
     'backdrop',
   ],
-  staticCss: ['*'],
   base: {
     root: { position: 'relative' },
     list: { display: 'flex', alignItems: 'center', gap: '1', listStyle: 'none' },

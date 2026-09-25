@@ -5,7 +5,6 @@ export const alert = defineSlotRecipe({
   className: 'kiso-alert',
   jsx: ['Alert', /^Alert\./],
   slots: ['root', 'icon', 'content', 'title', 'description'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       display: 'flex',

@@ -24,7 +24,6 @@ export const menu = defineSlotRecipe({
     'submenuTrigger',
     'arrow',
   ],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     positioner: { zIndex: 'popover' },
     popup: {

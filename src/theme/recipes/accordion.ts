@@ -4,7 +4,6 @@ export const accordion = defineSlotRecipe({
   className: 'kiso-accordion',
   jsx: ['Accordion', /^Accordion\./],
   slots: ['root', 'item', 'header', 'trigger', 'panel'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: { width: 'full' },
     item: { overflowAnchor: 'none' },

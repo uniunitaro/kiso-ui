@@ -4,7 +4,6 @@ import { defineRecipe } from '@pandacss/dev'
 export const spinner = defineRecipe({
   className: 'kiso-spinner',
   jsx: ['Spinner'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     display: 'inline-flex',
     alignItems: 'center',

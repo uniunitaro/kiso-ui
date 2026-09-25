@@ -3,7 +3,6 @@ import { defineRecipe } from '@pandacss/dev'
 export const skeleton = defineRecipe({
   className: 'kiso-skeleton',
   jsx: ['Skeleton'],
-  staticCss: ['*'],
   base: {
     display: 'block',
     minHeight: '4',

@@ -21,6 +21,10 @@ export interface PaginationProps extends Omit<ComponentPropsWithRef<'nav'>, 'onC
   page?: number
   defaultPage?: number
   onPageChange?: (page: number) => void
+  /**
+   * Button size (default sm). Panda extracts `<Pagination size>` through the button recipe's
+   * jsx, and the literal `?? 'sm'` fallback below, so no staticCss is needed.
+   */
   size?: ButtonProps['size']
 }
 export function Pagination({
@@ -28,7 +32,7 @@ export function Pagination({
   page,
   defaultPage = 1,
   onPageChange,
-  size = 'sm',
+  size,
   className,
   ...props
 }: PaginationProps) {
@@ -49,7 +53,7 @@ export function Pagination({
       <Button
         variant="plain"
         colorPalette="gray"
-        size={size}
+        size={size ?? 'sm'}
         square
         disabled={active <= 1 || total === 0}
         aria-label="Previous page"
@@ -61,7 +65,7 @@ export function Pagination({
         typeof item === 'number' ? (
           <Button
             key={item}
-            size={size}
+            size={size ?? 'sm'}
             square
             variant={item === active ? 'subtle' : 'plain'}
             colorPalette={item === active ? undefined : 'gray'}
@@ -80,7 +84,7 @@ export function Pagination({
       <Button
         variant="plain"
         colorPalette="gray"
-        size={size}
+        size={size ?? 'sm'}
         square
         disabled={active >= total || total === 0}
         aria-label="Next page"

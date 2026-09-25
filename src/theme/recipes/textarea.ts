@@ -4,7 +4,6 @@ import { fieldControl, fieldVariants } from '../shared'
 export const textarea = defineRecipe({
   className: 'kiso-textarea',
   jsx: ['Textarea'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: { ...fieldControl, minHeight: '20', resize: 'vertical' },
   defaultVariants: { size: 'md', variant: 'outline' },
   variants: {

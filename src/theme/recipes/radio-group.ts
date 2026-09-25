@@ -5,7 +5,6 @@ export const radioGroup = defineSlotRecipe({
   className: 'kiso-radio',
   jsx: ['RadioGroup', /^RadioGroup\./],
   slots: ['root', 'item', 'indicator'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: { display: 'flex', flexDirection: 'column', gap: '3' },
     item: {

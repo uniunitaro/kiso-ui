@@ -5,7 +5,6 @@ export const otpField = defineSlotRecipe({
   className: 'kiso-otp',
   jsx: ['OtpField', /^OtpField\./],
   slots: ['root', 'input', 'separator'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: { display: 'flex', alignItems: 'center', gap: '2' },
     input: {

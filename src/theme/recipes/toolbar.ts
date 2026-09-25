@@ -24,7 +24,6 @@ export const toolbar = defineSlotRecipe({
   className: 'kiso-toolbar',
   jsx: ['Toolbar', /^Toolbar\./],
   slots: ['root', 'group', 'button', 'link', 'input', 'separator'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       display: 'flex',

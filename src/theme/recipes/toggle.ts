@@ -4,7 +4,6 @@ import { defineRecipe } from '@pandacss/dev'
 export const toggle = defineRecipe({
   className: 'kiso-toggle',
   jsx: ['Toggle'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     display: 'inline-flex',
     alignItems: 'center',
@@ -48,7 +47,6 @@ export const toggle = defineRecipe({
 export const toggleGroup = defineRecipe({
   className: 'kiso-toggle-group',
   jsx: ['ToggleGroup'],
-  staticCss: ['*'],
   base: {
     display: 'inline-flex',
     gap: '1',

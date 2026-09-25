@@ -3,7 +3,6 @@ import { defineRecipe } from '@pandacss/dev'
 export const separator = defineRecipe({
   className: 'kiso-separator',
   jsx: ['Separator'],
-  staticCss: ['*'],
   base: {
     flexShrink: '0',
     borderColor: 'border',

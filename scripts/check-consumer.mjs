@@ -106,10 +106,13 @@ await writeFile(
   path.join(target, 'src', 'brand-example.tsx'),
   `import { Button } from './components/ui/button'
 import * as Checkbox from './components/ui/checkbox'
-export const Brand = () => (
+import { Pagination } from './components/ui/pagination'
+export const Brand = ({ wide }: { wide: boolean }) => (
   <>
     <Button colorPalette="brand" variant="surface" size={{base:'xs',md:'2xl'}}>Brand</Button>
-    <Checkbox.Root colorPalette="danger" />
+    <Button size={wide ? 'xl' : 'lg'}>Either</Button>
+    <Checkbox.Root colorPalette="danger" size={{ base: 'md', lg: 'sm' }} />
+    <Pagination count={3} size="2xs" />
   </>
 )
 `,
@@ -141,11 +144,19 @@ for (const selector of [
   '--colors-warning-subtle-bg: var(--colors-orange-subtle-bg)',
   '--global-color-focus-ring: var(--colors-color-palette-solid-bg)',
   '.kiso-button:is(:focus-visible, [data-focus-visible])',
-  '.md\\:kiso-button--size_lg',
+  // Variants are extracted from JSX like Park UI: literals, ternaries and responsive objects.
+  '.md\\:kiso-button--size_2xl',
+  '.kiso-button--size_xl',
+  '.kiso-button--size_lg',
   '.lg\\:kiso-checkbox__root--size_sm',
-  '.sm\\:kiso-spinner--size_lg',
+  // <Pagination size> reaches its buttons through the button recipe's jsx.
+  '.kiso-button--size_2xs',
 ]) {
   if (!generatedCss.includes(selector)) throw new Error(`Generated CSS missing: ${selector}`)
+}
+// No recipe forces every variant: unused sizes and breakpoints stay out of the CSS.
+for (const unused of ['.sm\\:kiso-spinner--size_lg', '.xl\\:kiso-select__trigger--size_2xs']) {
+  if (generatedCss.includes(unused)) throw new Error(`Unused variant in CSS: ${unused}`)
 }
 // Only the palettes listed in the config are emitted; Panda's own 50–950 colors are removed.
 for (const unexpected of ['--colors-tomato-9', '--colors-iris-9', '--colors-red-500']) {
@@ -167,7 +178,7 @@ await writeFile(
         'Panda codegen',
         'strict TypeScript with every documented example',
         'CSS generation',
-        'responsive recipe classes without consumer static usage',
+        'recipe variants extracted from JSX (no staticCss); unused variants omitted',
         'colorPalette extracted from component props (no staticCss)',
         'only listed palettes emitted; Panda preset colors removed',
       ],

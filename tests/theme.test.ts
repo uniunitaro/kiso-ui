@@ -19,7 +19,7 @@ const all = { ...recipes, ...slotRecipes } as Record<
 >
 
 describe('Park design system contracts', () => {
-  it('aligns primary and secondary control scales and preserves responsive generation', () => {
+  it('aligns primary and secondary control scales and leaves variants to extraction', () => {
     const primary = ['8', '9', '10', '11', '12', '16']
     const secondary = ['4', '4.5', '5', '5.5', '6', '8']
     const names = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const
@@ -35,9 +35,8 @@ describe('Park design system contracts', () => {
         `sizes.${secondary[index]}`,
       )
     })
-    for (const recipe of Object.values(all))
-      if (recipe.variants?.size)
-        expect(recipe.staticCss).toContainEqual({ size: ['*'], responsive: true })
+    // Like Park UI, variants come from JSX extraction; staticCss would emit every size everywhere.
+    for (const recipe of Object.values(all)) expect(recipe.staticCss).toBeUndefined()
   })
   it('scales listbox items with the control size', () => {
     expect(select.variants!.size.sm).toHaveProperty('item.minH', '9')

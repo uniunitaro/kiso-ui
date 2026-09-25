@@ -4,7 +4,6 @@ export const emptyState = defineSlotRecipe({
   className: 'kiso-empty-state',
   jsx: ['EmptyState', /^EmptyState\./],
   slots: ['root', 'icon', 'title', 'description', 'actions'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       display: 'flex',

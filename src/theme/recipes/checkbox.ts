@@ -5,7 +5,6 @@ export const checkbox = defineSlotRecipe({
   className: 'kiso-checkbox',
   jsx: ['Checkbox', /^Checkbox\./],
   slots: ['root', 'indicator'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       display: 'inline-flex',

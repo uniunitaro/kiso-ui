@@ -4,7 +4,6 @@ export const field = defineSlotRecipe({
   className: 'kiso-field',
   jsx: ['Field', /^Field\./],
   slots: ['root', 'label', 'description', 'error'],
-  staticCss: ['*'],
   base: {
     root: { display: 'flex', flexDirection: 'column', gap: '1.5', width: 'full' },
     label: {

@@ -4,7 +4,6 @@ export const scrollArea = defineSlotRecipe({
   className: 'kiso-scroll-area',
   jsx: ['ScrollArea', /^ScrollArea\./],
   slots: ['root', 'viewport', 'content', 'scrollbar', 'thumb', 'corner'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       '--scrollbar-margin': '2px',

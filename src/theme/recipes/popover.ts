@@ -6,7 +6,6 @@ export const popover = defineSlotRecipe({
   className: 'kiso-popover',
   jsx: ['Popover', /^Popover\./, 'PreviewCard', /^PreviewCard\./],
   slots: ['positioner', 'popup', 'title', 'description', 'arrow', 'close', 'closeTrigger'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     positioner: { zIndex: 'popover' },
     popup: {

@@ -19,7 +19,6 @@ export const select = defineSlotRecipe({
     'scrollUpArrow',
     'scrollDownArrow',
   ],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     trigger: {
       ...fieldControl,

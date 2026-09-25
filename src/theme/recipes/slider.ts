@@ -5,7 +5,6 @@ export const slider = defineSlotRecipe({
   className: 'kiso-slider',
   jsx: ['Slider', /^Slider\./],
   slots: ['root', 'label', 'value', 'control', 'track', 'indicator', 'thumb'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       display: 'grid',

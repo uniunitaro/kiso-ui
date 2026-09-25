@@ -5,7 +5,6 @@ export const tooltip = defineSlotRecipe({
   className: 'kiso-tooltip',
   jsx: ['Tooltip', /^Tooltip\./],
   slots: ['positioner', 'popup', 'arrow'],
-  staticCss: ['*'],
   base: {
     positioner: { zIndex: 'tooltip' },
     popup: {

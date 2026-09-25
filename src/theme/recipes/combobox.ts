@@ -35,7 +35,6 @@ export const combobox = defineSlotRecipe({
     'chipRemove',
     'separator',
   ],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     label: { display: 'block', textStyle: 'label', mb: '1.5' },
     inputGroup: {

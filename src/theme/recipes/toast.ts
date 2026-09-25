@@ -5,7 +5,6 @@ export const toast = defineSlotRecipe({
   className: 'kiso-toast',
   jsx: ['Toast', /^Toast\./, 'Toaster'],
   slots: ['viewport', 'root', 'content', 'title', 'description', 'close', 'action'],
-  staticCss: ['*'],
   base: {
     viewport: {
       position: 'fixed',

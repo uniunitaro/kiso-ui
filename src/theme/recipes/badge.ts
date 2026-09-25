@@ -3,7 +3,6 @@ import { defineRecipe } from '@pandacss/dev'
 export const badge = defineRecipe({
   className: 'kiso-badge',
   jsx: ['Badge'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     display: 'inline-flex',
     alignItems: 'center',

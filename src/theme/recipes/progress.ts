@@ -5,7 +5,6 @@ export const progress = defineSlotRecipe({
   className: 'kiso-progress',
   jsx: ['Progress', /^Progress\./, 'Meter', /^Meter\./],
   slots: ['root', 'label', 'value', 'track', 'indicator'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       display: 'grid',

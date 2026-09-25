@@ -5,7 +5,6 @@ export const tabs = defineSlotRecipe({
   className: 'kiso-tabs',
   jsx: ['Tabs', /^Tabs\./],
   slots: ['root', 'list', 'tab', 'panel', 'indicator'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       position: 'relative',

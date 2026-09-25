@@ -33,7 +33,9 @@ Select・Combobox・RadioGroup・Slider・Accordion などの Root はジェネ�
 
 ## CSS 生成
 
-静的な variant 値は各レシピの `staticCss: ['*']` で生成します。size は `responsive: true` で Panda のブレークポイント用 CSS も生成します。したがって実行時のサイズ切り替えや `size={{ base: 'sm', md: 'lg' }}` がコピー先でも動作します。その他のカスタム条件・レスポンシブな variant は Panda が検出できる静的な使用箇所を用意するか、そのレシピの staticCss に必要な条件を追加します。
+Park UI と同じく、レシピに `staticCss` は書きません。variant とサイズは、Panda が各レシピの `jsx`（部品名）から使用箇所を抽出し、使われた値だけを CSS にします。`size="lg"` のような直接の値、`size={wide ? 'xl' : 'lg'}` のような三項演算子、`size={{ base: 'sm', md: 'lg' }}` のようなレスポンシブ指定は抽出されます。`size={sizes[key]}` のように変数から決める値や、自作の部品が props をそのまま渡す値は抽出されません。その場合はアプリの `panda.config.ts` の `staticCss.recipes` に、使う値だけを列挙します（例：`{ button: [{ size: ['sm', 'lg'], responsive: true }] }`）。
+
+部品が別のレシピへ props を渡す場合は、受け取る側のレシピの `jsx` に外側の部品名を加えます（Pagination の `size` は button レシピの `jsx` に `Pagination` を含めて抽出させます）。部品内の既定値は `size ?? 'sm'` のようにリテラルで書き、抽出できるようにします。プレビューは実行時に variant を切り替えるため、プレビューの config だけが `staticCss.recipes: '*'` で全 variant を生成します。
 
 `@layer reset, base, tokens, recipes, utilities` が優先順位を決めます。Panda の preflight が全要素に `border-style: solid` と `--global-color-border` を与えるので、境界線は `borderWidth: '1px'` だけで描けます。`border: '1px solid'` のような一括指定は原子的な utilities の出力順によって borderColor をリセットするため避けます。
 

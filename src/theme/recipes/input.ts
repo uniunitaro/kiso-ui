@@ -4,7 +4,6 @@ import { fieldControl, fieldVariants } from '../shared'
 export const input = defineRecipe({
   className: 'kiso-input',
   jsx: ['Input'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     ...fieldControl,
     height: 'var(--input-height)',

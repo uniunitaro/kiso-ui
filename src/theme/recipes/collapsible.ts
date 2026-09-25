@@ -4,7 +4,6 @@ export const collapsible = defineSlotRecipe({
   className: 'kiso-collapsible',
   jsx: ['Collapsible', /^Collapsible\./],
   slots: ['root', 'trigger', 'panel'],
-  staticCss: ['*'],
   base: {
     root: { width: 'full' },
     trigger: {

@@ -150,7 +150,7 @@ pnpm build
 pnpm preview
 ```
 
-`test:consumer` は別ディレクトリに全コンポーネントをインストールし、48種類の使用例、型、Panda 生成、レスポンシブなサイズの CSS を検証します。初回の `pnpm install` 後、キャッシュ済み依存を使うオフライン検証です。
+`test:consumer` は別ディレクトリに全コンポーネントをインストールし、48種類の使用例、型、Panda 生成を検証します。JSX に書いた variant・レスポンシブなサイズが抽出され、使っていない variant が CSS に出ないことも確認します。初回の `pnpm install` 後、キャッシュ済み依存を使うオフライン検証です。
 
 `pnpm registry:build` は `public/registry.json`・`public/r/*.json`・`public/llms*.txt` を生成します。これは Kiso のスキーマで、shadcn CLI との互換性を謳うものではありません。実行例と依存情報を人にも AI にも同じソースから提供します。
 
@@ -188,7 +188,7 @@ semanticTokens: {
 
 `aliases()` は Kiso の別名 `accent`・`info`・`success`・`warning`・`danger` を作ります（Park UI にはない Kiso の追加です）。渡す色は、同じ `colors` に並べたものにしてください。部品は `accent` を継承し、Alert・Toast・`fg.error` などは状態の別名を参照します。追加色は `<Button colorPalette="brand" variant="surface" />` のように使えます。設定変更後に Panda を再生成してください。
 
-`colorPalette="red"` のように JSX に書いた値は、Panda が部品名（各レシピの `jsx`）から静的に抽出するため `staticCss` は不要です。変数で色を決める場合だけ、使う名前を `staticCss.css[].properties.colorPalette` に列挙します。プレビューの Theming ページはアクセントとグレーを実行時に切り替えるため、全パレットを登録しています（`src/app/theme-runtime.ts`、コピー対象外）。
+`colorPalette="red"`・`variant`・`size` のように JSX に書いた値は、Park UI と同じく Panda が部品名（各レシピの `jsx`）から静的に抽出し、使われた値だけを CSS にします。三項演算子やレスポンシブ指定（`size={{ base: 'sm', md: 'lg' }}`）も抽出されるため、通常は `staticCss` は不要です。変数から variant やサイズを決める場合は、使う値を `staticCss.recipes` に列挙します（例：`staticCss: { recipes: { button: [{ size: ['sm', 'lg'] }] } }`）。変数で色を決める場合だけ、使う名前を `staticCss.css[].properties.colorPalette` に列挙します。プレビューの Theming ページはアクセントとグレーを実行時に切り替えるため、全パレットを登録しています（`src/app/theme-runtime.ts`、コピー対象外）。
 
 各パレットは `1`〜`12`、透過色 `a1`〜`a12`、`solid / subtle / surface / outline / plain` の背景・文字・境界線・状態色を持ちます。
 

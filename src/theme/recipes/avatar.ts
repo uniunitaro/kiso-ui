@@ -4,7 +4,6 @@ export const avatar = defineSlotRecipe({
   className: 'kiso-avatar',
   jsx: ['Avatar', /^Avatar\./],
   slots: ['root', 'image', 'fallback'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       display: 'inline-flex',

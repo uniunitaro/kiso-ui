@@ -1,16 +1,16 @@
 {
-  "date": "2026-09-25T03:15:45.927Z",
+  "date": "2026-09-25T06:39:43.810Z",
   "status": "passed",
   "components": 48,
   "examples": 48,
-  "fixture": ".test-workspaces\\consumer-NZ4KaQ",
+  "fixture": ".test-workspaces\\consumer-Pijzuw",
   "checks": [
     "offline installation",
     "source dependency closure",
     "Panda codegen",
     "strict TypeScript with every documented example",
     "CSS generation",
-    "responsive recipe classes without consumer static usage",
+    "recipe variants extracted from JSX (no staticCss); unused variants omitted",
     "colorPalette extracted from component props (no staticCss)",
     "only listed palettes emitted; Panda preset colors removed"
   ]

@@ -56,8 +56,10 @@ export default defineConfig({
     },
   },
   plugins: [removePandaPresetColors],
-  // The docs preview picks colorPalette values at runtime, so it cannot be extracted statically.
+  // The docs preview picks colorPalette, variants and sizes at runtime, so they cannot be
+  // extracted statically. Apps rely on extraction and list only runtime values here.
   staticCss: {
+    recipes: '*',
     css: [
       {
         properties: {

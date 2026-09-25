@@ -4,7 +4,6 @@ export const switchRecipe = defineSlotRecipe({
   className: 'kiso-switch',
   jsx: ['Switch', /^Switch\./],
   slots: ['root', 'thumb'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       '--switch-diff': 'calc(var(--switch-width) - var(--switch-height))',

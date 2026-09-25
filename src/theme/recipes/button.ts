@@ -2,8 +2,7 @@ import { defineRecipe } from '@pandacss/dev'
 
 export const button = defineRecipe({
   className: 'kiso-button',
-  staticCss: ['*', { size: ['*'], responsive: true }],
-  jsx: ['Button'],
+  jsx: ['Button', 'Pagination'],
   base: {
     alignItems: 'center',
     appearance: 'none',

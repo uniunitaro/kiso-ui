@@ -4,7 +4,6 @@ export const card = defineSlotRecipe({
   className: 'kiso-card',
   jsx: ['Card', /^Card\./],
   slots: ['root', 'header', 'title', 'description', 'body', 'footer'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     root: {
       display: 'flex',

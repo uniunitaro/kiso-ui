@@ -3,7 +3,6 @@ import { defineRecipe } from '@pandacss/dev'
 export const kbd = defineRecipe({
   className: 'kiso-kbd',
   jsx: ['Kbd'],
-  staticCss: ['*', { size: ['*'], responsive: true }],
   base: {
     display: 'inline-flex',
     alignItems: 'center',

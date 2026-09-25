@@ -4,7 +4,6 @@ import { defineRecipe } from '@pandacss/dev'
 export const menubar = defineRecipe({
   className: 'kiso-menubar',
   jsx: ['Menubar'],
-  staticCss: ['*'],
   base: {
     display: 'flex',
     alignItems: 'center',
