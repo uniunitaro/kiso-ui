@@ -52,7 +52,7 @@ describe('source installer', () => {
     expect(existsSync(path.join(target, 'src/components/ui/style-context.tsx'))).toBe(true)
     expect(existsSync(path.join(target, 'src/theme/shared.ts'))).toBe(true)
     const index = readFileSync(path.join(target, 'src/theme/recipes/index.ts'), 'utf8')
-    expect(index).toContain('export const recipes = { button, input }')
+    expect(index).toContain('export const recipes = { button, input, spinner }')
     expect(index).not.toContain('dialog')
   })
   it('is idempotent and preserves an owned theme when adding another component', () => {
@@ -67,7 +67,7 @@ describe('source installer', () => {
     expect(readFileSync(tokens, 'utf8')).toContain('Consumer customization')
     const index = readFileSync(path.join(target, 'src/theme/recipes/index.ts'), 'utf8')
     expect(index).toContain('export const slotRecipes = { dialog }')
-    expect(index).toContain('export const recipes = { button, input }')
+    expect(index).toContain('export const recipes = { button, input, spinner }')
   })
   it('detects new-file collisions before writing any additional file', () => {
     const conflicting = path.join(target, 'src/components/ui/avatar.tsx')
@@ -90,10 +90,11 @@ describe('source installer', () => {
     expect(existsSync(path.join(paginationTarget, 'src/theme/recipes/button.ts'))).toBe(true)
     expect(
       readFileSync(path.join(paginationTarget, 'src/theme/recipes/index.ts'), 'utf8'),
-    ).toContain('export const recipes = { button }')
+    ).toContain('export const recipes = { button, spinner }')
     const installed = JSON.parse(
       readFileSync(path.join(paginationTarget, '.kiso/installed.json'), 'utf8'),
     )
-    expect(installed.components).toEqual(['button', 'pagination'])
+    // Button's loading state renders the Spinner component.
+    expect(installed.components).toEqual(['button', 'pagination', 'spinner'])
   })
 })

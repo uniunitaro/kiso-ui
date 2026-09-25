@@ -568,6 +568,7 @@ export function Demo({
   orientation?: 'horizontal' | 'vertical'
 }) {
   const [saved, setSaved] = useState(false)
+  const [publishing, setPublishing] = useState(false)
   switch (id) {
     case 'button':
       return (
@@ -580,6 +581,18 @@ export function Demo({
           >
             {saved ? <Check size={14} /> : <Plus size={14} />}
             {saved ? 'Added to your project' : 'Add to project'}
+          </Button>
+          <Button
+            size={pass(size)}
+            variant="outline"
+            colorPalette="gray"
+            loading={publishing}
+            onClick={() => {
+              setPublishing(true)
+              setTimeout(() => setPublishing(false), 2000)
+            }}
+          >
+            Publish
           </Button>
           <Button size={pass(size)} variant="outline" colorPalette="gray" disabled>
             Disabled

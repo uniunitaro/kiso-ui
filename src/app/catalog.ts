@@ -51,9 +51,9 @@ export const catalog: ComponentEntry[] = [
     name: 'Spinner',
     category: 'Feedback',
     description: 'A small sign that something is happening.',
-    sizes: ['xs', 'sm', 'md', 'lg', 'xl', '2xl'],
+    sizes: ['xs', 'sm', 'md', 'lg', 'xl', '2xl', 'inherit'],
     anatomy: ['Spinner'],
-    note: 'Announces the label through a status region. Use aria-hidden on decorative spinners inside an already labeled busy button. Honors the foundation’s reduced-motion rules.',
+    note: 'Announces the label through a status region. Use aria-hidden on decorative spinners inside an already labeled busy button; Button loading does this for you. size="inherit" follows the surrounding font size (1em), or --spinner-size when a parent sets it. Honors the foundation’s reduced-motion rules.',
   },
   {
     id: 'empty-state',
@@ -329,7 +329,7 @@ export const catalog: ComponentEntry[] = [
     variants: ['solid', 'surface', 'subtle', 'outline', 'plain'],
     sizes: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'],
     anatomy: ['Button'],
-    note: 'Use nativeButton={false} when composing a link through render. Icon-only buttons need an accessible label. colorPalette is independent of variant; prefer colorPalette="danger" with any variant for destructive actions. Size also accepts responsive values such as { base: "sm", md: "lg" }.',
+    note: 'Use nativeButton={false} when composing a link through render. Icon-only buttons need an accessible label. colorPalette is independent of variant; prefer colorPalette="danger" with any variant for destructive actions. Size also accepts responsive values such as { base: "sm", md: "lg" }. loading shows a spinner without changing the width and blocks presses while keeping focus; loadingText, spinner and spinnerPlacement customize it.',
   },
   {
     id: 'toggle',

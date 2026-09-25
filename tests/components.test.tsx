@@ -54,6 +54,36 @@ describe('composition contract', () => {
     expect(screen.getByRole('button', { name: 'Unavailable' })).toBeDisabled()
   })
 
+  it('shows a loading spinner, keeps the name and focus, and blocks presses', async () => {
+    const user = userEvent.setup()
+    let presses = 0
+    const { rerender } = render(<Button onClick={() => presses++}>Publish</Button>)
+    const button = screen.getByRole('button', { name: 'Publish' })
+    button.focus()
+    rerender(
+      <Button loading onClick={() => presses++}>
+        Publish
+      </Button>,
+    )
+    expect(button).toHaveAttribute('aria-busy', 'true')
+    expect(button).toHaveAttribute('data-loading')
+    expect(button).toHaveAttribute('aria-disabled', 'true')
+    expect(button).toHaveFocus()
+    const spinner = button.querySelector('[data-slot="loader"] .kiso-spinner')
+    expect(spinner).toHaveAttribute('aria-hidden', 'true')
+    expect(spinner).not.toHaveAttribute('role')
+    expect(screen.getByRole('button', { name: 'Publish' })).toBe(button)
+    await user.click(button)
+    expect(presses).toBe(0)
+    rerender(
+      <Button loading loadingText="Saving…" spinnerPlacement="end">
+        Publish
+      </Button>,
+    )
+    expect(screen.getByRole('button', { name: 'Saving…' })).toBe(button)
+    expect(button.lastElementChild).toHaveClass('kiso-spinner')
+  })
+
   it('passes variants through a portal and returns focus after Escape', async () => {
     const user = userEvent.setup()
     render(

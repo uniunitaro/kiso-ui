@@ -23,6 +23,20 @@ export const button = defineRecipe({
     focusVisibleRing: 'outside',
     _icon: { flexShrink: '0' },
     _disabled: { layerStyle: 'disabled' },
+    // Loading without loadingText: the label keeps the width, the spinner sits on top.
+    '& [data-slot=loader]': {
+      position: 'absolute',
+      inset: '0',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    '& [data-slot=label]': {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 'inherit',
+      opacity: '0',
+    },
   },
   defaultVariants: { variant: 'solid', size: 'md' },
   variants: {

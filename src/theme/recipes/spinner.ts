@@ -11,8 +11,8 @@ export const spinner = defineRecipe({
     '& [data-spinner]': {
       display: 'inline-block',
       flexShrink: '0',
-      width: 'var(--spinner-size)',
-      height: 'var(--spinner-size)',
+      width: 'var(--spinner-size, 1em)',
+      height: 'var(--spinner-size, 1em)',
       borderWidth: '2px',
       borderStyle: 'solid',
       borderColor: 'currentColor',
@@ -25,6 +25,8 @@ export const spinner = defineRecipe({
   defaultVariants: { size: 'md' },
   variants: {
     size: {
+      // Follows the surrounding text like Park UI's button loader: 1em (or --spinner-size).
+      inherit: { '& [data-spinner]': { borderWidth: '0.125em' } },
       xs: { '--spinner-size': 'sizes.3' },
       sm: { '--spinner-size': 'sizes.4' },
       md: { '--spinner-size': 'sizes.5' },
