@@ -1,0 +1,32 @@
+import { describe, expect, it } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Button, Toast } from '../src/components/ui'
+
+function Trigger({ type, title }: { type?: string; title: string }) {
+  const manager = Toast.useToastManager()
+  return <Button onClick={() => manager.add({ title, type })}>{title}</Button>
+}
+
+describe('Toaster', () => {
+  it('tints an icon for known types and stays a plain card otherwise', async () => {
+    const user = userEvent.setup()
+    render(
+      <Toast.Provider>
+        <Trigger type="success" title="Saved" />
+        <Trigger title="Link copied" />
+        <Toast.Toaster />
+      </Toast.Provider>,
+    )
+    await user.click(screen.getByRole('button', { name: 'Saved' }))
+    await user.click(screen.getByRole('button', { name: 'Link copied' }))
+    await waitFor(() => expect(document.querySelectorAll('.kiso-toast__root')).toHaveLength(2))
+    const [plain, success] = [...document.querySelectorAll('.kiso-toast__root')]
+    expect(success).toHaveAttribute('data-type', 'success')
+    expect(success.querySelector('.kiso-toast__indicator')).toHaveAttribute('aria-hidden', 'true')
+    expect(plain).not.toHaveAttribute('data-type')
+    expect(plain.querySelector('.kiso-toast__indicator')).toBeNull()
+    // The frontmost toast is first; Base UI marks the rest as behind for the collapsed stack.
+    expect(success.querySelector('.kiso-toast__content')).toHaveAttribute('data-behind')
+  })
+})

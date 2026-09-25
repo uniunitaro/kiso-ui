@@ -123,6 +123,26 @@ function ToastTrigger() {
       >
         Try an error
       </Button>
+      <Button
+        variant="plain"
+        colorPalette="gray"
+        onClick={() =>
+          manager.promise(new Promise((resolve) => setTimeout(resolve, 2000)), {
+            loading: 'Publishing your changes…',
+            success: 'Published.',
+            error: 'That didn’t go through.',
+          })
+        }
+      >
+        Publish
+      </Button>
+      <Button
+        variant="plain"
+        colorPalette="gray"
+        onClick={() => manager.add({ title: 'Link copied.' })}
+      >
+        Copy link
+      </Button>
     </div>
   )
 }

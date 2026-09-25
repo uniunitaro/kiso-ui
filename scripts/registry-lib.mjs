@@ -55,7 +55,11 @@ export const recipeNames = {
   spinner: ['spinner'],
   'button-group': ['buttonGroup'],
 }
-const componentDependencies = { pagination: ['button'], button: ['spinner'] }
+const componentDependencies = {
+  pagination: ['button'],
+  button: ['spinner'],
+  toast: ['spinner'],
+}
 export function resolveComponentIds(ids) {
   const result = new Set()
   function visit(id) {

@@ -1,49 +1,106 @@
 import { defineSlotRecipe } from '@pandacss/dev'
 
-// Base UI sets data-type from toast.add({ type }); success / error / warning / info pick a palette.
+// Base UI sets data-type from toast.add({ type }); success / error / warning / info pick the
+// palette of the indicator icon. The card itself stays neutral.
+// Stacking follows Base UI's hero demo: toasts sit behind the frontmost one, smaller and peeking
+// out above it, and fan out when the viewport is hovered or focused (data-expanded).
 export const toast = defineSlotRecipe({
   className: 'kiso-toast',
   jsx: ['Toast', /^Toast\./, 'Toaster'],
-  slots: ['viewport', 'root', 'content', 'title', 'description', 'close', 'action'],
+  slots: ['viewport', 'root', 'indicator', 'content', 'title', 'description', 'close', 'action'],
   base: {
     viewport: {
       position: 'fixed',
       bottom: '4',
       insetInlineEnd: '4',
       zIndex: 'toast',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '3',
       width: 'sm',
       maxWidth: 'calc(100vw - token(spacing.8))',
       outline: '0',
     },
     root: {
-      position: 'relative',
+      '--gap': 'spacing.3',
+      '--peek': 'spacing.3',
+      '--scale': 'calc(max(0, 1 - (var(--toast-index) * 0.1)))',
+      '--shrink': 'calc(1 - var(--scale))',
+      '--height': 'var(--toast-frontmost-height, var(--toast-height))',
+      '--offset-y':
+        'calc(var(--toast-offset-y) * -1 + (var(--toast-index) * var(--gap) * -1) + var(--toast-swipe-movement-y))',
+      position: 'absolute',
+      insetInlineEnd: '0',
+      bottom: '0',
+      width: 'full',
+      height: 'var(--height)',
+      zIndex: 'calc(1000 - var(--toast-index))',
       display: 'flex',
       alignItems: 'flex-start',
       gap: '3',
       p: '4',
       bg: 'gray.surface.bg',
       color: 'fg.default',
+      borderWidth: '1px',
+      borderColor: 'border',
       borderRadius: 'l3',
       boxShadow: 'lg',
       textStyle: 'sm',
-      transitionProperty: 'opacity, translate',
-      transitionDuration: 'normal',
-      translate: 'var(--toast-swipe-movement-x, 0px) var(--toast-swipe-movement-y, 0px)',
-      _startingStyle: { opacity: 0, translate: '0 token(spacing.3)' },
-      _endingStyle: { opacity: 0, translate: 'token(spacing.6) 0' },
-      '&[data-limited]': { display: 'none' },
-      // A palette accent on the leading edge marks the type.
+      userSelect: 'none',
+      focusVisibleRing: 'outside',
+      transformOrigin: 'bottom center',
+      // Collapsed: each toast behind is shorter (the frontmost height), smaller and peeks above.
+      transform:
+        'translateX(var(--toast-swipe-movement-x)) translateY(calc(var(--toast-swipe-movement-y) - (var(--toast-index) * var(--peek)) - (var(--shrink) * var(--height)))) scale(var(--scale))',
+      transition: 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s, height 0.15s',
+      // Keeps the hover alive in the gap between expanded toasts.
+      _after: {
+        content: '""',
+        position: 'absolute',
+        top: '100%',
+        insetInline: '0',
+        height: 'calc(var(--gap) + 1px)',
+      },
+      // Only the frontmost toast shows its content until the stack expands.
+      '& > *': { transition: 'opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1)' },
+      '&:has(> [data-behind]:not([data-expanded])) > *': { opacity: 0 },
+      // Base UI's viewport expansion, not Kiso's _expanded (data-panel-open).
+      '&[data-expanded]': {
+        transform: 'translateX(var(--toast-swipe-movement-x)) translateY(var(--offset-y))',
+        height: 'var(--toast-height)',
+      },
+      _startingStyle: { transform: 'translateY(150%)' },
+      _endingStyle: {
+        opacity: 0,
+        transform: 'translateY(150%)',
+        '&[data-swipe-direction=up]': {
+          transform: 'translateY(calc(var(--toast-swipe-movement-y) - 150%))',
+        },
+        '&[data-swipe-direction=down]': {
+          transform: 'translateY(calc(var(--toast-swipe-movement-y) + 150%))',
+        },
+        '&[data-swipe-direction=left]': {
+          transform:
+            'translateX(calc(var(--toast-swipe-movement-x) - 150%)) translateY(var(--offset-y))',
+        },
+        '&[data-swipe-direction=right]': {
+          transform:
+            'translateX(calc(var(--toast-swipe-movement-x) + 150%)) translateY(var(--offset-y))',
+        },
+      },
+      '&[data-limited]': { opacity: 0 },
       '&[data-type=success]': { colorPalette: 'success' },
       '&[data-type=error]': { colorPalette: 'danger' },
       '&[data-type=warning]': { colorPalette: 'warning' },
       '&[data-type=info]': { colorPalette: 'info' },
-      '&[data-type]': {
-        borderInlineStartWidth: '3px',
-        borderInlineStartColor: 'colorPalette.solid.bg',
-      },
+      '&[data-type=loading]': { colorPalette: 'gray' },
+    },
+    // Optional: without it the toast is a plain neutral card.
+    indicator: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: '0',
+      h: '5',
+      color: 'colorPalette.plain.fg',
+      _icon: { boxSize: '5' },
     },
     content: { display: 'flex', flexDirection: 'column', gap: '1', flex: '1', minWidth: '0' },
     title: { fontWeight: 'semibold' },
@@ -53,9 +110,9 @@ export const toast = defineSlotRecipe({
       placeItems: 'center',
       flexShrink: '0',
       boxSize: '6',
-      mt: '-1',
+      mt: '-0.5',
       mr: '-1',
-      color: 'fg.subtle',
+      color: 'fg.muted',
       borderRadius: 'l2',
       cursor: 'pointer',
       focusVisibleRing: 'outside',
@@ -70,11 +127,11 @@ export const toast = defineSlotRecipe({
       borderRadius: 'l2',
       fontWeight: 'semibold',
       textStyle: 'sm',
-      bg: 'colorPalette.subtle.bg',
-      color: 'colorPalette.subtle.fg',
+      bg: 'gray.subtle.bg',
+      color: 'gray.subtle.fg',
       cursor: 'pointer',
       focusVisibleRing: 'outside',
-      _hover: { bg: 'colorPalette.subtle.bg.hover' },
+      _hover: { bg: 'gray.subtle.bg.hover' },
     },
   },
 })
