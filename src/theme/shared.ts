@@ -14,12 +14,18 @@ export const popup = {
   _endingStyle: { opacity: 0, scale: '0.97' },
 } satisfies SystemStyleObject
 
+/**
+ * Corner for things inside an l3 container with p: '1' (menu rows, enclosed tabs, menubar
+ * triggers): both curves share a center at any radius scale. calc() clamps negatives to 0.
+ */
+export const insetRadius = 'calc({radii.l3} - {spacing.1})'
+
 /** Rows inside menus and listboxes. Sizes set padding, height and text. */
 export const item = {
   display: 'flex',
   alignItems: 'center',
   width: 'full',
-  borderRadius: 'l2',
+  borderRadius: insetRadius,
   cursor: 'default',
   outline: '0',
   textAlign: 'start',

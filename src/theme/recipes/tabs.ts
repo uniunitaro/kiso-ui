@@ -1,4 +1,5 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+import { insetRadius } from '../shared'
 
 // Place <Tabs.Indicator /> inside List: Base UI positions it with --active-tab-* variables.
 export const tabs = defineSlotRecipe({
@@ -83,9 +84,13 @@ export const tabs = defineSlotRecipe({
           gap: '1',
           width: 'fit-content',
         },
-        tab: { borderRadius: 'l2', _selected: { color: 'colorPalette.surface.fg' } },
+        tab: {
+          borderRadius: insetRadius,
+          _focusVisible: { borderRadius: insetRadius },
+          _selected: { color: 'colorPalette.surface.fg' },
+        },
         indicator: {
-          borderRadius: 'l2',
+          borderRadius: insetRadius,
           boxShadow: { base: 'xs', _dark: 'none' },
           bg: { base: 'white', _dark: 'gray.3' },
         },
