@@ -1,6 +1,8 @@
 // Base UI exposes presence attributes, not Ark/Radix data-state values.
 export const conditions = {
-  dark: '[data-theme=dark] &',
+  // Same as Park UI: dark is Panda's default (.dark &), so <html class="dark"> (next-themes'
+  // default) switches it; light values apply everywhere else.
+  light: ':root &, .light &',
   // Hover and press never paint a disabled control (Park UI keeps the same rule).
   hover: '&:is(:hover, [data-hover]):not(:disabled, [data-disabled], [aria-disabled=true])',
   active: '&:is(:active, [data-active]):not(:disabled, [data-disabled], [aria-disabled=true])',

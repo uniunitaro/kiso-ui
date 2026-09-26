@@ -13,7 +13,7 @@ export const globalCss = defineGlobalStyles({
     colorPalette: 'accent',
     colorScheme: 'light',
     fontFamily: 'sans',
-    '&[data-theme=dark]': { colorScheme: 'dark' },
+    '&.dark': { colorScheme: 'dark' },
   },
   body: { bg: 'canvas', color: 'fg.default' },
   '@media (prefers-reduced-motion: reduce)': {

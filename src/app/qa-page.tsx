@@ -33,7 +33,7 @@ export function QaPage() {
       const root = document.documentElement
       setTestedTheme(
         [
-          root.dataset.theme,
+          root.classList.contains('dark') ? 'dark' : 'light',
           `accent ${root.dataset.accent}`,
           `gray ${root.dataset.gray}`,
           `radius l2 ${getComputedStyle(root).getPropertyValue('--kiso-radius-l2') || 'default'}`,

@@ -72,7 +72,9 @@ export function App() {
     return () => window.removeEventListener('hashchange', update)
   }, [])
   useEffect(() => {
-    document.documentElement.dataset.theme = theme.mode
+    // Same as next-themes with attribute="class": light or dark on <html>.
+    document.documentElement.classList.remove('light', 'dark')
+    document.documentElement.classList.add(theme.mode)
     document.documentElement.dataset.accent = theme.accent
     document.documentElement.dataset.gray = theme.gray
     radiusLevels[theme.radius].forEach((value, index) =>

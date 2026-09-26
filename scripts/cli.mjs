@@ -41,7 +41,7 @@ ${fence}ts
 ${pandaConfigTemplate(palettes)}${fence}
 
 4. Import src/theme/global.css in your application entry.
-5. Set data-theme="light" or "dark" on html. Components inherit colorPalette="accent" (from aliases); pass colorPalette to any component, or set it on an ancestor to recolor a subtree. Use definePalette('brand', blue) for a renamed copy.
+5. Put class="dark" on html for the dark theme (next-themes: attribute="class", its default); light is the default. Components inherit colorPalette="accent" (from aliases); pass colorPalette to any component, or set it on an ancestor to recolor a subtree. Use definePalette('brand', blue) for a renamed copy.
 6. Run pnpm exec panda codegen. Add it to prepare and run it after adding components.
 7. Import individual components from src/components/ui. Panda extracts variant, size and colorPalette values written in JSX (literals, ternaries, responsive objects) and emits only those; list values chosen from variables in staticCss.recipes, e.g. { button: [{ size: ['sm', 'lg'] }] }.
 

@@ -115,10 +115,10 @@ pnpm ui update dialog --target ../your-app
 ```
 
 ```html
-<html data-theme="dark"></html>
+<html class="dark"></html>
 ```
 
-`data-theme` は html に設定すると Portal 内にも継承されます。`colorPalette` は DOM で継承されるため、Portal で描画する Menu・Select・Dialog などは Root の `colorPalette` prop で指定します（部品側でポップアップへ届けます）。フォントの追加は任意で、標準ではシステムフォントへフォールバックします。プレビューは Geist を同梱しています。
+ダークモードは Park UI と同じく html の `class="dark"` で切り替えます（Panda 既定の `dark` 条件）。next-themes は既定の `attribute="class"` のまま使えます。何も付けなければライトです。html に付けるので Portal 内にも効きます。`colorPalette` は DOM で継承されるため、Portal で描画する Menu・Select・Dialog などは Root の `colorPalette` prop で指定します（部品側でポップアップへ届けます）。フォントの追加は任意で、標準ではシステムフォントへフォールバックします。プレビューは Geist を同梱しています。
 
 ## 開発と検証
 

@@ -507,7 +507,7 @@ export function InstallationPage() {
       <div className={css({ mt: '4' })}>
         <CodeBlock
           title="app.tsx"
-          code={`import { Button } from './components/ui/button'\n\n// Set data-theme="light" or "dark" on <html>.\n// Every component inherits colorPalette="accent"; pass colorPalette to change one,\n// or set it on an ancestor to recolor everything inside.\n\nexport function App() {\n  return <Button variant="solid" size="md">Make something good</Button>\n}`}
+          code={`import { Button } from './components/ui/button'\n\n// Put class="dark" on <html> for the dark theme (next-themes does this by default).\n// Every component inherits colorPalette="accent"; pass colorPalette to change one,\n// or set it on an ancestor to recolor everything inside.\n\nexport function App() {\n  return <Button variant="solid" size="md">Make something good</Button>\n}`}
         />
       </div>
       <h2 className={s.docHeading}>05 / Stay up to date</h2>
