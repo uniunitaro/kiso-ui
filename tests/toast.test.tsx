@@ -26,7 +26,29 @@ describe('Toaster', () => {
     expect(success.querySelector('.kiso-toast__indicator')).toHaveAttribute('aria-hidden', 'true')
     expect(plain).not.toHaveAttribute('data-type')
     expect(plain.querySelector('.kiso-toast__indicator')).toBeNull()
+    // Without a label the region keeps Base UI's own name.
+    expect(document.querySelector('.kiso-toast__viewport')).toHaveAttribute(
+      'aria-label',
+      'Notifications',
+    )
     // The frontmost toast is first; Base UI marks the rest as behind for the collapsed stack.
     expect(success.querySelector('.kiso-toast__content')).toHaveAttribute('data-behind')
+  })
+  it('names the region and the dismiss button in the given language', async () => {
+    const user = userEvent.setup()
+    render(
+      <Toast.Provider>
+        <Trigger title="保存しました" />
+        <Toast.Toaster label="通知" closeLabel="通知を閉じる" />
+      </Toast.Provider>,
+    )
+    await user.click(screen.getByRole('button', { name: '保存しました' }))
+    await waitFor(() =>
+      expect(document.querySelector('.kiso-toast__close')).toHaveAttribute(
+        'aria-label',
+        '通知を閉じる',
+      ),
+    )
+    expect(document.querySelector('.kiso-toast__viewport')).toHaveAttribute('aria-label', '通知')
   })
 })

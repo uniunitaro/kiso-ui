@@ -67,12 +67,23 @@ export const typeIcons: Record<string, ReactNode> = {
   loading: <Spinner size="inherit" aria-hidden />,
 }
 
-/** Optional composition; mount once inside Provider. Use parts directly for custom layouts. */
-export function Toaster() {
+/**
+ * Optional composition; mount once inside Provider. Use parts directly for custom layouts.
+ * label names the region (Base UI: "Notifications") and closeLabel the dismiss button; pass
+ * your own for another language.
+ */
+export function Toaster({
+  label,
+  closeLabel = 'Dismiss notification',
+}: {
+  label?: string
+  closeLabel?: string
+}) {
   const { toasts } = useToastManager()
   return (
     <Portal>
-      <Viewport>
+      {/* An undefined aria-label would erase Base UI's default name. */}
+      <Viewport {...(label && { 'aria-label': label })}>
         {toasts.map((item) => (
           <Root key={item.id} toast={item}>
             {item.type && typeIcons[item.type] && (
@@ -83,7 +94,7 @@ export function Toaster() {
               {item.description && <Description>{item.description}</Description>}
             </Content>
             {item.actionProps && <Action {...item.actionProps} />}
-            <Close aria-label="Dismiss notification">
+            <Close aria-label={closeLabel}>
               <svg
                 viewBox="0 0 16 16"
                 fill="none"

@@ -5,6 +5,7 @@ import { createStyleContext } from './style-context'
 const { withProvider, withContext } = createStyleContext(table)
 export const Root = withProvider('table', 'root')
 const StyledContainer = withContext('div', 'container')
+/** Scrolls a wide table. Name it with aria-label (another language) or aria-labelledby. */
 export function Container(props: ComponentPropsWithRef<'div'>) {
   return <StyledContainer role="region" aria-label="Scrollable table" tabIndex={0} {...props} />
 }

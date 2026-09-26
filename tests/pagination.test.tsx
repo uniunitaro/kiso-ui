@@ -42,4 +42,17 @@ describe('pagination boundaries', () => {
     rerender(<Pagination count={3} page={8} onPageChange={onChange} />)
     expect(screen.getByRole('button', { name: 'Page 3' })).toHaveAttribute('aria-current', 'page')
   })
+  it('takes labels in another language, keeping the defaults it does not replace', () => {
+    render(
+      <Pagination
+        count={3}
+        aria-label="ページ送り"
+        labels={{ previous: '前のページ', page: (page) => `${page} ページ` }}
+      />,
+    )
+    expect(screen.getByRole('navigation', { name: 'ページ送り' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '前のページ' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '2 ページ' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Next page' })).toBeInTheDocument()
+  })
 })

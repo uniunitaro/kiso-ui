@@ -22,7 +22,7 @@ export const catalog: ComponentEntry[] = [
     sizes: ['sm', 'md', 'lg'],
     variants: ['plain', 'surface'],
     anatomy: ['Container', 'Root', 'Header', 'Body', 'Footer', 'Row', 'Head', 'Cell', 'Caption'],
-    note: 'Native table semantics with column headers by default. Use Container for horizontal overflow with keyboard access; give it a specific aria-label when there are several tables. Sorting and filtering belong in your data layer; no table engine is bundled.',
+    note: 'Native table semantics with column headers by default. Use Container for horizontal overflow with keyboard access; give it a specific aria-label when there are several tables, or in another language (the default is "Scrollable table"). Sorting and filtering belong in your data layer; no table engine is bundled.',
   },
   {
     id: 'breadcrumb',
@@ -43,7 +43,7 @@ export const catalog: ComponentEntry[] = [
     description: 'A steady path through a longer collection.',
     sizes: ['xs', 'sm', 'md', 'lg', 'xl', '2xl'],
     anatomy: ['Pagination'],
-    note: 'count is the total number of pages. Supports page/onPageChange or defaultPage. Navigation clamps within the page count; changes from external count updates are not emitted as user events.',
+    note: 'count is the total number of pages. Supports page/onPageChange or defaultPage. Navigation clamps within the page count; changes from external count updates are not emitted as user events. For another language, pass aria-label and labels={{ previous, next, page: (n) => … }}.',
   },
   {
     id: 'spinner',
@@ -203,7 +203,7 @@ export const catalog: ComponentEntry[] = [
       'Action',
       'Close',
     ],
-    note: 'Mount Toaster once inside Provider. useToastManager supports add, update, close and promise. The card stays neutral; Toaster adds a tinted icon for success, error, warning, info and loading, and none for other types. Toasts stack behind the newest one and fan out on hover or focus. Toast announcements and timeout pausing are handled by Base UI. For a toast next to a button (Copied!), give it its own createToastManager() and render each toast inside Positioner with positionerProps.anchor.',
+    note: 'Mount Toaster once inside Provider. useToastManager supports add, update, close and promise. The card stays neutral; Toaster adds a tinted icon for success, error, warning, info and loading, and none for other types. Toasts stack behind the newest one and fan out on hover or focus. Toast announcements and timeout pausing are handled by Base UI. Toaster takes label and closeLabel for another language. For a toast next to a button (Copied!), give it its own createToastManager() and render each toast inside Positioner with positionerProps.anchor.',
   },
   {
     id: 'meter',

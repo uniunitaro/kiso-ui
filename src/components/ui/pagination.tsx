@@ -17,6 +17,17 @@ export function getPageItems(
     return [1, 'start-gap', total - 4, total - 3, total - 2, total - 1, total]
   return [1, 'start-gap', active - 1, active, active + 1, 'end-gap', total]
 }
+/** Accessible names; pass your own for another language. The nav name is aria-label. */
+export interface PaginationLabels {
+  previous: string
+  next: string
+  page: (page: number) => string
+}
+const defaultLabels: PaginationLabels = {
+  previous: 'Previous page',
+  next: 'Next page',
+  page: (page) => `Page ${page}`,
+}
 export interface PaginationProps extends Omit<ComponentPropsWithRef<'nav'>, 'onChange'> {
   count: number
   page?: number
@@ -27,6 +38,7 @@ export interface PaginationProps extends Omit<ComponentPropsWithRef<'nav'>, 'onC
    * jsx, and the literal `?? 'sm'` fallback below, so no staticCss is needed.
    */
   size?: ButtonProps['size']
+  labels?: Partial<PaginationLabels>
 }
 export function Pagination({
   count,
@@ -34,9 +46,11 @@ export function Pagination({
   defaultPage = 1,
   onPageChange,
   size,
+  labels: customLabels,
   className,
   ...props
 }: PaginationProps) {
+  const labels = { ...defaultLabels, ...customLabels }
   const [internalPage, setInternalPage] = useState(defaultPage)
   const total = Math.max(0, Math.floor(Number.isFinite(count) ? count : 0))
   const requested = page ?? internalPage
@@ -57,7 +71,7 @@ export function Pagination({
         size={size ?? 'sm'}
         square
         disabled={active <= 1 || total === 0}
-        aria-label="Previous page"
+        aria-label={labels.previous}
         onClick={() => change(active - 1)}
       >
         <ChevronLeftIcon />
@@ -70,7 +84,7 @@ export function Pagination({
             square
             variant={item === active ? 'subtle' : 'plain'}
             colorPalette={item === active ? undefined : 'gray'}
-            aria-label={`Page ${item}`}
+            aria-label={labels.page(item)}
             aria-current={item === active ? 'page' : undefined}
             onClick={() => change(item)}
           >
@@ -88,7 +102,7 @@ export function Pagination({
         size={size ?? 'sm'}
         square
         disabled={active >= total || total === 0}
-        aria-label="Next page"
+        aria-label={labels.next}
         onClick={() => change(active + 1)}
       >
         <ChevronRightIcon />
