@@ -102,7 +102,7 @@ export const catalog: ComponentEntry[] = [
       'Chip',
       'ChipRemove',
     ],
-    note: 'Supports single and multiple values with generic type inference. Keep the input visibly labeled. Chips are available for multiple selection; list callbacks receive each filtered item.',
+    note: 'Supports single and multiple values with generic type inference. Keep the input visibly labeled. Chips are available for multiple selection; list callbacks receive each filtered item. Trigger, Clear, ItemIndicator and ChipRemove draw built-in icons; pass children to replace them.',
   },
   {
     id: 'autocomplete',
@@ -391,7 +391,7 @@ export const catalog: ComponentEntry[] = [
     variants: ['solid', 'surface', 'subtle', 'outline', 'plain'],
     palettes: ['accent', 'gray', 'danger', 'success', 'warning', 'info'],
     anatomy: ['Label', 'Root', 'Indicator'],
-    note: 'Wrap Root and its text in Label, or use aria-labelledby. Set size and variant on Label; Root follows it, and Label dims with a disabled Root. Supports checked, indeterminate, disabled and form submission.',
+    note: 'Wrap Root and its text in Label, or use aria-labelledby. Set size and variant on Label; Root follows it, and Label dims with a disabled Root. Supports checked, indeterminate, disabled and form submission. Indicator draws a check, or a minus while indeterminate; pass children to replace it.',
   },
   {
     id: 'radio-group',
@@ -441,7 +441,7 @@ export const catalog: ComponentEntry[] = [
       'ItemText',
       'ItemIndicator',
     ],
-    note: 'Root retains generic value inference and multiple selection. Pass items for stable value labels; use alignItemWithTrigger={false} for a conventional popup.',
+    note: 'Root retains generic value inference and multiple selection. Pass items for stable value labels; use alignItemWithTrigger={false} for a conventional popup. Icon and ItemIndicator draw a chevron and a check; pass children to replace them.',
   },
   {
     id: 'slider',
@@ -466,7 +466,7 @@ export const catalog: ComponentEntry[] = [
     variants: ['outline', 'surface', 'subtle'],
     palettes: ['accent', 'gray', 'danger', 'success', 'warning', 'info'],
     anatomy: ['Root', 'Group', 'Input', 'Increment', 'Decrement', 'ScrubArea'],
-    note: 'Pass min, max, step and locale to Root. Label the input and both step buttons.',
+    note: 'Pass min, max, step and locale to Root. Label the input and both step buttons. Decrement and Increment draw a minus and a plus; pass children to replace them.',
   },
   {
     id: 'badge',
@@ -629,7 +629,7 @@ export const catalog: ComponentEntry[] = [
       'Separator',
       'SubmenuRoot',
     ],
-    note: 'Use menus for actions. Use Select for a form value. Disabled and highlighted states are provided by Base UI.',
+    note: 'Use menus for actions. Use Select for a form value. Disabled and highlighted states are provided by Base UI. CheckboxItemIndicator and RadioItemIndicator draw a check; pass children to replace it.',
   },
   {
     id: 'tooltip',

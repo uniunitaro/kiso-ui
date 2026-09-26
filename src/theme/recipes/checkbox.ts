@@ -27,6 +27,12 @@ export const checkbox = defineSlotRecipe({
       alignItems: 'center',
       justifyContent: 'center',
       _icon: { boxSize: 'var(--checkbox-icon-size)', strokeWidth: '3' },
+      // The default icon carries both marks (components/ui/checkbox.tsx).
+      '& [data-mark=indeterminate]': { display: 'none' },
+      _indeterminate: {
+        '& [data-mark=check]': { display: 'none' },
+        '& [data-mark=indeterminate]': { display: 'inline' },
+      },
     },
     label: choiceLabel,
   },

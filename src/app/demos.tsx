@@ -7,7 +7,6 @@ import {
   Check,
   ChevronDown,
   Plus,
-  Minus,
   Bold,
   Italic,
   Underline,
@@ -58,9 +57,6 @@ import { styles as s } from './styles'
 export type DemoSize = 'sm' | 'md' | 'lg'
 /** Docs controls offer each recipe's own values (catalog.ts), so they pass straight through. */
 export const pass = (value?: string) => value as never
-export function Checkmark() {
-  return <Check aria-hidden="true" size={12} />
-}
 export function CheckControl({
   label,
   defaultChecked = false,
@@ -77,9 +73,7 @@ export function CheckControl({
   return (
     <Checkbox.Label size={pass(size)} variant={pass(variant)}>
       <Checkbox.Root defaultChecked={defaultChecked} disabled={disabled}>
-        <Checkbox.Indicator>
-          <Checkmark />
-        </Checkbox.Indicator>
+        <Checkbox.Indicator />
       </Checkbox.Root>
       {label}
     </Checkbox.Label>
@@ -128,9 +122,7 @@ export function SelectDemo({
     >
       <Select.Trigger aria-label="Team">
         <Select.Value />
-        <Select.Icon>
-          <ChevronDown />
-        </Select.Icon>
+        <Select.Icon />
       </Select.Trigger>
       <Select.Portal>
         <Select.Positioner sideOffset={6} alignItemWithTrigger={false}>
@@ -139,9 +131,7 @@ export function SelectDemo({
               {options.map((option) => (
                 <Select.Item key={option.value} value={option.value}>
                   <Select.ItemText>{option.label}</Select.ItemText>
-                  <Select.ItemIndicator>
-                    <Checkmark />
-                  </Select.ItemIndicator>
+                  <Select.ItemIndicator />
                 </Select.Item>
               ))}
             </Select.List>
@@ -320,9 +310,7 @@ export function MenuDemo({ size = 'md', palette }: { size?: string; palette?: st
               <Menu.Separator />
               <Menu.CheckboxItem defaultChecked>
                 Show in sidebar
-                <Menu.CheckboxItemIndicator>
-                  <Checkmark />
-                </Menu.CheckboxItemIndicator>
+                <Menu.CheckboxItemIndicator />
               </Menu.CheckboxItem>
               <Menu.Separator />
               <Menu.Item
@@ -535,13 +523,9 @@ export function NumberDemo({ size = 'md', variant }: { size?: string; variant?: 
       <Field.Label>Team seats</Field.Label>
       <NumberField.Root defaultValue={5} min={1} max={50} size={pass(size)} variant={pass(variant)}>
         <NumberField.Group>
-          <NumberField.Decrement aria-label="Remove a seat">
-            <Minus size={14} />
-          </NumberField.Decrement>
+          <NumberField.Decrement aria-label="Remove a seat" />
           <NumberField.Input />
-          <NumberField.Increment aria-label="Add a seat">
-            <Plus size={14} />
-          </NumberField.Increment>
+          <NumberField.Increment aria-label="Add a seat" />
         </NumberField.Group>
       </NumberField.Root>
       <Field.Description>Between 1 and 50 people.</Field.Description>
@@ -672,9 +656,7 @@ export function Demo({
           />
           <Checkbox.Label size={pass(size)} variant={pass(variant)}>
             <Checkbox.Root indeterminate>
-              <Checkbox.Indicator>
-                <Minus size={12} />
-              </Checkbox.Indicator>
+              <Checkbox.Indicator />
             </Checkbox.Root>
             Some projects selected
           </Checkbox.Label>
@@ -1074,9 +1056,7 @@ export function Overview() {
                     )
                   }
                 >
-                  <Checkbox.Indicator>
-                    <Checkmark />
-                  </Checkbox.Indicator>
+                  <Checkbox.Indicator />
                 </Checkbox.Root>
                 {label}
               </Checkbox.Label>

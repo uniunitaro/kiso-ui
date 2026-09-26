@@ -2,6 +2,7 @@
 import { ContextMenu as Base } from '@base-ui/react/context-menu'
 import { menu, type MenuVariantProps } from '../../../styled-system/recipes'
 import { createStyleContext, type ColorPaletteProp } from './style-context'
+import { CheckIcon, withIcon } from './icons'
 const { Provider, withContext } = createStyleContext(menu)
 export function Root({
   size,
@@ -21,12 +22,15 @@ export const LinkItem = withContext(Base.LinkItem, 'item')
 export const GroupLabel = withContext(Base.GroupLabel, 'groupLabel')
 export const Separator = withContext(Base.Separator, 'separator')
 export const CheckboxItem = withContext(Base.CheckboxItem, 'checkboxItem')
-export const CheckboxItemIndicator = withContext(
-  Base.CheckboxItemIndicator,
-  'checkboxItemIndicator',
+export const CheckboxItemIndicator = withIcon(
+  withContext(Base.CheckboxItemIndicator, 'checkboxItemIndicator'),
+  <CheckIcon />,
 )
 export const RadioItem = withContext(Base.RadioItem, 'radioItem')
-export const RadioItemIndicator = withContext(Base.RadioItemIndicator, 'radioItemIndicator')
+export const RadioItemIndicator = withIcon(
+  withContext(Base.RadioItemIndicator, 'radioItemIndicator'),
+  <CheckIcon />,
+)
 export const SubmenuTrigger = withContext(Base.SubmenuTrigger, 'submenuTrigger')
 export const Trigger = Base.Trigger
 export const Portal = Base.Portal

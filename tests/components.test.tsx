@@ -13,6 +13,7 @@ import {
   Input,
   RadioGroup,
   Fieldset,
+  NumberField,
 } from '../src/components/ui'
 
 describe('composition contract', () => {
@@ -275,5 +276,35 @@ describe('keyboard and form contracts', () => {
     await user.click(screen.getByRole('radio', { name: 'Team' }))
     expect(screen.getByRole('radio', { name: 'Team' })).toBeChecked()
     expect(screen.getByRole('radio', { name: 'Personal' })).not.toBeChecked()
+  })
+})
+
+describe('built-in icons', () => {
+  it('draws icons in icon parts until children replace them', () => {
+    render(
+      <NumberField.Root defaultValue={1}>
+        <NumberField.Decrement aria-label="Less" />
+        <NumberField.Input aria-label="Count" />
+        <NumberField.Increment aria-label="More">More</NumberField.Increment>
+      </NumberField.Root>,
+    )
+    const less = screen.getByRole('button', { name: 'Less' })
+    expect(less.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+    expect(less).toHaveClass('kiso-number__decrement')
+    const more = screen.getByRole('button', { name: 'More' })
+    expect(more.querySelector('svg')).toBeNull()
+    expect(more).toHaveTextContent('More')
+  })
+
+  it('marks the checkbox indicator for the indeterminate minus', () => {
+    render(
+      <Checkbox.Root aria-label="Some" indeterminate>
+        <Checkbox.Indicator data-testid="indicator" />
+      </Checkbox.Root>,
+    )
+    const indicator = screen.getByTestId('indicator')
+    expect(indicator).toHaveAttribute('data-indeterminate')
+    expect(indicator.querySelector('[data-mark=check]')).not.toBeNull()
+    expect(indicator.querySelector('[data-mark=indeterminate]')).not.toBeNull()
   })
 })

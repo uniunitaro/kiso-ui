@@ -85,7 +85,7 @@ export function Choice({
       >
         <Select.Trigger>
           <Select.Value />
-          <Select.Icon>⌄</Select.Icon>
+          <Select.Icon />
         </Select.Trigger>
         <Select.Portal>
           <Select.Positioner sideOffset={5} alignItemWithTrigger={false}>
@@ -399,7 +399,7 @@ export function CatalogPage() {
           >
             <Select.Trigger aria-label="Filter by category">
               <Select.Value />
-              <Select.Icon>⌄</Select.Icon>
+              <Select.Icon />
             </Select.Trigger>
             <Select.Portal>
               <Select.Positioner sideOffset={5} alignItemWithTrigger={false}>

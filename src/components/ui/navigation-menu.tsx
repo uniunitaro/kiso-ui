@@ -2,12 +2,13 @@
 import { NavigationMenu as Base } from '@base-ui/react/navigation-menu'
 import { navigationMenu } from '../../../styled-system/recipes'
 import { createStyleContext } from './style-context'
+import { ChevronDownIcon, withIcon } from './icons'
 const { withProvider, withContext } = createStyleContext(navigationMenu)
 export const Root = withProvider(Base.Root, 'root')
 export const List = withContext(Base.List, 'list')
 export const Item = withContext(Base.Item, 'item')
 export const Trigger = withContext(Base.Trigger, 'trigger')
-export const Icon = withContext(Base.Icon, 'icon')
+export const Icon = withIcon(withContext(Base.Icon, 'icon'), <ChevronDownIcon />)
 export const Content = withContext(Base.Content, 'content')
 export const Positioner = withContext(Base.Positioner, 'positioner')
 export const Popup = withContext(Base.Popup, 'popup')

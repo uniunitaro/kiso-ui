@@ -3,6 +3,7 @@ import { useState, type ComponentPropsWithRef } from 'react'
 import { cx } from '../../../styled-system/css'
 import { pagination } from '../../../styled-system/recipes'
 import { Button, type ButtonProps } from './button'
+import { ChevronLeftIcon, ChevronRightIcon } from './icons'
 
 export function getPageItems(
   count: number,
@@ -59,7 +60,7 @@ export function Pagination({
         aria-label="Previous page"
         onClick={() => change(active - 1)}
       >
-        ‹
+        <ChevronLeftIcon />
       </Button>
       {getPageItems(total, active).map((item) =>
         typeof item === 'number' ? (
@@ -90,7 +91,7 @@ export function Pagination({
         aria-label="Next page"
         onClick={() => change(active + 1)}
       >
-        ›
+        <ChevronRightIcon />
       </Button>
     </nav>
   )

@@ -261,7 +261,7 @@ export function App() {
               >
                 <Select.Trigger aria-label="Navigate documentation">
                   <Select.Value placeholder="Navigate" />
-                  <Select.Icon>⌄</Select.Icon>
+                  <Select.Icon />
                 </Select.Trigger>
                 <Select.Portal>
                   <Select.Positioner sideOffset={5} alignItemWithTrigger={false}>

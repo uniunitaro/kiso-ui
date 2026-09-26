@@ -204,9 +204,7 @@ export function ThemePage({
               className={css({ w: '40' })}
             />
             <Checkbox.Root size={size} defaultChecked aria-label={size + ' checkbox'}>
-              <Checkbox.Indicator>
-                <Check />
-              </Checkbox.Indicator>
+              <Checkbox.Indicator />
             </Checkbox.Root>
             <Switch.Root size={size} defaultChecked aria-label={size + ' switch'}>
               <Switch.Thumb />

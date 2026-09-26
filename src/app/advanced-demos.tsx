@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import {
   Bold,
-  Check,
   ChevronDown,
   Copy,
   Italic,
@@ -63,12 +62,8 @@ export function ComboboxDemo({
       >
         <Combobox.InputGroup>
           <Combobox.Input placeholder="Find a framework…" />
-          <Combobox.Clear aria-label="Clear framework">
-            <X />
-          </Combobox.Clear>
-          <Combobox.Trigger aria-label="Show frameworks">
-            <ChevronDown />
-          </Combobox.Trigger>
+          <Combobox.Clear aria-label="Clear framework" />
+          <Combobox.Trigger aria-label="Show frameworks" />
         </Combobox.InputGroup>
         <Combobox.Portal>
           <Combobox.Positioner sideOffset={6}>
@@ -78,9 +73,7 @@ export function ComboboxDemo({
                 {(item: string) => (
                   <Combobox.Item key={item} value={item}>
                     {item}
-                    <Combobox.ItemIndicator>
-                      <Check />
-                    </Combobox.ItemIndicator>
+                    <Combobox.ItemIndicator />
                   </Combobox.Item>
                 )}
               </Combobox.List>
@@ -269,9 +262,7 @@ export function AdvancedDemo({
           {['Design', 'Engineering', 'Product'].map((name) => (
             <Checkbox.Label key={name}>
               <Checkbox.Root value={name.toLowerCase()}>
-                <Checkbox.Indicator>
-                  <Check size={12} />
-                </Checkbox.Indicator>
+                <Checkbox.Indicator />
               </Checkbox.Root>
               {name}
             </Checkbox.Label>
@@ -605,9 +596,7 @@ export function AdvancedDemo({
             <NavigationMenu.Item>
               <NavigationMenu.Trigger>
                 Explore
-                <NavigationMenu.Icon>
-                  <ChevronDown />
-                </NavigationMenu.Icon>
+                <NavigationMenu.Icon />
               </NavigationMenu.Trigger>
               <NavigationMenu.Content>
                 <NavigationMenu.Link href="#/components">The components</NavigationMenu.Link>
