@@ -15,6 +15,7 @@ export function Root<Payload = unknown>(
     </StyleProvider>
   )
 }
+export const Backdrop = withContext(Base.Backdrop, 'backdrop')
 export const Positioner = withContext(Base.Positioner, 'positioner')
 export const Popup = withContext(Base.Popup, 'popup')
 export const Title = withContext(Base.Title, 'title')
@@ -24,5 +25,8 @@ export const Close = withContext(Base.Close, 'close')
 export const CloseTrigger = withContext(Base.Close, 'closeTrigger')
 export const Trigger = Base.Trigger
 export const Portal = Base.Portal
+export const Viewport = Base.Viewport
 
 export const createHandle = Base.createHandle
+export const Handle = Base.Handle
+export type Handle<Payload> = Base.Handle<Payload>

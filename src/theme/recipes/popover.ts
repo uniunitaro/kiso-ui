@@ -1,12 +1,22 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { arrow, popup } from '../shared'
+import { arrow, popup, popupBackdrop } from '../shared'
 
 // Shared by Popover and PreviewCard.
 export const popover = defineSlotRecipe({
   className: 'kiso-popover',
   jsx: ['Popover', /^Popover\./, 'PreviewCard', /^PreviewCard\./],
-  slots: ['positioner', 'popup', 'title', 'description', 'arrow', 'close', 'closeTrigger'],
+  slots: [
+    'backdrop',
+    'positioner',
+    'popup',
+    'title',
+    'description',
+    'arrow',
+    'close',
+    'closeTrigger',
+  ],
   base: {
+    backdrop: popupBackdrop,
     positioner: { zIndex: 'popover' },
     popup: {
       ...popup,

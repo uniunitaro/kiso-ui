@@ -9,6 +9,9 @@ export const Provider = Base.Provider
 export const Portal = Base.Portal
 export const Root = withProvider(Base.Root, 'root')
 export const Viewport = withContext(Base.Viewport, 'viewport')
+/** Anchored toasts: place one toast next to an element (positionerProps.anchor). */
+export const Positioner = withContext(Base.Positioner, 'positioner')
+export const Arrow = withContext(Base.Arrow, 'arrow')
 /** Optional icon before the content, tinted by the toast type. */
 export const Indicator = withContext('span', 'indicator')
 export const Content = withContext(Base.Content, 'content')

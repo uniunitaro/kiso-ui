@@ -24,6 +24,7 @@ export const tooltip = defineSlotRecipe({
       _startingStyle: { opacity: 0, scale: '0.96' },
       _endingStyle: { opacity: 0, scale: '0.96' },
     },
-    arrow: { ...arrow, width: '2', height: '2' },
+    // The solid tooltip needs no outline.
+    arrow: { ...arrow, width: '2', height: '2', borderWidth: '0' },
   },
 })

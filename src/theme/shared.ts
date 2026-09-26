@@ -156,15 +156,31 @@ export const fieldGroupVariants = {
   },
 } satisfies Record<string, SystemStyleObject>
 
-/** Rotated square for Popover/Tooltip arrows; it inherits the popup background. */
+/**
+ * Rotated square for popup arrows; it inherits the popup background. The popup covers its inner
+ * half, so the border draws only the outer edges, continuing the popup's outline (shadows md/lg).
+ */
 export const arrow = {
   width: '3',
   height: '3',
   bg: 'inherit',
+  borderWidth: '1px',
+  borderColor: { base: 'gray.a4', _dark: 'gray.a8' },
   rotate: '45deg',
   zIndex: '-1',
   '&[data-side=top]': { bottom: '-1.5' },
   '&[data-side=bottom]': { top: '-1.5' },
   '&[data-side=left], &[data-side=inline-start]': { right: '-1.5' },
   '&[data-side=right], &[data-side=inline-end]': { left: '-1.5' },
+} satisfies SystemStyleObject
+
+/**
+ * Layer under a floating popup (Menu, Popover, Select, Combobox…). Transparent: it blocks the
+ * page behind the popup; tint it with className when the popup should dim the page.
+ */
+export const popupBackdrop = {
+  position: 'fixed',
+  inset: '0',
+  zIndex: 'popover',
+  userSelect: 'none',
 } satisfies SystemStyleObject

@@ -1,10 +1,20 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { fieldControl, fieldVariants, groupLabel, item, popup } from '../shared'
+import {
+  arrow,
+  disabledLabel,
+  fieldControl,
+  fieldVariants,
+  groupLabel,
+  item,
+  popup,
+  popupBackdrop,
+} from '../shared'
 
 export const select = defineSlotRecipe({
   className: 'kiso-select',
   jsx: ['Select', /^Select\./],
   slots: [
+    'label',
     'trigger',
     'value',
     'icon',
@@ -18,8 +28,11 @@ export const select = defineSlotRecipe({
     'separator',
     'scrollUpArrow',
     'scrollDownArrow',
+    'backdrop',
+    'arrow',
   ],
   base: {
+    label: { display: 'block', textStyle: 'label', mb: '1.5', _disabled: disabledLabel },
     trigger: {
       ...fieldControl,
       display: 'flex',
@@ -39,6 +52,11 @@ export const select = defineSlotRecipe({
       minWidth: 'max(var(--anchor-width), {sizes.40})',
       maxHeight: 'min(var(--available-height), {sizes.96})',
       overflowY: 'auto',
+      // The arrow sits outside the box, so the list scrolls instead of the popup.
+      '&:has(> .kiso-select__arrow)': {
+        overflowY: 'visible',
+        '& > .kiso-select__list': { minHeight: '0', overflowY: 'auto' },
+      },
     },
     list: { display: 'flex', flexDirection: 'column', outline: '0' },
     item: { ...item, justifyContent: 'space-between', cursor: 'pointer' },
@@ -48,6 +66,8 @@ export const select = defineSlotRecipe({
     separator: { h: '1px', bg: 'border', my: '1' },
     scrollUpArrow: { display: 'flex', justifyContent: 'center', color: 'fg.subtle', py: '1' },
     scrollDownArrow: { display: 'flex', justifyContent: 'center', color: 'fg.subtle', py: '1' },
+    backdrop: popupBackdrop,
+    arrow,
   },
   defaultVariants: { variant: 'outline', size: 'md' },
   variants: {

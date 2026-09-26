@@ -16,9 +16,11 @@ export function Root<Payload = unknown>(
     </StyleProvider>
   )
 }
+export const Backdrop = withContext(Base.Backdrop, 'backdrop')
 export const Positioner = withContext(Base.Positioner, 'positioner')
 export const Popup = withContext(Base.Popup, 'popup')
 export const Item = withContext(Base.Item, 'item')
+export const LinkItem = withContext(Base.LinkItem, 'item')
 export const GroupLabel = withContext(Base.GroupLabel, 'groupLabel')
 export const Separator = withContext(Base.Separator, 'separator')
 export const CheckboxItem = withContext(Base.CheckboxItem, 'checkboxItem')
@@ -35,8 +37,11 @@ export const SubmenuTrigger = withContext(Base.SubmenuTrigger, 'submenuTrigger')
 export const Arrow = withContext(Base.Arrow, 'arrow')
 export const Trigger = Base.Trigger
 export const Portal = Base.Portal
+export const Viewport = Base.Viewport
 export const Group = Base.Group
 export const RadioGroup = Base.RadioGroup
 export const SubmenuRoot = Base.SubmenuRoot
 
 export const createHandle = Base.createHandle
+export const Handle = Base.Handle
+export type Handle<Payload> = Base.Handle<Payload>

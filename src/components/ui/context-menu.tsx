@@ -15,6 +15,7 @@ export function Root({
     </Provider>
   )
 }
+export const Backdrop = withContext(Base.Backdrop, 'backdrop')
 export const Positioner = withContext(Base.Positioner, 'positioner')
 export const Popup = withContext(Base.Popup, 'popup')
 export const Item = withContext(Base.Item, 'item')
@@ -32,6 +33,7 @@ export const RadioItemIndicator = withIcon(
   <CheckIcon />,
 )
 export const SubmenuTrigger = withContext(Base.SubmenuTrigger, 'submenuTrigger')
+export const Arrow = withContext(Base.Arrow, 'arrow')
 export const Trigger = Base.Trigger
 export const Portal = Base.Portal
 export const Group = Base.Group

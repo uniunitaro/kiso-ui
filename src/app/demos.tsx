@@ -11,6 +11,7 @@ import {
   Italic,
   Underline,
   Info,
+  BookOpen,
   Copy,
   Trash2,
   Settings2,
@@ -120,7 +121,8 @@ export function SelectDemo({
       items={options}
       defaultValue="design"
     >
-      <Select.Trigger aria-label="Team">
+      <Select.Label>Team</Select.Label>
+      <Select.Trigger>
         <Select.Value />
         <Select.Icon />
       </Select.Trigger>
@@ -306,6 +308,10 @@ export function MenuDemo({ size = 'md', palette }: { size?: string; palette?: st
                   <Settings2 />
                   Settings
                 </Menu.Item>
+                <Menu.LinkItem href="#/installation">
+                  <BookOpen />
+                  Read the guide
+                </Menu.LinkItem>
               </Menu.Group>
               <Menu.Separator />
               <Menu.CheckboxItem defaultChecked>

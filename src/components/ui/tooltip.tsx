@@ -21,3 +21,8 @@ export const Arrow = withContext(Base.Arrow, 'arrow')
 export const Trigger = Base.Trigger
 export const Portal = Base.Portal
 export const Provider = Base.Provider
+export const Viewport = Base.Viewport
+
+export const createHandle = Base.createHandle
+export const Handle = Base.Handle
+export type Handle<Payload> = Base.Handle<Payload>

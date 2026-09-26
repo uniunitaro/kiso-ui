@@ -42,6 +42,8 @@ const rangeSlider = (
   <Slider.Root defaultValue={[20, 80]} onValueChange={(value) => value.map((n) => n.toFixed())} />
 )
 const handle = Dialog.createHandle<{ project: string }>()
+// Handle is both the class and its type, so a handle can be created and annotated directly.
+const typedHandle: Dialog.Handle<{ project: string }> = new Dialog.Handle<{ project: string }>()
 const payloadDialog = (
   <Dialog.Root handle={handle}>
     {({ payload }) => <span>{payload?.project.toUpperCase()}</span>}
@@ -71,6 +73,7 @@ void [
   numericSlider,
   rangeSlider,
   payloadDialog,
+  typedHandle,
   responsiveButton,
   badVariant,
   badSelect,

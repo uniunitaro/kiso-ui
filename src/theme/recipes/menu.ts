@@ -1,5 +1,5 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { groupLabel, item, popup } from '../shared'
+import { arrow, groupLabel, item, popup, popupBackdrop } from '../shared'
 
 const indicator = {
   display: 'flex',
@@ -12,6 +12,7 @@ export const menu = defineSlotRecipe({
   className: 'kiso-menu',
   jsx: ['Menu', /^Menu\./, 'ContextMenu', /^ContextMenu\./],
   slots: [
+    'backdrop',
     'positioner',
     'popup',
     'item',
@@ -25,6 +26,7 @@ export const menu = defineSlotRecipe({
     'arrow',
   ],
   base: {
+    backdrop: popupBackdrop,
     positioner: { zIndex: 'popover' },
     popup: {
       ...popup,
@@ -33,6 +35,8 @@ export const menu = defineSlotRecipe({
       minWidth: 'max(var(--anchor-width), {sizes.40})',
       maxHeight: 'min(var(--available-height), {sizes.96})',
       overflowY: 'auto',
+      // Scrolling would clip the arrow outside the box; a menu with an arrow stays short.
+      '&:has(> .kiso-menu__arrow)': { overflowY: 'visible' },
     },
     item,
     checkboxItem: item,
@@ -42,6 +46,7 @@ export const menu = defineSlotRecipe({
     separator: { h: '1px', bg: 'border', flexShrink: '0' },
     checkboxItemIndicator: indicator,
     radioItemIndicator: indicator,
+    arrow,
   },
   defaultVariants: { size: 'md' },
   variants: {

@@ -22,6 +22,9 @@ export const Title = withContext(Base.Title, 'title')
 export const Description = withContext(Base.Description, 'description')
 export const Close = withContext(Base.Close, 'close')
 export const CloseTrigger = withContext(Base.Close, 'closeTrigger')
+/** Page wrappers under Provider: the page steps back while a drawer is open. */
+export const Indent = withContext(Base.Indent, 'indent')
+export const IndentBackground = withContext(Base.IndentBackground, 'indentBackground')
 export const Header = withContext('div', 'header')
 export const Body = withContext('div', 'body')
 export const Footer = withContext('div', 'footer')
@@ -29,4 +32,7 @@ export const Portal = Base.Portal
 export const Trigger = Base.Trigger
 export const Provider = Base.Provider
 export const SwipeArea = Base.SwipeArea
+export const VirtualKeyboardProvider = Base.VirtualKeyboardProvider
 export const createHandle = Base.createHandle
+export const Handle = Base.Handle
+export type Handle<Payload> = Base.Handle<Payload>

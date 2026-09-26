@@ -1,4 +1,5 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+import { arrow } from '../shared'
 
 // Base UI sets data-type from toast.add({ type }); success / error / warning / info pick the
 // palette of the indicator icon. The card itself stays neutral.
@@ -7,7 +8,18 @@ import { defineSlotRecipe } from '@pandacss/dev'
 export const toast = defineSlotRecipe({
   className: 'kiso-toast',
   jsx: ['Toast', /^Toast\./, 'Toaster'],
-  slots: ['viewport', 'root', 'indicator', 'content', 'title', 'description', 'close', 'action'],
+  slots: [
+    'viewport',
+    'positioner',
+    'root',
+    'arrow',
+    'indicator',
+    'content',
+    'title',
+    'description',
+    'close',
+    'action',
+  ],
   base: {
     viewport: {
       position: 'fixed',
@@ -18,6 +30,8 @@ export const toast = defineSlotRecipe({
       maxWidth: 'calc(100vw - token(spacing.8))',
       outline: '0',
     },
+    // Anchored toasts: Positioner places one toast next to an element instead of the stack.
+    positioner: { zIndex: 'toast' },
     root: {
       '--gap': 'spacing.3',
       '--peek': 'spacing.3',
@@ -91,7 +105,27 @@ export const toast = defineSlotRecipe({
       '&[data-type=warning]': { colorPalette: 'warning' },
       '&[data-type=info]': { colorPalette: 'info' },
       '&[data-type=loading]': { colorPalette: 'gray' },
+      // Inside a Positioner the toast is a small callout next to its anchor, not a stack card.
+      '.kiso-toast__positioner > &': {
+        position: 'relative',
+        insetInlineEnd: 'auto',
+        bottom: 'auto',
+        width: 'max-content',
+        maxWidth: 'min(token(sizes.xs), var(--available-width))',
+        height: 'auto',
+        zIndex: 'auto',
+        py: '2.5',
+        px: '3',
+        transform: 'none',
+        transformOrigin: 'var(--transform-origin)',
+        transitionProperty: 'opacity, scale',
+        transitionDuration: 'fast',
+        _after: { display: 'none' },
+        _startingStyle: { transform: 'none', opacity: 0, scale: '0.96' },
+        _endingStyle: { transform: 'none', opacity: 0, scale: '0.96' },
+      },
     },
+    arrow: { ...arrow, borderColor: 'border' },
     // Optional: without it the toast is a plain neutral card.
     indicator: {
       display: 'flex',

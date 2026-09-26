@@ -30,3 +30,5 @@ export const Portal = Base.Portal
 export const Viewport = Base.Viewport
 
 export const createHandle = Base.createHandle
+export const Handle = Base.Handle
+export type Handle<Payload> = Base.Handle<Payload>

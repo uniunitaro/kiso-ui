@@ -21,10 +21,14 @@ export const InputGroup = withContext(Base.InputGroup, 'inputGroup')
 export const Input = withContext(Base.Input, 'input')
 export const Trigger = withIcon(withContext(Base.Trigger, 'trigger'), <ChevronDownIcon />)
 export const Clear = withIcon(withContext(Base.Clear, 'clear'), <XIcon />)
+export const Icon = withIcon(withContext(Base.Icon, 'icon'), <ChevronDownIcon />)
+export const Backdrop = withContext(Base.Backdrop, 'backdrop')
 export const Positioner = withContext(Base.Positioner, 'positioner')
 export const Popup = withContext(Base.Popup, 'popup')
+export const Arrow = withContext(Base.Arrow, 'arrow')
 export const List = withContext(Base.List, 'list')
 export const Item = withContext(Base.Item, 'item')
+export const Row = withContext(Base.Row, 'row')
 export const ItemIndicator = withIcon(
   withContext(Base.ItemIndicator, 'itemIndicator'),
   <CheckIcon />,

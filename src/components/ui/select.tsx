@@ -18,9 +18,11 @@ export function Root<Value, Multiple extends boolean | undefined = false>({
     </Provider>
   )
 }
+export const Label = withContext(Base.Label, 'label')
 export const Trigger = withContext(Base.Trigger, 'trigger')
 export const Value = withContext(Base.Value, 'value')
 export const Icon = withIcon(withContext(Base.Icon, 'icon'), <ChevronDownIcon />)
+export const Backdrop = withContext(Base.Backdrop, 'backdrop')
 export const Positioner = withContext(Base.Positioner, 'positioner')
 export const Popup = withContext(Base.Popup, 'popup')
 export const List = withContext(Base.List, 'list')
@@ -34,5 +36,7 @@ export const GroupLabel = withContext(Base.GroupLabel, 'groupLabel')
 export const Separator = withContext(Base.Separator, 'separator')
 export const ScrollUpArrow = withContext(Base.ScrollUpArrow, 'scrollUpArrow')
 export const ScrollDownArrow = withContext(Base.ScrollDownArrow, 'scrollDownArrow')
+/** Shown only with alignItemWithTrigger={false}; the list then scrolls instead of the popup. */
+export const Arrow = withContext(Base.Arrow, 'arrow')
 export const Group = Base.Group
 export const Portal = Base.Portal

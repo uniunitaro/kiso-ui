@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   Bold,
   ChevronDown,
@@ -129,75 +129,126 @@ function ToastTrigger() {
       >
         Publish
       </Button>
-      <Button
-        variant="plain"
-        colorPalette="gray"
-        onClick={() => manager.add({ title: 'Link copied.' })}
-      >
-        Copy link
-      </Button>
+      <CopyLinkButton />
     </div>
   )
 }
+
+// Anchored toasts get their own manager, so they never join the stack in the corner.
+const anchoredToasts = Toast.createToastManager()
+function CopyLinkButton() {
+  const ref = useRef<HTMLButtonElement>(null)
+  return (
+    <Button
+      ref={ref}
+      variant="plain"
+      colorPalette="gray"
+      onClick={() =>
+        anchoredToasts.add({
+          title: 'Link copied.',
+          timeout: 1500,
+          positionerProps: { anchor: ref.current, sideOffset: 10 },
+        })
+      }
+    >
+      Copy link
+    </Button>
+  )
+}
+function AnchoredToasts() {
+  const { toasts } = Toast.useToastManager()
+  return (
+    <Toast.Portal>
+      <Toast.Viewport>
+        {toasts.map((item) => (
+          <Toast.Positioner key={item.id} toast={item}>
+            <Toast.Root toast={item}>
+              <Toast.Arrow />
+              <Toast.Content>
+                <Toast.Title>{item.title}</Toast.Title>
+              </Toast.Content>
+            </Toast.Root>
+          </Toast.Positioner>
+        ))}
+      </Toast.Viewport>
+    </Toast.Portal>
+  )
+}
+
 export function ToastDemo() {
   return (
     <Toast.Provider timeout={5000}>
       <ToastTrigger />
       <Toast.Toaster />
+      <Toast.Provider toastManager={anchoredToasts}>
+        <AnchoredToasts />
+      </Toast.Provider>
     </Toast.Provider>
   )
 }
 
 function DrawerDemo({ size }: { size?: string }) {
   return (
-    <div className={s.row}>
-      {(['down', 'right'] as const).map((direction) => (
-        <Drawer.Root key={direction} swipeDirection={direction} size={pass(size)}>
-          <Drawer.Trigger render={<Button variant="outline" colorPalette="gray" />}>
-            {direction === 'down' ? 'Open bottom sheet' : 'Open side panel'}
-          </Drawer.Trigger>
-          <Drawer.Portal>
-            <Drawer.Backdrop />
-            <Drawer.Viewport>
-              <Drawer.Popup>
-                <Drawer.Content>
-                  <Drawer.Header>
-                    <Drawer.Title>A little room to focus.</Drawer.Title>
-                    <Drawer.Description>
-                      Review the details, make your next move, and return to what you were doing.
-                    </Drawer.Description>
-                  </Drawer.Header>
-                  <Drawer.Body>
-                    <div
-                      className={css({
-                        p: '4',
-                        borderWidth: '1px',
-                        borderRadius: 'l3',
-                        display: 'flex',
-                        gap: '3',
-                        alignItems: 'center',
-                      })}
-                    >
-                      <Layers size={20} />
-                      <span className={s.title}>Studio North · Design system</span>
-                    </div>
-                  </Drawer.Body>
-                  <Drawer.Footer>
-                    <Drawer.Close render={<Button />}>Back to the collection</Drawer.Close>
-                  </Drawer.Footer>
-                  <Drawer.CloseTrigger
-                    aria-label="Close"
-                    render={<Button variant="plain" colorPalette="gray" size="sm" square />}
-                  >
-                    <X />
-                  </Drawer.CloseTrigger>
-                </Drawer.Content>
-              </Drawer.Popup>
-            </Drawer.Viewport>
-          </Drawer.Portal>
-        </Drawer.Root>
-      ))}
-    </div>
+    // Provider, IndentBackground and Indent usually wrap the whole app; paint containment keeps
+    // the fixed background inside this frame, which stands in for the page.
+    <Drawer.Provider>
+      <div className={css({ position: 'relative', contain: 'paint', borderRadius: 'l3' })}>
+        <Drawer.IndentBackground />
+        <Drawer.Indent
+          className={css({ p: '6', borderWidth: '1px', borderColor: 'border', borderRadius: 'l3' })}
+        >
+          <div className={s.row}>
+            {(['down', 'right'] as const).map((direction) => (
+              <Drawer.Root key={direction} swipeDirection={direction} size={pass(size)}>
+                <Drawer.Trigger render={<Button variant="outline" colorPalette="gray" />}>
+                  {direction === 'down' ? 'Open bottom sheet' : 'Open side panel'}
+                </Drawer.Trigger>
+                <Drawer.Portal>
+                  <Drawer.Backdrop />
+                  <Drawer.Viewport>
+                    <Drawer.Popup>
+                      <Drawer.Content>
+                        <Drawer.Header>
+                          <Drawer.Title>A little room to focus.</Drawer.Title>
+                          <Drawer.Description>
+                            Review the details, make your next move, and return to what you were
+                            doing.
+                          </Drawer.Description>
+                        </Drawer.Header>
+                        <Drawer.Body>
+                          <div
+                            className={css({
+                              p: '4',
+                              borderWidth: '1px',
+                              borderRadius: 'l3',
+                              display: 'flex',
+                              gap: '3',
+                              alignItems: 'center',
+                            })}
+                          >
+                            <Layers size={20} />
+                            <span className={s.title}>Studio North · Design system</span>
+                          </div>
+                        </Drawer.Body>
+                        <Drawer.Footer>
+                          <Drawer.Close render={<Button />}>Back to the collection</Drawer.Close>
+                        </Drawer.Footer>
+                        <Drawer.CloseTrigger
+                          aria-label="Close"
+                          render={<Button variant="plain" colorPalette="gray" size="sm" square />}
+                        >
+                          <X />
+                        </Drawer.CloseTrigger>
+                      </Drawer.Content>
+                    </Drawer.Popup>
+                  </Drawer.Viewport>
+                </Drawer.Portal>
+              </Drawer.Root>
+            ))}
+          </div>
+        </Drawer.Indent>
+      </div>
+    </Drawer.Provider>
   )
 }
 
@@ -258,16 +309,25 @@ export function AdvancedDemo({
       )
     case 'checkbox-group':
       return (
-        <CheckboxGroup defaultValue={['design']} aria-label="Interests">
-          {['Design', 'Engineering', 'Product'].map((name) => (
-            <Checkbox.Label key={name}>
-              <Checkbox.Root value={name.toLowerCase()}>
-                <Checkbox.Indicator />
-              </Checkbox.Root>
-              {name}
-            </Checkbox.Label>
-          ))}
-        </CheckboxGroup>
+        <Field.Root>
+          <CheckboxGroup defaultValue={['design']} aria-label="Interests">
+            {[
+              ['Design', 'Tokens, recipes and the details in between.'],
+              ['Engineering', 'Types, tests and the build.'],
+              ['Product', 'What to make next, and why.'],
+            ].map(([name, description]) => (
+              <Field.Item key={name}>
+                <Checkbox.Label>
+                  <Checkbox.Root value={name.toLowerCase()}>
+                    <Checkbox.Indicator />
+                  </Checkbox.Root>
+                  {name}
+                </Checkbox.Label>
+                <Field.Description>{description}</Field.Description>
+              </Field.Item>
+            ))}
+          </CheckboxGroup>
+        </Field.Root>
       )
     case 'fieldset':
       return (

@@ -1,5 +1,5 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { fieldGroupVariants, groupLabel, item, popup } from '../shared'
+import { arrow, fieldGroupVariants, groupLabel, item, popup, popupBackdrop } from '../shared'
 
 const iconButton = {
   display: 'flex',
@@ -23,6 +23,7 @@ export const combobox = defineSlotRecipe({
     'input',
     'trigger',
     'clear',
+    'icon',
     'positioner',
     'popup',
     'list',
@@ -34,6 +35,9 @@ export const combobox = defineSlotRecipe({
     'chip',
     'chipRemove',
     'separator',
+    'row',
+    'backdrop',
+    'arrow',
   ],
   base: {
     label: { display: 'block', textStyle: 'label', mb: '1.5' },
@@ -56,6 +60,8 @@ export const combobox = defineSlotRecipe({
     },
     trigger: iconButton,
     clear: iconButton,
+    // A static chevron for inputs without a Trigger button.
+    icon: { display: 'flex', flexShrink: '0', color: 'fg.subtle' },
     positioner: { zIndex: 'popover' },
     popup: {
       ...popup,
@@ -105,6 +111,10 @@ export const combobox = defineSlotRecipe({
       _icon: { boxSize: '3' },
     },
     separator: { h: '1px', bg: 'border', my: '1' },
+    // Grid layouts: each Row holds several items side by side.
+    row: { display: 'flex', gap: '0.5' },
+    backdrop: popupBackdrop,
+    arrow,
   },
   defaultVariants: { variant: 'outline', size: 'md' },
   variants: {
@@ -117,6 +127,7 @@ export const combobox = defineSlotRecipe({
       xs: {
         inputGroup: { minH: '8', px: '2', gap: '1', textStyle: 'sm' },
         trigger: { boxSize: '5', _icon: { boxSize: '3.5' } },
+        icon: { _icon: { boxSize: '3.5' } },
         clear: { boxSize: '5', _icon: { boxSize: '3' } },
         popup: { p: '1', gap: '0.5', textStyle: 'sm' },
         item: { minH: '8', '--item-px': 'spacing.1', gap: '2', _icon: { boxSize: '3.5' } },
@@ -125,6 +136,7 @@ export const combobox = defineSlotRecipe({
       sm: {
         inputGroup: { minH: '9', px: '2.5', gap: '1', textStyle: 'sm' },
         trigger: { boxSize: '6', _icon: { boxSize: '4' } },
+        icon: { _icon: { boxSize: '4' } },
         clear: { boxSize: '6', _icon: { boxSize: '3.5' } },
         popup: { p: '1', gap: '0.5', textStyle: 'sm' },
         item: { minH: '9', '--item-px': 'spacing.1.5', gap: '2', _icon: { boxSize: '4' } },
@@ -133,6 +145,7 @@ export const combobox = defineSlotRecipe({
       md: {
         inputGroup: { minH: '10', px: '3', gap: '1', textStyle: 'md' },
         trigger: { boxSize: '6', _icon: { boxSize: '4' } },
+        icon: { _icon: { boxSize: '4' } },
         clear: { boxSize: '6', _icon: { boxSize: '3.5' } },
         popup: { p: '1', gap: '0.5', textStyle: 'md' },
         item: { minH: '10', '--item-px': 'spacing.2', gap: '2', _icon: { boxSize: '4' } },
@@ -141,6 +154,7 @@ export const combobox = defineSlotRecipe({
       lg: {
         inputGroup: { minH: '11', px: '3.5', gap: '1.5', textStyle: 'md' },
         trigger: { boxSize: '7', _icon: { boxSize: '4.5' } },
+        icon: { _icon: { boxSize: '4.5' } },
         clear: { boxSize: '7', _icon: { boxSize: '4' } },
         popup: { p: '1', gap: '0.5', textStyle: 'md' },
         item: { minH: '11', '--item-px': 'spacing.2.5', gap: '2', _icon: { boxSize: '4.5' } },
@@ -149,6 +163,7 @@ export const combobox = defineSlotRecipe({
       xl: {
         inputGroup: { minH: '12', px: '4', gap: '1.5', textStyle: 'lg' },
         trigger: { boxSize: '8', _icon: { boxSize: '5' } },
+        icon: { _icon: { boxSize: '5' } },
         clear: { boxSize: '8', _icon: { boxSize: '4.5' } },
         popup: { p: '1', gap: '1', textStyle: 'lg' },
         item: { minH: '12', '--item-px': 'spacing.3', gap: '3', _icon: { boxSize: '5' } },
@@ -157,6 +172,7 @@ export const combobox = defineSlotRecipe({
       '2xl': {
         inputGroup: { minH: '16', px: '4.5', gap: '2', textStyle: '3xl' },
         trigger: { boxSize: '10', _icon: { boxSize: '6' } },
+        icon: { _icon: { boxSize: '6' } },
         clear: { boxSize: '10', _icon: { boxSize: '5' } },
         popup: { p: '1', gap: '1', textStyle: 'xl' },
         item: { minH: '14', '--item-px': 'spacing.3', gap: '3', _icon: { boxSize: '5' } },
