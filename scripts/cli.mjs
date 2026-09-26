@@ -12,8 +12,43 @@ import {
   registryItem,
   resolveComponentIds,
 } from './registry-lib.mjs'
+import {
+  checkPalettes,
+  defaultPalettes,
+  mergePandaConfig,
+  pandaConfigModes,
+  pandaConfigTemplate,
+} from './panda-config.mjs'
 
-const setupGuide = `# Kiso UI setup\n\n1. Install runtime packages: pnpm add @base-ui/react react react-dom\n2. Install Panda: pnpm add -D @pandacss/dev; configure PostCSS using pnpm exec panda init --postcss (merge carefully into existing config).\n3. Merge into your panda.config.ts (list only the palettes you use; add one by importing it from src/theme/colors and listing it):\n\n\x60\x60\x60ts\nimport { defineConfig } from '@pandacss/dev'\nimport { tokens, semanticColors, aliases, radii, removePandaPresetColors } from './src/theme/tokens'\nimport { shadows } from './src/theme/shadows'\nimport { iris } from './src/theme/colors/iris'\nimport { neutral } from './src/theme/colors/neutral'\nimport { blue } from './src/theme/colors/blue'\nimport { green } from './src/theme/colors/green'\nimport { amber } from './src/theme/colors/amber'\nimport { red } from './src/theme/colors/red'\nimport { conditions } from './src/theme/conditions'\nimport { globalCss } from './src/theme/global-css'\nimport { textStyles } from './src/theme/text-styles'\nimport { layerStyles } from './src/theme/layer-styles'\nimport { keyframes } from './src/theme/keyframes'\nimport { recipes, slotRecipes } from './src/theme/recipes'\n\nexport default defineConfig({\n  preflight: true,\n  jsxFramework: 'react',\n  include: ['./src/**/*.{ts,tsx}'],\n  outdir: 'styled-system',\n  conditions: { extend: conditions },\n  globalCss: { extend: globalCss },\n  theme: {\n    extend: {\n      tokens,\n      semanticTokens: {\n        colors: {\n          ...semanticColors,\n          // Only the palettes listed here exist. Add one: import it and list it.\n          iris,\n          blue,\n          green,\n          amber,\n          red,\n          gray: neutral,\n          ...aliases({ accent: iris, info: blue, success: green, warning: amber, danger: red }),\n        },\n        radii,\n        shadows,\n      },\n      textStyles,\n      layerStyles,\n      keyframes,\n      recipes,\n      slotRecipes,\n    },\n  },\n  plugins: [removePandaPresetColors],\n})\n\x60\x60\x60\n\n4. Import src/theme/global.css in your application entry.\n5. Set data-theme="light" or "dark" on html. Components inherit colorPalette="accent" (from aliases); pass colorPalette to any component, or set it on an ancestor to recolor a subtree. Use definePalette('brand', blue) for a renamed copy.\n6. Run pnpm exec panda codegen. Add it to prepare and run it after adding components.\n7. Import individual components from src/components/ui. Panda extracts variant, size and colorPalette values written in JSX (literals, ternaries, responsive objects) and emits only those; list values chosen from variables in staticCss.recipes, e.g. { button: [{ size: ['sm', 'lg'] }] }.\n\nFonts default to system fallbacks. Optionally install @fontsource-variable/geist and @fontsource-variable/geist-mono and import them in your app.\n\nThe CLI preserves your existing configuration. It only supports the src/components/ui, src/theme and root styled-system layout.\nNo packages are installed, no network requests are made, and no existing customized files are overwritten.\nGenerated src/theme/recipes/index.ts is maintained by the CLI; edit recipe files instead.\n`
+// Panda finds the first of these; the CLI edits whichever exists instead of adding a second.
+const pandaConfigFiles = [
+  'panda.config.ts',
+  'panda.config.mts',
+  'panda.config.mjs',
+  'panda.config.js',
+]
+
+const fence = '```'
+const setupGuide = (palettes) => `# Kiso UI setup
+
+1. Install runtime packages: pnpm add @base-ui/react react react-dom
+2. Install Panda: pnpm add -D @pandacss/dev; configure PostCSS using pnpm exec panda init --postcss (it keeps an existing panda.config.ts).
+3. panda.config.ts: the CLI writes the configuration below when the file is missing and leaves an existing one alone. Rerun with --panda-config=merge to add Kiso to an existing file (your values win; if something cannot be added safely, nothing is written), or --panda-config=overwrite to replace it. --accent and --gray choose the palettes. List only the palettes you use; add one by importing it from src/theme/colors and listing it.
+
+${fence}ts
+${pandaConfigTemplate(palettes)}${fence}
+
+4. Import src/theme/global.css in your application entry.
+5. Set data-theme="light" or "dark" on html. Components inherit colorPalette="accent" (from aliases); pass colorPalette to any component, or set it on an ancestor to recolor a subtree. Use definePalette('brand', blue) for a renamed copy.
+6. Run pnpm exec panda codegen. Add it to prepare and run it after adding components.
+7. Import individual components from src/components/ui. Panda extracts variant, size and colorPalette values written in JSX (literals, ternaries, responsive objects) and emits only those; list values chosen from variables in staticCss.recipes, e.g. { button: [{ size: ['sm', 'lg'] }] }.
+
+Fonts default to system fallbacks. Optionally install @fontsource-variable/geist and @fontsource-variable/geist-mono and import them in your app.
+
+The CLI only supports the src/components/ui, src/theme and root styled-system layout.
+No packages are installed, no network requests are made, and no existing customized files are overwritten; only --panda-config=overwrite replaces panda.config.ts.
+Generated src/theme/recipes/index.ts is maintained by the CLI; edit recipe files instead.
+`
 
 async function maybeRead(file) {
   try {
@@ -46,20 +81,49 @@ async function main() {
   let targetArg
   let dryRun = false
   let json = false
+  let pandaConfig = 'keep'
+  const palettes = { ...defaultPalettes }
   const ids = []
   while (args.length) {
-    const arg = args.shift()
-    if (arg === '--target') {
-      targetArg = args.shift()
-      if (!targetArg || targetArg.startsWith('--')) throw new Error('--target needs a directory.')
-    } else if (arg === '--dry-run') dryRun = true
+    // Options take a value as --name value or --name=value.
+    const [arg, inline] = args.shift().split(/=(.*)/s)
+    const value = (what) => {
+      const next = inline ?? args.shift()
+      if (!next || next.startsWith('--')) throw new Error(`${arg} needs ${what}.`)
+      return next
+    }
+    if (arg === '--target') targetArg = value('a directory')
+    else if (arg === '--panda-config') {
+      pandaConfig = value(pandaConfigModes.join(', '))
+      if (!pandaConfigModes.includes(pandaConfig))
+        throw new Error(`--panda-config must be one of ${pandaConfigModes.join(', ')}.`)
+    } else if (arg === '--accent') palettes.accent = value('a palette name')
+    else if (arg === '--gray') palettes.gray = value('a palette name')
+    else if (arg === '--dry-run') dryRun = true
     else if (arg === '--json') json = true
     else if (arg.startsWith('-')) throw new Error(`Unknown option: ${arg}`)
     else ids.push(arg)
   }
+  checkPalettes(palettes)
   if (command === 'help') {
     console.log(
-      'Kiso UI — source you own\n\n  pnpm ui list [--json]\n  pnpm ui inspect NAME\n  pnpm ui init --target PATH [--dry-run]\n  pnpm ui add NAME... --target PATH [--dry-run]\n\nRequires Node 24+. Existing customized files are never overwritten. No dependencies are installed.',
+      `Kiso UI — source you own
+
+  pnpm ui list [--json]
+  pnpm ui inspect NAME
+  pnpm ui init --target PATH [options]
+  pnpm ui add NAME... --target PATH [options]
+
+Options for init and add:
+  --dry-run                 Show the plan without writing
+  --panda-config=keep       Create panda.config.ts when missing; leave an existing one alone (default)
+  --panda-config=merge      Add Kiso to an existing panda.config.ts; your values win
+  --panda-config=overwrite  Replace panda.config.ts with the Kiso configuration
+  --accent=NAME             Accent palette for a written config (default ${defaultPalettes.accent})
+  --gray=NAME               Gray palette for a written config (default ${defaultPalettes.gray})
+
+Requires Node 24+. Existing customized files are never overwritten (only --panda-config=overwrite
+replaces the Panda config). No dependencies are installed.`,
     )
     return
   }
@@ -107,7 +171,7 @@ async function main() {
   for (const file of foundationFiles) files.set(file, await readSource(file))
   for (const id of ids)
     for (const file of await componentFiles(id)) files.set(file, await readSource(file))
-  files.set('KISO-SETUP.md', setupGuide)
+  files.set('KISO-SETUP.md', setupGuide(palettes))
   files.set('src/theme/recipes/index.ts', recipeIndex(installed))
   files.set(
     '.kiso/installed.json',
@@ -136,6 +200,35 @@ async function main() {
     if (action === 'conflict') conflicts.push(file)
     plan.push({ file, absolute, before, content, action })
   }
+  const configConflicts = []
+  {
+    let file = pandaConfigFiles[0]
+    let before = null
+    for (const candidate of pandaConfigFiles) {
+      before = await maybeRead(await ensureSafePath(target, candidate))
+      if (before !== null) {
+        file = candidate
+        break
+      }
+    }
+    const template = pandaConfigTemplate(palettes)
+    let content = before
+    if (before === null || pandaConfig === 'overwrite') content = template
+    else if (pandaConfig === 'merge') {
+      const merged = mergePandaConfig(before, palettes)
+      content = merged.content
+      configConflicts.push(...merged.conflicts.map((reason) => `${file}: ${reason}`))
+    }
+    const action =
+      before === null
+        ? 'create'
+        : pandaConfig === 'keep'
+          ? 'keep'
+          : before.replaceAll('\r\n', '\n') === content.replaceAll('\r\n', '\n')
+            ? 'unchanged'
+            : 'update'
+    plan.push({ file, absolute: await ensureSafePath(target, file), before, content, action })
+  }
   const summary = {
     target,
     dryRun,
@@ -151,7 +244,16 @@ async function main() {
     throw new Error(
       `Existing files differ; nothing was written. Review these files manually:\n${conflicts.join('\n')}`,
     )
-  if (dryRun) return
+  if (configConflicts.length)
+    throw new Error(
+      `The Panda config cannot be merged safely; nothing was written:\n${configConflicts.map((c) => `  ${c}`).join('\n')}\nEdit it by hand (KISO-SETUP.md shows the full configuration) or rerun with --panda-config=overwrite.`,
+    )
+  const config = plan.at(-1)
+  if (dryRun) {
+    if (!json && (config.action === 'create' || config.action === 'update'))
+      console.log(`\n${config.file} after this run:\n\n${config.content}`)
+    return
+  }
   const written = []
   try {
     for (const entry of plan.filter((p) => p.action === 'create' || p.action === 'update')) {
@@ -174,6 +276,10 @@ async function main() {
   console.log(
     `\nReady. ${installed.length} component(s) registered. Follow KISO-SETUP.md, install dependencies, then run panda codegen.`,
   )
+  if (config.action === 'keep')
+    console.log(
+      `${config.file} was left as is. Add Kiso to it by hand, or rerun with --panda-config=merge.`,
+    )
 }
 main().catch((error) => {
   console.error(`Kiso: ${error.message}`)

@@ -27,7 +27,7 @@ pnpm ui init --target ../your-app
 pnpm ui add button input field dialog --target ../your-app
 ```
 
-コピー先で依存を入れ、Panda の PostCSS 統合を設定します。
+コピー先で依存を入れ、Panda の PostCSS 統合を設定します（`panda init` は既存の `panda.config.ts` を上書きしません）。
 
 ```sh
 pnpm add @base-ui/react@^1.8.0 react@^19 react-dom@^19
@@ -35,62 +35,23 @@ pnpm add -D @pandacss/dev@^1.12.1
 pnpm exec panda init --postcss
 ```
 
-既存の設定を維持しながら `panda.config.ts` へ追加します。
+`panda.config.ts` の扱いは `--panda-config` で指定します。
 
-```ts
-import { defineConfig } from '@pandacss/dev'
-import { tokens, semanticColors, aliases, radii, removePandaPresetColors } from './src/theme/tokens'
-import { shadows } from './src/theme/shadows'
-import { iris } from './src/theme/colors/iris'
-import { neutral } from './src/theme/colors/neutral'
-import { blue } from './src/theme/colors/blue'
-import { green } from './src/theme/colors/green'
-import { amber } from './src/theme/colors/amber'
-import { red } from './src/theme/colors/red'
-import { conditions } from './src/theme/conditions'
-import { globalCss } from './src/theme/global-css'
-import { textStyles } from './src/theme/text-styles'
-import { layerStyles } from './src/theme/layer-styles'
-import { keyframes } from './src/theme/keyframes'
-import { recipes, slotRecipes } from './src/theme/recipes'
+| 指定           | 動作                                                                                                                                                                                                            |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `keep`（既定） | ファイルがなければ Kiso の設定で作り、あれば触らない                                                                                                                                                            |
+| `merge`        | 既存のファイルに Kiso の import と設定を書き足す。書いてある値が優先され、書式（インデント・引用符・セミコロン）も既存に合わせる。`outdir` が違うなど安全に足せない箇所があれば、理由を表示して何も書き込まない |
+| `overwrite`    | Kiso の設定で丸ごと置き換える                                                                                                                                                                                   |
 
-export default defineConfig({
-  preflight: true,
-  jsxFramework: 'react',
-  include: ['./src/**/*.{ts,tsx}'],
-  outdir: 'styled-system',
-  conditions: { extend: conditions },
-  globalCss: { extend: globalCss },
-  theme: {
-    extend: {
-      tokens,
-      semanticTokens: {
-        colors: {
-          ...semanticColors,
-          // Only the palettes listed here exist. Add one: import it and list it.
-          iris,
-          blue,
-          green,
-          amber,
-          red,
-          gray: neutral,
-          ...aliases({ accent: iris, info: blue, success: green, warning: amber, danger: red }),
-        },
-        radii,
-        shadows,
-      },
-      textStyles,
-      layerStyles,
-      keyframes,
-      recipes,
-      slotRecipes,
-    },
-  },
-  plugins: [removePandaPresetColors],
-})
+`--accent` と `--gray` で、書き込む設定のパレットを選べます（既定は `iris` と `neutral`）。`--dry-run` を付けると、書き込み後の `panda.config.ts` を表示します。
+
+```sh
+pnpm ui init --target ../your-app --panda-config=merge --accent=teal --gray=slate --dry-run
 ```
 
-アプリのエントリーで `import './theme/global.css'`（src 内の場合。カスケードレイヤーの宣言だけを持ちます）。`pnpm exec panda codegen` を実行し、prepare スクリプトにも登録してください。PostCSS が CSS を生成します。PostCSS を使わない構成では `panda cssgen` の出力をアプリへ読み込みます。コピー時の `KISO-SETUP.md` も参照できます。
+書き込まれる設定の全文は、コピー先の `KISO-SETUP.md` とプレビューの Installation ページで確認できます（どちらも `src/app/panda-config-template.ts` から生成）。
+
+アプリのエントリーで `import './theme/global.css'`（src 内の場合。カスケードレイヤーの宣言だけを持ちます）。`pnpm exec panda codegen` を実行し、prepare スクリプトにも登録してください。PostCSS が CSS を生成します。PostCSS を使わない構成では `panda cssgen` の出力をアプリへ読み込みます。
 
 ```tsx
 import { Button } from './components/ui/button'
@@ -99,7 +60,7 @@ import * as Dialog from './components/ui/dialog'
 export function Example() {
   return (
     <Dialog.Root size="md">
-      <Dialog.Trigger render={<Button variant="outline" colorPalette="neutral" />}>
+      <Dialog.Trigger render={<Button variant="outline" colorPalette="gray" />}>
         Open
       </Dialog.Trigger>
       <Dialog.Portal>

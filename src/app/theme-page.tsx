@@ -10,6 +10,7 @@ import { css } from '../../styled-system/css'
 import { CodeBlock, Choice } from './docs'
 import * as Checkbox from '../components/ui/checkbox'
 import { accentNames, grayNames, radiusLevels, radiusNames } from './palettes'
+import { aliasesCall, importLines, listedPalettes } from './panda-config-template'
 import { styles as s } from './styles'
 
 export type ThemeSettings = {
@@ -297,9 +298,15 @@ export function ThemePage({
       </div>
       <h2 className={s.docHeading}>Take this feeling with you</h2>
       <CodeBlock
-        title="panda.config.ts · theme settings"
-        code={`import { semanticColors, aliases } from './src/theme/tokens'\nimport { ${theme.accent} } from './src/theme/colors/${theme.accent}'\nimport { ${theme.gray} } from './src/theme/colors/${theme.gray}'\nimport { blue } from './src/theme/colors/blue'\nimport { green } from './src/theme/colors/green'\nimport { amber } from './src/theme/colors/amber'\nimport { red } from './src/theme/colors/red'\n\n// defineConfig > theme.extend.semanticTokens\ncolors: {\n  ...semanticColors,\n  ${theme.accent}, blue, green, amber, red,\n  gray: ${theme.gray},\n  ...aliases({ accent: ${theme.accent}, info: blue, success: green, warning: amber, danger: red }),\n},\nradii: { l1: { value: '${radiusLevels[theme.radius][0]}px' }, l2: { value: '${radiusLevels[theme.radius][1]}px' }, l3: { value: '${radiusLevels[theme.radius][2]}px' } },\n\n// <Button colorPalette="red" variant="surface">Remove</Button>\n// <div className={css({ colorPalette: 'green' })}>…</div>`}
+        title="Terminal · Kiso repository"
+        code={`pnpm ui init --target ../your-app --accent=${theme.accent} --gray=${theme.gray}`}
       />
+      <div className={css({ mt: '4' })}>
+        <CodeBlock
+          title="panda.config.ts · theme settings"
+          code={`${importLines(['semanticColors', 'aliases', ...new Set([...listedPalettes(theme), theme.gray])]).join('\n')}\n\n// defineConfig > theme.extend.semanticTokens\ncolors: {\n  ...semanticColors,\n  ${listedPalettes(theme).join(', ')},\n  gray: ${theme.gray},\n  ...${aliasesCall(theme)},\n},\nradii: { l1: { value: '${radiusLevels[theme.radius][0]}px' }, l2: { value: '${radiusLevels[theme.radius][1]}px' }, l3: { value: '${radiusLevels[theme.radius][2]}px' } },\n\n// <Button colorPalette="red" variant="surface">Remove</Button>\n// <div className={css({ colorPalette: 'green' })}>…</div>`}
+        />
+      </div>
       <h2 className={s.docHeading}>Go a little deeper</h2>
       <p className={s.prose}>
         Edit <code>src/theme/tokens.ts</code> to change semantic colors, fonts or corner

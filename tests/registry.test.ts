@@ -11,6 +11,7 @@ import {
   realpathSync,
 } from 'node:fs'
 import path from 'node:path'
+import { mergePandaConfig, pandaConfigTemplate } from '../scripts/panda-config.mjs'
 
 const workspace = process.cwd()
 const fixtures = path.join(workspace, '.test-workspaces')
@@ -96,5 +97,124 @@ describe('source installer', () => {
     )
     // Button's loading state renders the Spinner component.
     expect(installed.components).toEqual(['button', 'pagination', 'spinner'])
+  })
+})
+
+// What `panda init` (Panda 1.12) writes.
+const pandaInitConfig = `import { defineConfig } from "@pandacss/dev";
+
+export default defineConfig({
+  // Whether to use css reset
+  preflight: true,
+
+  // Where to look for your css declarations
+  include: ["./src/**/*.{js,jsx,ts,tsx}", "./pages/**/*.{js,jsx,ts,tsx}"],
+
+  // Files to exclude
+  exclude: [],
+
+  // Useful for theme customization
+  theme: {
+    extend: {},
+  },
+
+  // The output directory for your css system
+  outdir: "styled-system",
+});
+`
+
+describe('panda.config.ts', () => {
+  it('creates it when missing and leaves an existing one alone by default', () => {
+    const app = path.join(target, 'config-keep')
+    cli(['add', 'badge', '--target', app, '--accent', 'teal', '--gray=slate'])
+    const config = path.join(app, 'panda.config.ts')
+    expect(readFileSync(config, 'utf8')).toBe(
+      pandaConfigTemplate({ accent: 'teal', gray: 'slate' }),
+    )
+    writeFileSync(config, '// Consumer config\n')
+    expect(cli(['add', 'button', '--target', app])).toMatch(/keep\s+panda\.config\.ts/)
+    expect(readFileSync(config, 'utf8')).toBe('// Consumer config\n')
+  })
+  it('merges into an existing config or overwrites it only when asked', () => {
+    const app = path.join(target, 'config-modes')
+    mkdirSync(app, { recursive: true })
+    const config = path.join(app, 'panda.config.ts')
+    writeFileSync(config, pandaInitConfig)
+    cli(['add', 'badge', '--target', app, '--panda-config=merge'])
+    const merged = readFileSync(config, 'utf8')
+    expect(merged).toContain('// Useful for theme customization')
+    expect(merged).toContain('import { recipes, slotRecipes } from "./src/theme/recipes";')
+    expect(merged).toContain('...aliases({ accent: iris,')
+    cli(['add', 'badge', '--target', app, '--panda-config', 'overwrite', '--accent', 'tomato'])
+    expect(readFileSync(config, 'utf8')).toBe(
+      pandaConfigTemplate({ accent: 'tomato', gray: 'neutral' }),
+    )
+  })
+  it('writes nothing when the config cannot be merged safely', () => {
+    const app = path.join(target, 'config-conflict')
+    mkdirSync(app, { recursive: true })
+    const config = path.join(app, 'panda.config.ts')
+    const custom = pandaInitConfig.replace('"styled-system"', '"src/styled-system"')
+    writeFileSync(config, custom)
+    expect(() => cli(['add', 'badge', '--target', app, '--panda-config=merge'])).toThrow(/outdir/)
+    expect(readFileSync(config, 'utf8')).toBe(custom)
+    expect(existsSync(path.join(app, 'src'))).toBe(false)
+  })
+  it('rejects unknown modes and palettes before any changes', () => {
+    const app = path.join(target, 'config-invalid')
+    expect(() => cli(['add', 'badge', '--target', app, '--panda-config=replace'])).toThrow()
+    expect(() => cli(['add', 'badge', '--target', app, '--gray', 'teal'])).toThrow()
+    expect(existsSync(app)).toBe(false)
+  })
+})
+
+describe('mergePandaConfig', () => {
+  it("adds Kiso once, in the file's own style", () => {
+    const { content, conflicts } = mergePandaConfig(pandaInitConfig)
+    expect(conflicts).toEqual([])
+    expect(content).toContain('\n  jsxFramework: "react",\n')
+    expect(content).toContain('\n    extend: {\n      tokens,\n')
+    expect(mergePandaConfig(content).content).toBe(content)
+    const template = pandaConfigTemplate()
+    expect(mergePandaConfig(template).content).toBe(template)
+  })
+  it("puts Kiso first in flat maps so the user's entries win", () => {
+    const { content, conflicts } = mergePandaConfig(`import { defineConfig } from '@pandacss/dev'
+import { card } from './card'
+const config = defineConfig({
+  jsxFramework: 'react',
+  conditions: { extend: { hocus: '&:is(:hover, :focus)' } },
+  theme: {
+    extend: {
+      recipes: {
+        card,
+      },
+    },
+  },
+  plugins: [],
+})
+export default config
+`)
+    expect(conflicts).toEqual([])
+    expect(content).toContain(
+      "conditions: { extend: { ...conditions, hocus: '&:is(:hover, :focus)' } }",
+    )
+    expect(content).toContain('recipes: {\n        ...recipes,\n        card,\n      },')
+    expect(content).toContain('plugins: [removePandaPresetColors]')
+    expect(content).toContain("import { recipes, slotRecipes } from './src/theme/recipes'")
+  })
+  it('reports what it cannot add instead of guessing', () => {
+    const { conflicts } = mergePandaConfig(`import { defineConfig } from '@pandacss/dev'
+import { tokens } from './my-tokens'
+export default defineConfig({
+  jsxFramework: 'solid',
+  theme: { extend: { semanticTokens: { colors: { brand: { value: 'red' } } } } },
+})
+`)
+    expect(conflicts).toEqual([
+      "jsxFramework: Kiso needs 'react'.",
+      'theme.extend.semanticTokens.colors: already set; add ...semanticColors, the palettes and ...aliases() by hand.',
+      'tokens: the name is already used in panda.config.ts.',
+    ])
   })
 })

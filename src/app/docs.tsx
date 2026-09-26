@@ -10,6 +10,7 @@ import { paletteClass } from '../components/ui/style-context'
 import { catalog, type ComponentEntry } from './catalog'
 import { Demo, type DemoSize } from './demos'
 import { examples } from './examples'
+import { pandaConfigTemplate } from './panda-config-template'
 import { styles as s } from './styles'
 import foundationCss from '../theme/global.css?raw'
 
@@ -461,25 +462,40 @@ export function InstallationPage() {
       <h2 className={s.docHeading}>01 / Install the foundation</h2>
       <CodeBlock
         title="Terminal · your application"
-        code="pnpm add @base-ui/react react react-dom\npnpm add -D @pandacss/dev\npnpm exec panda init --postcss"
+        code={
+          'pnpm add @base-ui/react react react-dom\npnpm add -D @pandacss/dev\npnpm exec panda init --postcss'
+        }
       />
       <h2 className={s.docHeading}>02 / Copy your first components</h2>
       <p className={s.prose}>
         Run the local CLI from the Kiso repository. The dry run shows every file before writing. The
-        foundation includes tokens, conditions, shared styles and an integration guide; existing
-        Panda configuration stays yours.
+        foundation includes tokens, conditions, shared styles and an integration guide.
       </p>
       <div className={css({ mt: '4' })}>
         <CodeBlock
           title="Terminal · Kiso repository"
-          code="pnpm ui init --target ../your-app --dry-run\npnpm ui init --target ../your-app\npnpm ui add button input field --target ../your-app"
+          code={
+            'pnpm ui init --target ../your-app --dry-run\npnpm ui init --target ../your-app\npnpm ui add button input field --target ../your-app'
+          }
         />
       </div>
       <h2 className={s.docHeading}>03 / Register the local theme</h2>
-      <CodeBlock
-        title="panda.config.ts"
-        code={`import { defineConfig } from '@pandacss/dev'\nimport { tokens, semanticColors, aliases, radii, removePandaPresetColors } from './src/theme/tokens'\nimport { shadows } from './src/theme/shadows'\nimport { iris } from './src/theme/colors/iris'\nimport { neutral } from './src/theme/colors/neutral'\nimport { blue } from './src/theme/colors/blue'\nimport { green } from './src/theme/colors/green'\nimport { amber } from './src/theme/colors/amber'\nimport { red } from './src/theme/colors/red'\nimport { conditions } from './src/theme/conditions'\nimport { globalCss } from './src/theme/global-css'\nimport { textStyles } from './src/theme/text-styles'\nimport { layerStyles } from './src/theme/layer-styles'\nimport { keyframes } from './src/theme/keyframes'\nimport { recipes, slotRecipes } from './src/theme/recipes'\n\nexport default defineConfig({\n  preflight: true,\n  jsxFramework: 'react',\n  include: ['./src/**/*.{ts,tsx}'],\n  outdir: 'styled-system',\n  conditions: { extend: conditions },\n  globalCss: { extend: globalCss },\n  theme: {\n    extend: {\n      tokens,\n      semanticTokens: {\n        colors: {\n          ...semanticColors,\n          // Only the palettes listed here exist. Add one: import it and list it.\n          iris,\n          blue,\n          green,\n          amber,\n          red,\n          gray: neutral,\n          ...aliases({ accent: iris, info: blue, success: green, warning: amber, danger: red }),\n        },\n        radii,\n        shadows,\n      },\n      textStyles,\n      layerStyles,\n      keyframes,\n      recipes,\n      slotRecipes,\n    },\n  },\n  plugins: [removePandaPresetColors],\n})`}
-      />
+      <p className={s.prose}>
+        The CLI writes <code>panda.config.ts</code> when your app has none and leaves an existing
+        one alone. Pass <code>--panda-config=merge</code> to add Kiso to it (your values win; if
+        something cannot be added safely, nothing is written) or{' '}
+        <code>--panda-config=overwrite</code> to replace it. <code>--accent</code> and{' '}
+        <code>--gray</code> choose the palettes.
+      </p>
+      <div className={css({ mt: '4' })}>
+        <CodeBlock
+          title="Terminal · Kiso repository"
+          code="pnpm ui init --target ../your-app --panda-config=merge --accent=iris --gray=neutral"
+        />
+      </div>
+      <div className={css({ mt: '4' })}>
+        <CodeBlock title="panda.config.ts" code={pandaConfigTemplate()} />
+      </div>
       <h2 className={s.docHeading}>04 / Set up the page</h2>
       <p className={s.prose}>
         Import the copied src/theme/global.css in your application entry. It declares the cascade

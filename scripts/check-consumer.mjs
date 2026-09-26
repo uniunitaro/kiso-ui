@@ -30,57 +30,6 @@ await writeFile(
     2,
   ),
 )
-execFileSync(
-  process.execPath,
-  ['scripts/cli.mjs', 'add', ...catalog.map((entry) => entry.id), '--target', target],
-  { cwd: sourceRoot, stdio: 'inherit' },
-)
-await writeFile(
-  path.join(target, 'panda.config.ts'),
-  `import { defineConfig } from '@pandacss/dev'
-import { tokens, semanticColors, aliases, definePalette, radii, removePandaPresetColors } from './src/theme/tokens'
-import { shadows } from './src/theme/shadows'
-import { blue } from './src/theme/colors/blue'
-import { green } from './src/theme/colors/green'
-import { orange } from './src/theme/colors/orange'
-import { red } from './src/theme/colors/red'
-import { slate } from './src/theme/colors/slate'
-import { conditions } from './src/theme/conditions'
-import { globalCss } from './src/theme/global-css'
-import { textStyles } from './src/theme/text-styles'
-import { layerStyles } from './src/theme/layer-styles'
-import { keyframes } from './src/theme/keyframes'
-import { recipes, slotRecipes } from './src/theme/recipes'
-
-const brand = definePalette('brand', blue)
-
-export default defineConfig({
-  preflight: true,
-  jsxFramework: 'react',
-  include: ['./src/**/*.{ts,tsx}'],
-  outdir: 'styled-system',
-  conditions: { extend: conditions },
-  globalCss: { extend: globalCss },
-  theme: {
-    extend: {
-      tokens,
-      semanticTokens: {
-        colors: {
-          ...semanticColors,
-          brand, blue, green, orange, red,
-          gray: slate,
-          ...aliases({ accent: brand, info: blue, success: green, warning: orange, danger: red }),
-        },
-        radii,
-        shadows,
-      },
-      textStyles, layerStyles, keyframes, recipes, slotRecipes,
-    },
-  },
-  plugins: [removePandaPresetColors],
-})
-`,
-)
 await writeFile(
   path.join(target, 'tsconfig.json'),
   JSON.stringify(
@@ -102,6 +51,62 @@ await writeFile(
     2,
   ),
 )
+function pnpm(args) {
+  const pnpmEntry = process.env.npm_execpath
+  if (!pnpmEntry) throw new Error('Run this check using pnpm test:consumer.')
+  const result = spawnSync(process.execPath, [pnpmEntry, ...args], {
+    cwd: target,
+    stdio: 'inherit',
+  })
+  if (result.error) throw result.error
+  if (result.status !== 0) throw new Error(`Consumer command failed: pnpm ${args.join(' ')}`)
+}
+pnpm(['install', '--offline', '--ignore-scripts'])
+// Start from what `panda init` (1.12) writes, then let the CLI merge Kiso into it. panda init
+// itself would find the Kiso repository's config above this fixture and write nothing.
+await writeFile(
+  path.join(target, 'panda.config.ts'),
+  `import { defineConfig } from "@pandacss/dev";
+
+export default defineConfig({
+  // Whether to use css reset
+  preflight: true,
+
+  // Where to look for your css declarations
+  include: ["./src/**/*.{js,jsx,ts,tsx}", "./pages/**/*.{js,jsx,ts,tsx}"],
+
+  // Files to exclude
+  exclude: [],
+
+  // Useful for theme customization
+  theme: {
+    extend: {},
+  },
+
+  // The output directory for your css system
+  outdir: "styled-system",
+});
+`,
+)
+const cliArgs = [
+  'scripts/cli.mjs',
+  'add',
+  ...catalog.map((entry) => entry.id),
+  '--target',
+  target,
+  '--panda-config=merge',
+  '--accent=teal',
+  '--gray=slate',
+]
+execFileSync(process.execPath, cliArgs, { cwd: sourceRoot, stdio: 'inherit' })
+const rerun = JSON.parse(
+  execFileSync(process.execPath, [...cliArgs, '--dry-run', '--json'], {
+    cwd: sourceRoot,
+    encoding: 'utf8',
+  }),
+)
+if (rerun.files.find((file) => file.path === 'panda.config.ts')?.action !== 'unchanged')
+  throw new Error('Merging Kiso into panda.config.ts again changed it.')
 await writeFile(
   path.join(target, 'src', 'brand-example.tsx'),
   `import { Button } from './components/ui/button'
@@ -109,7 +114,7 @@ import * as Checkbox from './components/ui/checkbox'
 import { Pagination } from './components/ui/pagination'
 export const Brand = ({ wide }: { wide: boolean }) => (
   <>
-    <Button colorPalette="brand" variant="surface" size={{base:'xs',md:'2xl'}}>Brand</Button>
+    <Button colorPalette="teal" variant="surface" size={{base:'xs',md:'2xl'}}>Teal</Button>
     <Button size={wide ? 'xl' : 'lg'}>Either</Button>
     <Checkbox.Root colorPalette="danger" size={{ base: 'md', lg: 'sm' }} />
     <Checkbox.Label size="2xl"><Checkbox.Root />Large</Checkbox.Label>
@@ -122,27 +127,18 @@ for (const entry of catalog) {
   if (!examples[entry.id]) throw new Error(`Missing runnable example: ${entry.id}`)
   await writeFile(path.join(target, 'src', `example-${entry.id}.tsx`), examples[entry.id])
 }
-function pnpm(args) {
-  const pnpmEntry = process.env.npm_execpath
-  if (!pnpmEntry) throw new Error('Run this check using pnpm test:consumer.')
-  const result = spawnSync(process.execPath, [pnpmEntry, ...args], {
-    cwd: target,
-    stdio: 'inherit',
-  })
-  if (result.error) throw result.error
-  if (result.status !== 0) throw new Error(`Consumer command failed: pnpm ${args.join(' ')}`)
-}
-pnpm(['install', '--offline', '--ignore-scripts'])
 pnpm(['exec', 'panda', 'codegen'])
 pnpm(['exec', 'tsc', '--noEmit'])
 pnpm(['exec', 'panda', 'cssgen'])
 const generatedCss = await readFile(path.join(target, 'styled-system', 'styles.css'), 'utf8')
 for (const selector of [
   // Extracted from JSX props: no staticCss for colorPalette in the consumer config.
-  '.color-palette_brand',
+  '.color-palette_teal',
   '.color-palette_danger',
-  '--colors-brand-solid-bg',
-  '--colors-warning-subtle-bg: var(--colors-orange-subtle-bg)',
+  // --accent and --gray reach the merged config.
+  '--colors-teal-solid-bg',
+  '--colors-accent-solid-bg: var(--colors-teal-solid-bg)',
+  '--colors-warning-subtle-bg: var(--colors-amber-subtle-bg)',
   '--global-color-focus-ring: var(--colors-color-palette-solid-bg)',
   '.kiso-button:is(:focus-visible, [data-focus-visible])',
   // Variants are extracted from JSX like Park UI: literals, ternaries and responsive objects.
@@ -178,6 +174,7 @@ await writeFile(
       fixture: path.relative(sourceRoot, target),
       checks: [
         'offline installation',
+        'Kiso merged into the panda.config.ts panda init writes; merging again changes nothing',
         'source dependency closure',
         'Panda codegen',
         'strict TypeScript with every documented example',
