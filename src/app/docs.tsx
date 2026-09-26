@@ -476,7 +476,7 @@ export function InstallationPage() {
         <CodeBlock
           title="Terminal · Kiso repository"
           code={
-            'git clone <kiso-repository-url> kiso-ui\ncd kiso-ui\npnpm install\n\npnpm ui init --target ../your-app --dry-run\npnpm ui init --target ../your-app\npnpm ui add button input field --target ../your-app'
+            'git clone https://github.com/uniunitaro/kiso-ui.git kiso-ui\ncd kiso-ui\npnpm install\n\npnpm ui init --target ../your-app --dry-run\npnpm ui init --target ../your-app\npnpm ui add button input field --target ../your-app'
           }
         />
       </div>

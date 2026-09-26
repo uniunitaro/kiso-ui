@@ -20,7 +20,7 @@ pnpm dev
 コピー先は React 19 / TypeScript / Panda CSS のアプリを想定します。CLI は npm に公開していないため、このリポジトリを手元に置き、そこから実行します。`--target` はこのリポジトリから見たコピー先のパスです。
 
 ```sh
-git clone <kiso-repository-url> kiso-ui
+git clone https://github.com/uniunitaro/kiso-ui.git kiso-ui
 cd kiso-ui
 pnpm install
 ```
