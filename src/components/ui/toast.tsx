@@ -4,6 +4,7 @@ import { Toast as Base } from '@base-ui/react/toast'
 import { toast } from '../../../styled-system/recipes'
 import { Spinner } from './spinner'
 import { createStyleContext } from './style-context'
+import { Svg, XIcon, withIcon } from './icons'
 const { withProvider, withContext } = createStyleContext(toast)
 export const Provider = Base.Provider
 export const Portal = Base.Portal
@@ -17,52 +18,37 @@ export const Indicator = withContext('span', 'indicator')
 export const Content = withContext(Base.Content, 'content')
 export const Title = withContext(Base.Title, 'title')
 export const Description = withContext(Base.Description, 'description')
-export const Close = withContext(Base.Close, 'close')
+/** Draws × and is named "Dismiss notification" until children or aria-label replace them. */
+export const Close = withIcon(withContext(Base.Close, 'close'), <XIcon />, 'Dismiss notification')
 export const Action = withContext(Base.Action, 'action')
 export const useToastManager = Base.useToastManager
 export const createToastManager = Base.createToastManager
 
-function Icon({ children }: { children: ReactNode }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {children}
-    </svg>
-  )
-}
-
 /** Icons the Toaster shows per type. Any other type (or none) shows no icon. */
 export const typeIcons: Record<string, ReactNode> = {
   success: (
-    <Icon>
+    <Svg>
       <circle cx="12" cy="12" r="9" />
       <path d="M8.5 12.5l2.5 2.5 4.5-5" />
-    </Icon>
+    </Svg>
   ),
   error: (
-    <Icon>
+    <Svg>
       <circle cx="12" cy="12" r="9" />
       <path d="M9.5 9.5l5 5M14.5 9.5l-5 5" />
-    </Icon>
+    </Svg>
   ),
   warning: (
-    <Icon>
+    <Svg>
       <path d="M12 4L21 19.5H3z" />
       <path d="M12 10v4M12 17h.01" />
-    </Icon>
+    </Svg>
   ),
   info: (
-    <Icon>
+    <Svg>
       <circle cx="12" cy="12" r="9" />
       <path d="M12 11v5M12 8h.01" />
-    </Icon>
+    </Svg>
   ),
   loading: <Spinner size="inherit" aria-hidden />,
 }
@@ -94,17 +80,7 @@ export function Toaster({
               {item.description && <Description>{item.description}</Description>}
             </Content>
             {item.actionProps && <Action {...item.actionProps} />}
-            <Close aria-label={closeLabel}>
-              <svg
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                aria-hidden="true"
-              >
-                <path d="M4 4l8 8M12 4l-8 8" strokeLinecap="round" />
-              </svg>
-            </Close>
+            <Close aria-label={closeLabel} />
           </Root>
         ))}
       </Viewport>

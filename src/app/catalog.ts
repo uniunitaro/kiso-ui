@@ -203,7 +203,7 @@ export const catalog: ComponentEntry[] = [
       'Action',
       'Close',
     ],
-    note: 'Mount Toaster once inside Provider. useToastManager supports add, update, close and promise. The card stays neutral; Toaster adds a tinted icon for success, error, warning, info and loading, and none for other types. Toasts stack behind the newest one and fan out on hover or focus. Toast announcements and timeout pausing are handled by Base UI. Toaster takes label and closeLabel for another language. For a toast next to a button (Copied!), give it its own createToastManager() and render each toast inside Positioner with positionerProps.anchor.',
+    note: 'Mount Toaster once inside Provider. useToastManager supports add, update, close and promise. The card stays neutral; Toaster adds a tinted icon for success, error, warning, info and loading, and none for other types. Toasts stack behind the newest one and fan out on hover or focus. Toast announcements and timeout pausing are handled by Base UI. Toaster takes label and closeLabel for another language. Close draws × and is named "Dismiss notification" by default. For a toast next to a button (Copied!), give it its own createToastManager() and render each toast inside Positioner with positionerProps.anchor.',
   },
   {
     id: 'meter',
