@@ -257,13 +257,6 @@ export const styles = {
     },
     '& svg': { w: '3', h: '3' },
   }),
-  labelRow: css({
-    display: 'flex',
-    alignItems: 'center',
-    gap: '2.5',
-    fontSize: 'sm',
-    cursor: 'pointer',
-  }),
   notification: css({
     display: 'flex',
     gap: '4',

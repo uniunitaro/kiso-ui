@@ -34,6 +34,37 @@ export const item = {
   _disabled: { layerStyle: 'disabled' },
 } satisfies SystemStyleObject
 
+/**
+ * A dimmed label around a control: the label fades as a whole, and a disabled control inside
+ * it drops its own fade so it is not dimmed twice.
+ */
+export const disabledLabel = {
+  layerStyle: 'disabled',
+  '& [data-disabled]': { opacity: '1', filter: 'none' },
+} satisfies SystemStyleObject
+
+/**
+ * The <label> around a checkbox, radio or switch and its text. Base UI marks only the control
+ * disabled, so the label follows it with :has().
+ */
+export const choiceLabel = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  cursor: 'pointer',
+  userSelect: 'none',
+  '&:has([data-disabled])': disabledLabel,
+} satisfies SystemStyleObject
+
+/** Text and gap of choiceLabel per control size (Park UI's sm–lg, extended to xs–2xl). */
+export const choiceLabelSizes = {
+  xs: { gap: '2', textStyle: 'sm' },
+  sm: { gap: '2', textStyle: 'sm' },
+  md: { gap: '3', textStyle: 'md' },
+  lg: { gap: '3', textStyle: 'lg' },
+  xl: { gap: '3', textStyle: 'xl' },
+  '2xl': { gap: '4', textStyle: '2xl' },
+} satisfies Record<string, SystemStyleObject>
+
 /** Field-like controls: border, focus ring, invalid and disabled states shared by inputs. */
 export const fieldControl = {
   appearance: 'none',

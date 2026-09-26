@@ -75,19 +75,14 @@ export function CheckControl({
   variant?: string
 }) {
   return (
-    <label className={s.labelRow}>
-      <Checkbox.Root
-        defaultChecked={defaultChecked}
-        disabled={disabled}
-        size={pass(size)}
-        variant={pass(variant)}
-      >
+    <Checkbox.Label size={pass(size)} variant={pass(variant)}>
+      <Checkbox.Root defaultChecked={defaultChecked} disabled={disabled}>
         <Checkbox.Indicator>
           <Checkmark />
         </Checkbox.Indicator>
       </Checkbox.Root>
       {label}
-    </label>
+    </Checkbox.Label>
   )
 }
 export function Person({
@@ -494,7 +489,7 @@ export function NotificationDemo({ size = 'md' }: { size?: string }) {
         ['Weekly digest', 'The highlights, once a week.', true],
         ['Tips & inspiration', 'A fresh perspective, occasionally.', false],
       ].map(([title, detail, checked]) => (
-        <label key={String(title)} className={s.notification}>
+        <Switch.Label key={String(title)} size={pass(size)} className={s.notification}>
           <span>
             <span className={css({ display: 'block', fontSize: 'xs', fontWeight: 'medium' })}>
               {String(title)}
@@ -505,10 +500,10 @@ export function NotificationDemo({ size = 'md' }: { size?: string }) {
               {String(detail)}
             </span>
           </span>
-          <Switch.Root size={pass(size)} defaultChecked={Boolean(checked)}>
+          <Switch.Root defaultChecked={Boolean(checked)}>
             <Switch.Thumb />
           </Switch.Root>
-        </label>
+        </Switch.Label>
       ))}
     </div>
   )
@@ -675,14 +670,14 @@ export function Demo({
             label="Managed by your organization"
             disabled
           />
-          <label className={s.labelRow}>
-            <Checkbox.Root size={pass(size)} variant={pass(variant)} indeterminate>
+          <Checkbox.Label size={pass(size)} variant={pass(variant)}>
+            <Checkbox.Root indeterminate>
               <Checkbox.Indicator>
                 <Minus size={12} />
               </Checkbox.Indicator>
             </Checkbox.Root>
             Some projects selected
-          </label>
+          </Checkbox.Label>
         </div>
       )
     case 'switch':
@@ -696,12 +691,12 @@ export function Demo({
           aria-label="Workspace type"
         >
           {['Personal', 'Team', 'Organization'].map((value) => (
-            <label key={value} className={s.labelRow}>
+            <RadioGroup.Label key={value}>
               <RadioGroup.Item value={value.toLowerCase()}>
                 <RadioGroup.Indicator />
               </RadioGroup.Item>
               {value}
-            </label>
+            </RadioGroup.Label>
           ))}
         </RadioGroup.Root>
       )
@@ -1070,7 +1065,7 @@ export function Overview() {
               'Make it feel like you',
               'Put something good out there',
             ].map((label, index) => (
-              <label key={label} className={s.labelRow}>
+              <Checkbox.Label key={label}>
                 <Checkbox.Root
                   checked={checklist[index]}
                   onCheckedChange={(checked) =>
@@ -1084,7 +1079,7 @@ export function Overview() {
                   </Checkbox.Indicator>
                 </Checkbox.Root>
                 {label}
-              </label>
+              </Checkbox.Label>
             ))}
           </div>
         </Specimen>

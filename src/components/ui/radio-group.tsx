@@ -29,3 +29,5 @@ export function Root<Value>(
 }
 export const Item = withContext(Base.Root, 'item')
 export const Indicator = withContext(Base.Indicator, 'indicator')
+/** Wraps an Item and its text; dims with a disabled Item. */
+export const Label = withContext('label', 'label')

@@ -163,12 +163,12 @@ export function ThemePage({
                   <Field.Label>Project name</Field.Label>
                   <Input defaultValue="A fresh perspective" />
                 </Field.Root>
-                <label className={s.spread}>
+                <Switch.Label className={s.spread}>
                   <span className={s.small}>Keep the good ideas coming</span>
                   <Switch.Root defaultChecked>
                     <Switch.Thumb />
                   </Switch.Root>
-                </label>
+                </Switch.Label>
               </div>
             </Card.Body>
             <Card.Footer>

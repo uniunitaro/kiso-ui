@@ -29,7 +29,7 @@ type SlotRecipe<V extends object, S extends string> = {
   (variants?: V): Record<S, string>
   splitVariantProps<P extends object>(props: P): [V, object]
 }
-type Styles<S extends string> = { slots: Record<S, string>; palette?: string }
+type Styles<S extends string> = { slots: Record<S, string>; palette?: string; variants?: object }
 
 /** One tiny helper, copied with the component. No runtime styling engine. */
 export function createStyleContext<V extends object, S extends string>(recipe: SlotRecipe<V, S>) {
@@ -43,18 +43,29 @@ export function createStyleContext<V extends object, S extends string>(recipe: S
     colorPalette,
     ...variants
   }: V & ColorPaletteProp & { children?: ReactNode }) {
-    const value = { slots: recipe(variants as V), palette: paletteClass(colorPalette) }
+    const value = {
+      slots: recipe(variants as V),
+      palette: paletteClass(colorPalette),
+      variants,
+    }
     return <Context.Provider value={value}>{children}</Context.Provider>
   }
   /** For roots that render an element: the palette is inherited through the DOM. */
   function withProvider<C extends ElementType>(Component: C, slot: S) {
     type Props = Omit<ComponentPropsWithRef<C>, keyof V | 'colorPalette'> & V & ColorPaletteProp
     function Styled(props: Props) {
-      const [variants, other] = recipe.splitVariantProps(props)
+      const parent = useContext(Context)
+      const [own, other] = recipe.splitVariantProps(props)
       const { colorPalette, ...rest } = other as Record<string, unknown> & ColorPaletteProp
+      // Nested in a provider of the same recipe (Checkbox.Label > Checkbox.Root), unset variants
+      // follow the outer part, so size is written once.
+      const variants = {
+        ...parent?.variants,
+        ...Object.fromEntries(Object.entries(own).filter(([, value]) => value !== undefined)),
+      } as V
       const slots = recipe(variants)
       return (
-        <Context.Provider value={{ slots }}>
+        <Context.Provider value={{ slots, variants }}>
           {createElement(Component, {
             ...rest,
             'data-slot': slot,

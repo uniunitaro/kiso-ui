@@ -6,7 +6,13 @@ export const fieldset = defineSlotRecipe({
   slots: ['root', 'legend'],
   base: {
     root: { display: 'flex', flexDirection: 'column', gap: '5', minWidth: '0', width: 'full' },
-    legend: { color: 'fg.default', fontWeight: 'semibold', textStyle: 'md', mb: '1' },
+    legend: {
+      color: 'fg.default',
+      fontWeight: 'semibold',
+      textStyle: 'md',
+      mb: '1',
+      _disabled: { layerStyle: 'disabled' },
+    },
   },
   defaultVariants: { variant: 'plain' },
   variants: {

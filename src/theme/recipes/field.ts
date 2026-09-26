@@ -1,4 +1,5 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+import { disabledLabel } from '../shared'
 
 export const field = defineSlotRecipe({
   className: 'kiso-field',
@@ -14,7 +15,7 @@ export const field = defineSlotRecipe({
       userSelect: 'none',
       color: 'fg.default',
       textStyle: 'label',
-      _disabled: { layerStyle: 'disabled' },
+      _disabled: disabledLabel,
     },
     description: { color: 'fg.muted', textStyle: 'sm', _disabled: { layerStyle: 'disabled' } },
     error: { color: 'fg.error', textStyle: 'sm' },

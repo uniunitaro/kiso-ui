@@ -12,6 +12,7 @@ import {
   Field,
   Input,
   RadioGroup,
+  Fieldset,
 } from '../src/components/ui'
 
 describe('composition contract', () => {
@@ -194,6 +195,67 @@ describe('keyboard and form contracts', () => {
     await waitFor(() =>
       expect(screen.getByRole('combobox', { name: 'Team' })).toHaveTextContent('Beta'),
     )
+  })
+
+  it('names choices through Label parts and keeps disabled choices inert', async () => {
+    const user = userEvent.setup()
+    render(
+      <>
+        <Checkbox.Label>
+          <Checkbox.Root disabled>
+            <Checkbox.Indicator>✓</Checkbox.Indicator>
+          </Checkbox.Root>
+          Managed
+        </Checkbox.Label>
+        <Switch.Label>
+          Digest
+          <Switch.Root>
+            <Switch.Thumb />
+          </Switch.Root>
+        </Switch.Label>
+      </>,
+    )
+    const managed = screen.getByRole('checkbox', { name: 'Managed' })
+    // The label's :has([data-disabled]) style keys off this attribute.
+    expect(managed).toHaveAttribute('data-disabled')
+    expect(managed.closest('label')).toHaveClass('kiso-checkbox__label')
+    await user.click(screen.getByText('Managed'))
+    expect(managed).not.toBeChecked()
+    await user.click(screen.getByText('Digest'))
+    expect(screen.getByRole('switch', { name: 'Digest' })).toBeChecked()
+  })
+
+  it('sizes Root from the Label around it unless Root sets its own', () => {
+    render(
+      <>
+        <Checkbox.Label size="lg" variant="outline">
+          <Checkbox.Root />
+          Inherited
+        </Checkbox.Label>
+        <Checkbox.Label size="lg">
+          <Checkbox.Root size="sm" />
+          Own
+        </Checkbox.Label>
+      </>,
+    )
+    const inherited = screen.getByRole('checkbox', { name: 'Inherited' })
+    expect(inherited).toHaveClass(
+      'kiso-checkbox__root--size_lg',
+      'kiso-checkbox__root--variant_outline',
+    )
+    expect(inherited.closest('label')).toHaveClass('kiso-checkbox__label--size_lg')
+    expect(screen.getByRole('checkbox', { name: 'Own' })).toHaveClass(
+      'kiso-checkbox__root--size_sm',
+    )
+  })
+
+  it('marks the legend of a disabled fieldset', () => {
+    render(
+      <Fieldset.Root disabled>
+        <Fieldset.Legend>About you</Fieldset.Legend>
+      </Fieldset.Root>,
+    )
+    expect(screen.getByText('About you')).toHaveAttribute('data-disabled')
   })
 
   it('exposes radio items with their own labels', async () => {

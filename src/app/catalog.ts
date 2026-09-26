@@ -135,7 +135,7 @@ export const catalog: ComponentEntry[] = [
     description: 'A few independent choices, held together.',
     base: 'checkbox-group',
     anatomy: ['CheckboxGroup'],
-    note: 'Compose with Checkbox.Root using a value on each checkbox. The group supports controlled values and parent-child selection. Give the group a visible label or aria-label.',
+    note: 'Compose with Checkbox.Label and Checkbox.Root, using a value on each checkbox. The group supports controlled values and parent-child selection. Give the group a visible label or aria-label.',
   },
   {
     id: 'fieldset',
@@ -390,8 +390,8 @@ export const catalog: ComponentEntry[] = [
     sizes: ['xs', 'sm', 'md', 'lg', 'xl', '2xl'],
     variants: ['solid', 'surface', 'subtle', 'outline', 'plain'],
     palettes: ['accent', 'gray', 'danger', 'success', 'warning', 'info'],
-    anatomy: ['Root', 'Indicator'],
-    note: 'Put Root inside a label, or use aria-labelledby. Supports checked, indeterminate, disabled and form submission.',
+    anatomy: ['Label', 'Root', 'Indicator'],
+    note: 'Wrap Root and its text in Label, or use aria-labelledby. Set size and variant on Label; Root follows it, and Label dims with a disabled Root. Supports checked, indeterminate, disabled and form submission.',
   },
   {
     id: 'radio-group',
@@ -403,8 +403,8 @@ export const catalog: ComponentEntry[] = [
     sizes: ['xs', 'sm', 'md', 'lg', 'xl', '2xl'],
     variants: ['solid', 'surface', 'subtle', 'outline'],
     palettes: ['accent', 'gray', 'danger', 'success', 'warning', 'info'],
-    anatomy: ['Root', 'Item', 'Indicator'],
-    note: 'Give the group an accessible name. Arrow keys move between options; individual labels belong to each Item.',
+    anatomy: ['Root', 'Label', 'Item', 'Indicator'],
+    note: 'Give the group an accessible name. Arrow keys move between options; wrap each Item and its text in Label, which follows the group size and dims with a disabled Item.',
   },
   {
     id: 'switch',
@@ -415,8 +415,8 @@ export const catalog: ComponentEntry[] = [
     base: 'switch',
     sizes: ['xs', 'sm', 'md', 'lg', 'xl', '2xl'],
     palettes: ['accent', 'gray', 'danger', 'success', 'warning', 'info'],
-    anatomy: ['Root', 'Thumb'],
-    note: 'Use for settings that apply immediately. Name the setting with a label; do not put on/off in the accessible name.',
+    anatomy: ['Label', 'Root', 'Thumb'],
+    note: 'Use for settings that apply immediately. Name the setting with Label; its size reaches Root and it dims with a disabled Root; do not put on/off in the accessible name.',
   },
   {
     id: 'select',

@@ -1,10 +1,11 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+import { choiceLabel, choiceLabelSizes } from '../shared'
 
-// Root is the box itself (Base UI Checkbox.Root); wrap it in a <label> with your text.
+// Root is the box itself (Base UI Checkbox.Root); wrap it and its text in Label.
 export const checkbox = defineSlotRecipe({
   className: 'kiso-checkbox',
   jsx: ['Checkbox', /^Checkbox\./],
-  slots: ['root', 'indicator'],
+  slots: ['root', 'indicator', 'label'],
   base: {
     root: {
       display: 'inline-flex',
@@ -27,6 +28,7 @@ export const checkbox = defineSlotRecipe({
       justifyContent: 'center',
       _icon: { boxSize: 'var(--checkbox-icon-size)', strokeWidth: '3' },
     },
+    label: choiceLabel,
   },
   defaultVariants: { variant: 'solid', size: 'md' },
   variants: {
@@ -75,12 +77,30 @@ export const checkbox = defineSlotRecipe({
       plain: { root: { color: 'colorPalette.plain.fg' } },
     },
     size: {
-      xs: { root: { boxSize: '4', '--checkbox-icon-size': 'sizes.3' } },
-      sm: { root: { boxSize: '4.5', '--checkbox-icon-size': 'sizes.3' } },
-      md: { root: { boxSize: '5', '--checkbox-icon-size': 'sizes.3.5' } },
-      lg: { root: { boxSize: '5.5', '--checkbox-icon-size': 'sizes.4' } },
-      xl: { root: { boxSize: '6', '--checkbox-icon-size': 'sizes.4.5' } },
-      '2xl': { root: { boxSize: '8', '--checkbox-icon-size': 'sizes.6' } },
+      xs: {
+        root: { boxSize: '4', '--checkbox-icon-size': 'sizes.3' },
+        label: choiceLabelSizes.xs,
+      },
+      sm: {
+        root: { boxSize: '4.5', '--checkbox-icon-size': 'sizes.3' },
+        label: choiceLabelSizes.sm,
+      },
+      md: {
+        root: { boxSize: '5', '--checkbox-icon-size': 'sizes.3.5' },
+        label: choiceLabelSizes.md,
+      },
+      lg: {
+        root: { boxSize: '5.5', '--checkbox-icon-size': 'sizes.4' },
+        label: choiceLabelSizes.lg,
+      },
+      xl: {
+        root: { boxSize: '6', '--checkbox-icon-size': 'sizes.4.5' },
+        label: choiceLabelSizes.xl,
+      },
+      '2xl': {
+        root: { boxSize: '8', '--checkbox-icon-size': 'sizes.6' },
+        label: choiceLabelSizes['2xl'],
+      },
     },
   },
 })

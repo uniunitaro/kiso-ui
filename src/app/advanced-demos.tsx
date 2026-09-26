@@ -267,14 +267,14 @@ export function AdvancedDemo({
       return (
         <CheckboxGroup defaultValue={['design']} aria-label="Interests">
           {['Design', 'Engineering', 'Product'].map((name) => (
-            <label className={s.labelRow} key={name}>
+            <Checkbox.Label key={name}>
               <Checkbox.Root value={name.toLowerCase()}>
                 <Checkbox.Indicator>
                   <Check size={12} />
                 </Checkbox.Indicator>
               </Checkbox.Root>
               {name}
-            </label>
+            </Checkbox.Label>
           ))}
         </CheckboxGroup>
       )

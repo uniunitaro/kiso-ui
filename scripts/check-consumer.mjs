@@ -112,6 +112,7 @@ export const Brand = ({ wide }: { wide: boolean }) => (
     <Button colorPalette="brand" variant="surface" size={{base:'xs',md:'2xl'}}>Brand</Button>
     <Button size={wide ? 'xl' : 'lg'}>Either</Button>
     <Checkbox.Root colorPalette="danger" size={{ base: 'md', lg: 'sm' }} />
+    <Checkbox.Label size="2xl"><Checkbox.Root />Large</Checkbox.Label>
     <Pagination count={3} size="2xs" />
   </>
 )
@@ -149,6 +150,9 @@ for (const selector of [
   '.kiso-button--size_xl',
   '.kiso-button--size_lg',
   '.lg\\:kiso-checkbox__root--size_sm',
+  // Root inherits the size written on Checkbox.Label; the slot recipe emits both parts.
+  '.kiso-checkbox__root--size_2xl',
+  '.kiso-checkbox__label--size_2xl',
   // <Pagination size> reaches its buttons through the button recipe's jsx.
   '.kiso-button--size_2xs',
 ]) {

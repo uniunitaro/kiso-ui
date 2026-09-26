@@ -1,9 +1,12 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+import { choiceLabel, choiceLabelSizes } from '../shared'
+
+// Wrap Root and its text in Label.
 
 export const switchRecipe = defineSlotRecipe({
   className: 'kiso-switch',
   jsx: ['Switch', /^Switch\./],
-  slots: ['root', 'thumb'],
+  slots: ['root', 'thumb', 'label'],
   base: {
     root: {
       '--switch-diff': 'calc(var(--switch-width) - var(--switch-height))',
@@ -33,6 +36,7 @@ export const switchRecipe = defineSlotRecipe({
       _checked: { translate: 'var(--switch-diff) 0' },
       '&:dir(rtl)[data-checked]': { translate: 'calc(var(--switch-diff) * -1) 0' },
     },
+    label: choiceLabel,
   },
   defaultVariants: { variant: 'solid', size: 'md' },
   variants: {
@@ -53,12 +57,30 @@ export const switchRecipe = defineSlotRecipe({
       },
     },
     size: {
-      xs: { root: { '--switch-width': 'sizes.8', '--switch-height': 'sizes.4' } },
-      sm: { root: { '--switch-width': 'sizes.9', '--switch-height': 'sizes.4.5' } },
-      md: { root: { '--switch-width': 'sizes.10', '--switch-height': 'sizes.5' } },
-      lg: { root: { '--switch-width': 'sizes.11', '--switch-height': 'sizes.5.5' } },
-      xl: { root: { '--switch-width': 'sizes.12', '--switch-height': 'sizes.6' } },
-      '2xl': { root: { '--switch-width': 'sizes.16', '--switch-height': 'sizes.8' } },
+      xs: {
+        root: { '--switch-width': 'sizes.8', '--switch-height': 'sizes.4' },
+        label: choiceLabelSizes.xs,
+      },
+      sm: {
+        root: { '--switch-width': 'sizes.9', '--switch-height': 'sizes.4.5' },
+        label: choiceLabelSizes.sm,
+      },
+      md: {
+        root: { '--switch-width': 'sizes.10', '--switch-height': 'sizes.5' },
+        label: choiceLabelSizes.md,
+      },
+      lg: {
+        root: { '--switch-width': 'sizes.11', '--switch-height': 'sizes.5.5' },
+        label: choiceLabelSizes.lg,
+      },
+      xl: {
+        root: { '--switch-width': 'sizes.12', '--switch-height': 'sizes.6' },
+        label: choiceLabelSizes.xl,
+      },
+      '2xl': {
+        root: { '--switch-width': 'sizes.16', '--switch-height': 'sizes.8' },
+        label: choiceLabelSizes['2xl'],
+      },
     },
   },
 })
