@@ -20,11 +20,18 @@ export const popup = {
  */
 export const insetRadius = 'calc({radii.l3} - {spacing.1})'
 
-/** Rows inside menus and listboxes. Sizes set padding, height and text. */
+/**
+ * Side padding of menu and listbox rows: the size's own padding (--item-px), widened with the
+ * row's corner so text and icons clear the curve at large radius scales.
+ */
+const itemPaddingInline = `max(var(--item-px), calc(${insetRadius} * 0.8))`
+
+/** Rows inside menus and listboxes. Sizes set --item-px, height and text. */
 export const item = {
   display: 'flex',
   alignItems: 'center',
   width: 'full',
+  paddingInline: itemPaddingInline,
   borderRadius: insetRadius,
   cursor: 'default',
   outline: '0',
@@ -32,6 +39,15 @@ export const item = {
   userSelect: 'none',
   _highlighted: { bg: 'gray.surface.bg.hover' },
   _disabled: { layerStyle: 'disabled' },
+} satisfies SystemStyleObject
+
+/** Group headings in menus and listboxes, padded like the rows so their text lines up. */
+export const groupLabel = {
+  display: 'flex',
+  alignItems: 'center',
+  paddingInline: itemPaddingInline,
+  color: 'fg.muted',
+  fontWeight: 'medium',
 } satisfies SystemStyleObject
 
 /**

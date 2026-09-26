@@ -1,5 +1,5 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { fieldControl, fieldVariants, item, popup } from '../shared'
+import { fieldControl, fieldVariants, groupLabel, item, popup } from '../shared'
 
 export const select = defineSlotRecipe({
   className: 'kiso-select',
@@ -44,7 +44,7 @@ export const select = defineSlotRecipe({
     item: { ...item, justifyContent: 'space-between', cursor: 'pointer' },
     itemText: { flex: '1', truncate: true },
     itemIndicator: { display: 'flex', color: 'colorPalette.plain.fg' },
-    groupLabel: { display: 'flex', alignItems: 'center', color: 'fg.muted', fontWeight: 'medium' },
+    groupLabel,
     separator: { h: '1px', bg: 'border', my: '1' },
     scrollUpArrow: { display: 'flex', justifyContent: 'center', color: 'fg.subtle', py: '1' },
     scrollDownArrow: { display: 'flex', justifyContent: 'center', color: 'fg.subtle', py: '1' },
@@ -60,38 +60,38 @@ export const select = defineSlotRecipe({
       xs: {
         trigger: { h: '8', px: '2', gap: '2', textStyle: 'sm', _icon: { boxSize: '3.5' } },
         popup: { p: '1', gap: '0.5', textStyle: 'sm' },
-        item: { minH: '8', px: '1', gap: '2', _icon: { boxSize: '3.5' } },
-        groupLabel: { minH: '8', px: '1' },
+        item: { minH: '8', '--item-px': 'spacing.1', gap: '2', _icon: { boxSize: '3.5' } },
+        groupLabel: { minH: '8', '--item-px': 'spacing.1' },
       },
       sm: {
         trigger: { h: '9', px: '2.5', gap: '2', textStyle: 'sm', _icon: { boxSize: '4' } },
         popup: { p: '1', gap: '0.5', textStyle: 'sm' },
-        item: { minH: '9', px: '1.5', gap: '2', _icon: { boxSize: '4' } },
-        groupLabel: { minH: '9', px: '1.5' },
+        item: { minH: '9', '--item-px': 'spacing.1.5', gap: '2', _icon: { boxSize: '4' } },
+        groupLabel: { minH: '9', '--item-px': 'spacing.1.5' },
       },
       md: {
         trigger: { h: '10', px: '3', gap: '2', textStyle: 'md', _icon: { boxSize: '4' } },
         popup: { p: '1', gap: '0.5', textStyle: 'md' },
-        item: { minH: '10', px: '2', gap: '2', _icon: { boxSize: '4' } },
-        groupLabel: { minH: '10', px: '2' },
+        item: { minH: '10', '--item-px': 'spacing.2', gap: '2', _icon: { boxSize: '4' } },
+        groupLabel: { minH: '10', '--item-px': 'spacing.2' },
       },
       lg: {
         trigger: { h: '11', px: '3.5', gap: '2', textStyle: 'md', _icon: { boxSize: '4.5' } },
         popup: { p: '1', gap: '0.5', textStyle: 'md' },
-        item: { minH: '11', px: '2.5', gap: '2', _icon: { boxSize: '4.5' } },
-        groupLabel: { minH: '11', px: '2.5' },
+        item: { minH: '11', '--item-px': 'spacing.2.5', gap: '2', _icon: { boxSize: '4.5' } },
+        groupLabel: { minH: '11', '--item-px': 'spacing.2.5' },
       },
       xl: {
         trigger: { h: '12', px: '4', gap: '3', textStyle: 'lg', _icon: { boxSize: '5' } },
         popup: { p: '1', gap: '1', textStyle: 'lg' },
-        item: { minH: '12', px: '3', gap: '3', _icon: { boxSize: '5' } },
-        groupLabel: { minH: '12', px: '3' },
+        item: { minH: '12', '--item-px': 'spacing.3', gap: '3', _icon: { boxSize: '5' } },
+        groupLabel: { minH: '12', '--item-px': 'spacing.3' },
       },
       '2xl': {
         trigger: { h: '16', px: '4.5', gap: '3', textStyle: '3xl', _icon: { boxSize: '6' } },
         popup: { p: '1', gap: '1', textStyle: 'xl' },
-        item: { minH: '14', px: '3', gap: '3', _icon: { boxSize: '5' } },
-        groupLabel: { minH: '14', px: '3' },
+        item: { minH: '14', '--item-px': 'spacing.3', gap: '3', _icon: { boxSize: '5' } },
+        groupLabel: { minH: '14', '--item-px': 'spacing.3' },
       },
     },
   },
