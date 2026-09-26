@@ -1,4 +1,5 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+import { closeTrigger } from '../shared'
 
 // Shared by Dialog and AlertDialog. Header, Body and Footer are optional layout parts.
 export const dialog = defineSlotRecipe({
@@ -69,7 +70,7 @@ export const dialog = defineSlotRecipe({
     title: { fontWeight: 'semibold', textStyle: 'lg', color: 'fg.default' },
     description: { color: 'fg.muted', textStyle: 'sm' },
     close: {},
-    closeTrigger: { position: 'absolute', top: '3', insetInlineEnd: '3' },
+    closeTrigger,
   },
   defaultVariants: { size: 'md', placement: 'center' },
   variants: {

@@ -2,6 +2,7 @@
 import { AlertDialog as Base } from '@base-ui/react/alert-dialog'
 import { dialog, type DialogVariantProps } from '../../../styled-system/recipes'
 import { createStyleContext, type ColorPaletteProp } from './style-context'
+import { XIcon, withIcon } from './icons'
 
 const { Provider: StyleProvider, withContext } = createStyleContext(dialog)
 
@@ -20,8 +21,8 @@ export const Popup = withContext(Base.Popup, 'popup')
 export const Title = withContext(Base.Title, 'title')
 export const Description = withContext(Base.Description, 'description')
 export const Close = withContext(Base.Close, 'close')
-/** Corner close button; pair with render={<Button variant="plain" colorPalette="gray" square />}. */
-export const CloseTrigger = withContext(Base.Close, 'closeTrigger')
+/** Corner close button: draws × and is named Close until children or aria-label replace them. */
+export const CloseTrigger = withIcon(withContext(Base.Close, 'closeTrigger'), <XIcon />, 'Close')
 export const Header = withContext('div', 'header')
 export const Body = withContext('div', 'body')
 export const Footer = withContext('div', 'footer')

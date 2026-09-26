@@ -225,8 +225,8 @@ export const catalog: ComponentEntry[] = [
     description: 'Keep extra details close, without the clutter.',
     recipe: 'collapsible',
     base: 'collapsible',
-    anatomy: ['Root', 'Trigger', 'Panel'],
-    note: 'A single expandable region. Put panel content in a div so its padding works with the height animation.',
+    anatomy: ['Root', 'Trigger', 'Indicator', 'Panel'],
+    note: 'A single expandable region. Put panel content in a div so its padding works with the height animation. End Trigger with Indicator for a chevron that turns while the panel is open.',
   },
   {
     id: 'navigation-menu',
@@ -323,7 +323,7 @@ export const catalog: ComponentEntry[] = [
       'Close',
       'CloseTrigger',
     ],
-    note: 'The side follows swipeDirection on Root: "down" (default) is a bottom sheet, "right" / "left" are side panels, "up" drops from the top. Includes focus trapping, dismissal and reduced-motion support. Use Dialog for a centered modal. Wrap the app in Provider with IndentBackground and Indent to make the page step back while a drawer is open. VirtualKeyboardProvider keeps focused fields visible above a mobile keyboard.',
+    note: 'The side follows swipeDirection on Root: "down" (default) is a bottom sheet, "right" / "left" are side panels, "up" drops from the top. Includes focus trapping, dismissal and reduced-motion support. Use Dialog for a centered modal. Wrap the app in Provider with IndentBackground and Indent to make the page step back while a drawer is open. VirtualKeyboardProvider keeps focused fields visible above a mobile keyboard. CloseTrigger is a corner × named "Close"; pass aria-label for another language, or children to replace the icon.',
   },
   {
     id: 'preview-card',
@@ -575,8 +575,8 @@ export const catalog: ComponentEntry[] = [
     base: 'accordion',
     variants: ['outline', 'plain', 'enclosed'],
     sizes: ['sm', 'md', 'lg'],
-    anatomy: ['Root', 'Item', 'Header', 'Trigger', 'Panel'],
-    note: 'Put Trigger inside Header. Put panel content in a div for padding that does not break height animations. Multiple panels can be open.',
+    anatomy: ['Root', 'Item', 'Header', 'Trigger', 'Indicator', 'Panel'],
+    note: 'Put Trigger inside Header. Put panel content in a div for padding that does not break height animations. Multiple panels can be open. End Trigger with Indicator for a chevron that turns while the panel is open.',
   },
   {
     id: 'dialog',
@@ -600,7 +600,7 @@ export const catalog: ComponentEntry[] = [
       'Close',
       'CloseTrigger',
     ],
-    note: 'Always include a Title. Base UI handles focus trapping, dismissal and focus return. Portal keeps the popup outside page stacking contexts.',
+    note: 'Always include a Title. Base UI handles focus trapping, dismissal and focus return. Portal keeps the popup outside page stacking contexts. CloseTrigger is a corner × named "Close"; pass aria-label for another language, or children to replace the icon.',
   },
   {
     id: 'alert-dialog',
@@ -622,8 +622,9 @@ export const catalog: ComponentEntry[] = [
       'Body',
       'Footer',
       'Close',
+      'CloseTrigger',
     ],
-    note: 'Reserve for decisions that need a response. Provide a safe cancel action and a clearly named confirmation.',
+    note: 'Reserve for decisions that need a response. Provide a safe cancel action and a clearly named confirmation. CloseTrigger is a corner × named "Close"; pass aria-label for another language, or children to replace the icon.',
   },
   {
     id: 'popover',
@@ -647,7 +648,7 @@ export const catalog: ComponentEntry[] = [
       'Close',
       'CloseTrigger',
     ],
-    note: 'Use sideOffset on Positioner for spacing. Root owns open state and style variants; context survives the portal. createHandle connects triggers outside Root; Viewport animates content when one popover moves between triggers.',
+    note: 'Use sideOffset on Positioner for spacing. Root owns open state and style variants; context survives the portal. createHandle connects triggers outside Root; Viewport animates content when one popover moves between triggers. CloseTrigger is a corner × named "Close"; pass aria-label for another language, or children to replace the icon.',
   },
   {
     id: 'menu',

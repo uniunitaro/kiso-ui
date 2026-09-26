@@ -1,17 +1,5 @@
 import { useRef, useState } from 'react'
-import {
-  Bold,
-  ChevronDown,
-  Copy,
-  Italic,
-  Layers,
-  Link,
-  Minus,
-  Plus,
-  Search,
-  Settings2,
-  X,
-} from 'lucide-react'
+import { Bold, Copy, Italic, Layers, Link, Minus, Plus, Search, Settings2 } from 'lucide-react'
 import * as Autocomplete from '../components/ui/autocomplete'
 import { Button } from '../components/ui/button'
 import * as Checkbox from '../components/ui/checkbox'
@@ -233,12 +221,7 @@ function DrawerDemo({ size }: { size?: string }) {
                         <Drawer.Footer>
                           <Drawer.Close render={<Button />}>Back to the collection</Drawer.Close>
                         </Drawer.Footer>
-                        <Drawer.CloseTrigger
-                          aria-label="Close"
-                          render={<Button variant="plain" colorPalette="gray" size="sm" square />}
-                        >
-                          <X />
-                        </Drawer.CloseTrigger>
+                        <Drawer.CloseTrigger />
                       </Drawer.Content>
                     </Drawer.Popup>
                   </Drawer.Viewport>
@@ -413,7 +396,7 @@ export function AdvancedDemo({
         <Collapsible.Root>
           <Collapsible.Trigger>
             Project files
-            <ChevronDown />
+            <Collapsible.Indicator />
           </Collapsible.Trigger>
           <div
             className={css({

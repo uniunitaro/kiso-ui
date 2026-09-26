@@ -1,5 +1,5 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { arrow, popup, popupBackdrop } from '../shared'
+import { arrow, closeTrigger, popup, popupBackdrop } from '../shared'
 
 // Shared by Popover and PreviewCard.
 export const popover = defineSlotRecipe({
@@ -34,7 +34,7 @@ export const popover = defineSlotRecipe({
     title: { color: 'fg.default', fontWeight: 'medium', textStyle: 'md' },
     description: { color: 'fg.muted', textStyle: 'sm' },
     arrow,
-    closeTrigger: { position: 'absolute', top: '2', insetInlineEnd: '2' },
+    closeTrigger: { ...closeTrigger, top: '2', insetInlineEnd: '2', boxSize: '8' },
   },
   defaultVariants: { size: 'md' },
   variants: {

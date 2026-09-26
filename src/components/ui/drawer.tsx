@@ -2,6 +2,7 @@
 import { Drawer as Base } from '@base-ui/react/drawer'
 import { drawer, type DrawerVariantProps } from '../../../styled-system/recipes'
 import { createStyleContext, type ColorPaletteProp } from './style-context'
+import { XIcon, withIcon } from './icons'
 const { Provider: StyleProvider, withContext } = createStyleContext(drawer)
 export function Root<Payload = unknown>({
   size,
@@ -21,7 +22,8 @@ export const Content = withContext(Base.Content, 'content')
 export const Title = withContext(Base.Title, 'title')
 export const Description = withContext(Base.Description, 'description')
 export const Close = withContext(Base.Close, 'close')
-export const CloseTrigger = withContext(Base.Close, 'closeTrigger')
+/** Corner close button: draws × and is named Close until children or aria-label replace them. */
+export const CloseTrigger = withIcon(withContext(Base.Close, 'closeTrigger'), <XIcon />, 'Close')
 /** Page wrappers under Provider: the page steps back while a drawer is open. */
 export const Indent = withContext(Base.Indent, 'indent')
 export const IndentBackground = withContext(Base.IndentBackground, 'indentBackground')

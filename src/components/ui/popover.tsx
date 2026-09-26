@@ -2,6 +2,7 @@
 import { Popover as Base } from '@base-ui/react/popover'
 import { popover, type PopoverVariantProps } from '../../../styled-system/recipes'
 import { createStyleContext, type ColorPaletteProp } from './style-context'
+import { XIcon, withIcon } from './icons'
 
 const { Provider: StyleProvider, withContext } = createStyleContext(popover)
 
@@ -22,7 +23,8 @@ export const Title = withContext(Base.Title, 'title')
 export const Description = withContext(Base.Description, 'description')
 export const Arrow = withContext(Base.Arrow, 'arrow')
 export const Close = withContext(Base.Close, 'close')
-export const CloseTrigger = withContext(Base.Close, 'closeTrigger')
+/** Corner close button: draws × and is named Close until children or aria-label replace them. */
+export const CloseTrigger = withIcon(withContext(Base.Close, 'closeTrigger'), <XIcon />, 'Close')
 export const Trigger = Base.Trigger
 export const Portal = Base.Portal
 export const Viewport = Base.Viewport

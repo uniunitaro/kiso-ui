@@ -3,7 +3,7 @@ import { defineSlotRecipe } from '@pandacss/dev'
 export const accordion = defineSlotRecipe({
   className: 'kiso-accordion',
   jsx: ['Accordion', /^Accordion\./],
-  slots: ['root', 'item', 'header', 'trigger', 'panel'],
+  slots: ['root', 'item', 'header', 'trigger', 'indicator', 'panel'],
   base: {
     root: { width: 'full' },
     item: { overflowAnchor: 'none' },
@@ -22,14 +22,16 @@ export const accordion = defineSlotRecipe({
       outline: '0',
       focusVisibleRing: 'outside',
       _disabled: { layerStyle: 'disabled' },
-      // Last icon is the chevron; it turns while the panel is open.
-      '& > svg:last-child': {
-        color: 'fg.subtle',
-        boxSize: '1.2em',
-        transitionProperty: 'rotate',
-        transitionDuration: 'normal',
-      },
-      '&[data-panel-open] > svg:last-child': { rotate: '180deg' },
+    },
+    // The chevron at the end of Trigger; it turns while the panel is open.
+    indicator: {
+      display: 'inline-flex',
+      flexShrink: '0',
+      color: 'fg.subtle',
+      transitionProperty: 'rotate',
+      transitionDuration: 'normal',
+      _icon: { boxSize: '1.2em' },
+      '[data-panel-open] &': { rotate: '180deg' },
     },
     panel: {
       overflow: 'hidden',

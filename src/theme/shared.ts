@@ -184,3 +184,29 @@ export const popupBackdrop = {
   zIndex: 'popover',
   userSelect: 'none',
 } satisfies SystemStyleObject
+
+/**
+ * Corner × of Dialog, Drawer and Popover: looks like a plain gray square Button (size sm), so it
+ * needs no Button import. Recipes place it and may make it smaller.
+ */
+export const closeTrigger = {
+  position: 'absolute',
+  top: '3',
+  insetInlineEnd: '3',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: '0',
+  boxSize: '9',
+  borderRadius: 'l2',
+  color: 'gray.plain.fg',
+  cursor: 'pointer',
+  outline: '0',
+  transitionProperty: 'background-color, color, box-shadow',
+  transitionDuration: 'fast',
+  focusVisibleRing: 'outside',
+  _hover: { bg: 'gray.plain.bg.hover' },
+  _active: { bg: 'gray.plain.bg.active' },
+  _disabled: { layerStyle: 'disabled' },
+  _icon: { boxSize: '4' },
+} satisfies SystemStyleObject

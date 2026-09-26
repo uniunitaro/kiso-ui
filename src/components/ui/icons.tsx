@@ -63,10 +63,14 @@ export const ChevronRightIcon = () => (
   </Svg>
 )
 
-/** A part that holds one icon draws `icon` until children replace it. */
-export function withIcon<C extends ElementType>(Component: C, icon: ReactNode) {
-  function WithIcon({ children = icon, ...props }: ComponentPropsWithRef<C>) {
-    return createElement(Component, props, children)
+/**
+ * A part that holds one icon draws `icon` until children replace it. An icon-only button also
+ * takes a default `label` (aria-label); aria-label or children replace it.
+ */
+export function withIcon<C extends ElementType>(Component: C, icon: ReactNode, label?: string) {
+  function WithIcon({ children, ...props }: ComponentPropsWithRef<C>) {
+    if (children !== undefined) return createElement(Component, props, children)
+    return createElement(Component, label ? { 'aria-label': label, ...props } : props, icon)
   }
   return WithIcon
 }

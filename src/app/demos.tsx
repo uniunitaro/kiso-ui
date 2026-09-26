@@ -23,7 +23,6 @@ import {
   CheckCircle2,
   CircleAlert,
   Mail,
-  X,
 } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
@@ -231,12 +230,7 @@ export function DialogDemo({ size = 'md', palette }: { size?: string; palette?: 
           <Dialog.Body>
             <WorkspaceForm compact onComplete={() => setOpen(false)} />
           </Dialog.Body>
-          <Dialog.CloseTrigger
-            aria-label="Close"
-            render={<Button variant="plain" colorPalette="gray" size="sm" square />}
-          >
-            <X />
-          </Dialog.CloseTrigger>
+          <Dialog.CloseTrigger />
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
@@ -389,7 +383,7 @@ export function AccordionDemo({ size = 'md', variant }: { size?: string; variant
           <Accordion.Header>
             <Accordion.Trigger>
               {question}
-              <ChevronDown aria-hidden="true" />
+              <Accordion.Indicator />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Panel>

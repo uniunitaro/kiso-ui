@@ -14,6 +14,7 @@ import {
   RadioGroup,
   Fieldset,
   NumberField,
+  Accordion,
   InputGroup,
 } from '../src/components/ui'
 
@@ -307,6 +308,52 @@ describe('built-in icons', () => {
     expect(indicator).toHaveAttribute('data-indeterminate')
     expect(indicator.querySelector('[data-mark=check]')).not.toBeNull()
     expect(indicator.querySelector('[data-mark=indeterminate]')).not.toBeNull()
+  })
+})
+
+describe('close triggers and indicators', () => {
+  it('names the corner close button until aria-label or children replace it', async () => {
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Portal>
+          <Dialog.Popup>
+            <Dialog.Title>Workspace</Dialog.Title>
+            <Dialog.CloseTrigger />
+            <Dialog.CloseTrigger aria-label="閉じる" />
+            <Dialog.CloseTrigger>Done</Dialog.CloseTrigger>
+          </Dialog.Popup>
+        </Dialog.Portal>
+      </Dialog.Root>,
+    )
+    const close = await screen.findByRole('button', { name: 'Close' })
+    expect(close).toHaveClass('kiso-dialog__closeTrigger')
+    expect(close.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.getByRole('button', { name: '閉じる' }).querySelector('svg')).not.toBeNull()
+    const done = screen.getByRole('button', { name: 'Done' })
+    expect(done).not.toHaveAttribute('aria-label')
+    expect(done.querySelector('svg')).toBeNull()
+    await userEvent.click(close)
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+  })
+
+  it('draws a chevron in the accordion indicator', () => {
+    render(
+      <Accordion.Root defaultValue={['a']}>
+        <Accordion.Item value="a">
+          <Accordion.Header>
+            <Accordion.Trigger>
+              Question
+              <Accordion.Indicator data-testid="indicator" />
+            </Accordion.Trigger>
+          </Accordion.Header>
+          <Accordion.Panel>Answer</Accordion.Panel>
+        </Accordion.Item>
+      </Accordion.Root>,
+    )
+    const indicator = screen.getByTestId('indicator')
+    expect(indicator).toHaveClass('kiso-accordion__indicator')
+    expect(indicator.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.getByRole('button', { name: 'Question' })).toHaveAttribute('data-panel-open')
   })
 })
 

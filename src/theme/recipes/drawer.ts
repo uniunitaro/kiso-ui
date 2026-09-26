@@ -1,4 +1,5 @@
 import { defineSlotRecipe } from '@pandacss/dev'
+import { closeTrigger } from '../shared'
 
 // The side follows Base UI's swipeDirection prop (data-swipe-direction): down is a bottom sheet.
 export const drawer = defineSlotRecipe({
@@ -100,7 +101,7 @@ export const drawer = defineSlotRecipe({
     title: { fontWeight: 'semibold', textStyle: 'lg', color: 'fg.default' },
     description: { color: 'fg.muted', textStyle: 'sm' },
     close: {},
-    closeTrigger: { position: 'absolute', top: '3', insetInlineEnd: '3' },
+    closeTrigger,
     // Optional page wrapper under Drawer.Provider: the page steps back while a drawer is open
     // and follows the swipe back into place.
     indentBackground: {
