@@ -386,6 +386,15 @@ export const catalog: ComponentEntry[] = [
     note: 'Wrap with Field.Root and Field.Label for automatic label, description and validation associations. size is a visual variant.',
   },
   {
+    id: 'input-group',
+    name: 'Input Group',
+    category: 'Forms',
+    description: 'A search icon, a unit, a way out: whatever the field needs beside it.',
+    recipe: 'input-group',
+    anatomy: ['Root', 'Element', 'Addon'],
+    note: 'Wrap one Input. Element puts an icon or a small button inside the field, at the start when it comes before the Input and at the end after it; the Input keeps its variant and size and gets room for it. Clicks on an icon reach the Input. Addon attaches text such as https:// or .com beside the field. Give an icon-only button inside an Element its own aria-label.',
+  },
+  {
     id: 'textarea',
     name: 'Textarea',
     category: 'Forms',

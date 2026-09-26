@@ -1,10 +1,12 @@
-import { useState } from 'react'
-import { ArrowLeft, ArrowRight, FolderPlus, Plus } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight, FolderPlus, Plus, Search, X } from 'lucide-react'
 import { Badge } from '../components/ui/badge'
 import * as Breadcrumb from '../components/ui/breadcrumb'
 import { Button } from '../components/ui/button'
 import { ButtonGroup } from '../components/ui/button-group'
 import * as EmptyState from '../components/ui/empty-state'
+import { Input } from '../components/ui/input'
+import * as InputGroup from '../components/ui/input-group'
 import { Pagination } from '../components/ui/pagination'
 import { Spinner } from '../components/ui/spinner'
 import * as Table from '../components/ui/table'
@@ -23,6 +25,8 @@ export function NativeDemo({
 }) {
   const [page, setPage] = useState(1)
   const [created, setCreated] = useState(false)
+  const [query, setQuery] = useState('')
+  const search = useRef<HTMLInputElement>(null)
   switch (id) {
     case 'table':
       return (
@@ -149,6 +153,46 @@ export function NativeDemo({
           <p className={s.small} role="status">
             Page {page} of 5
           </p>
+        </div>
+      )
+    case 'input-group':
+      return (
+        <div className={s.stack}>
+          <InputGroup.Root>
+            <InputGroup.Element>
+              <Search />
+            </InputGroup.Element>
+            <Input
+              ref={search}
+              type="search"
+              aria-label="Search projects"
+              placeholder="Search projects"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            {query && (
+              <InputGroup.Element>
+                <Button
+                  variant="plain"
+                  colorPalette="gray"
+                  size="xs"
+                  square
+                  aria-label="Clear search"
+                  onClick={() => {
+                    setQuery('')
+                    search.current?.focus()
+                  }}
+                >
+                  <X />
+                </Button>
+              </InputGroup.Element>
+            )}
+          </InputGroup.Root>
+          <InputGroup.Root>
+            <InputGroup.Addon>https://</InputGroup.Addon>
+            <Input aria-label="Website" placeholder="studio-north" />
+            <InputGroup.Addon>.com</InputGroup.Addon>
+          </InputGroup.Root>
         </div>
       )
     default:

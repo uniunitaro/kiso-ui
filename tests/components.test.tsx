@@ -14,6 +14,7 @@ import {
   RadioGroup,
   Fieldset,
   NumberField,
+  InputGroup,
 } from '../src/components/ui'
 
 describe('composition contract', () => {
@@ -306,5 +307,21 @@ describe('built-in icons', () => {
     expect(indicator).toHaveAttribute('data-indeterminate')
     expect(indicator.querySelector('[data-mark=check]')).not.toBeNull()
     expect(indicator.querySelector('[data-mark=indeterminate]')).not.toBeNull()
+  })
+})
+
+describe('input group', () => {
+  it('keeps the Input as the labelled control beside its element and addon', () => {
+    render(
+      <InputGroup.Root>
+        <InputGroup.Addon>https://</InputGroup.Addon>
+        <Input aria-label="Website" size="lg" />
+        <InputGroup.Element data-testid="element">.com</InputGroup.Element>
+      </InputGroup.Root>,
+    )
+    const input = screen.getByRole('textbox', { name: 'Website' })
+    expect(input.parentElement).toHaveClass('kiso-input-group__root')
+    expect(screen.getByTestId('element')).toHaveClass('kiso-input-group__element')
+    expect(screen.getByText('https://')).toHaveClass('kiso-input-group__addon')
   })
 })

@@ -9,6 +9,7 @@ import { breadcrumb } from './breadcrumb'
 import { pagination } from './pagination'
 import { button } from './button'
 import { input } from './input'
+import { inputGroup } from './input-group'
 import { badge } from './badge'
 import { checkbox } from './checkbox'
 import { switchRecipe } from './switch'
@@ -89,4 +90,5 @@ export const slotRecipes = {
   navigationMenu,
   table,
   emptyState,
+  inputGroup,
 }

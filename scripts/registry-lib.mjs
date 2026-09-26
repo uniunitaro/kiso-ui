@@ -8,6 +8,7 @@ export const sourceRoot = path.resolve(fileURLToPath(new URL('..', import.meta.u
 export const recipeNames = {
   button: ['button'],
   input: ['input'],
+  'input-group': ['inputGroup'],
   textarea: ['textarea'],
   badge: ['badge'],
   toggle: ['toggle', 'toggleGroup'],
@@ -57,6 +58,8 @@ export const recipeNames = {
 }
 const componentDependencies = {
   pagination: ['button'],
+  // InputGroup styles the Input placed inside it.
+  'input-group': ['input'],
   button: ['spinner'],
   toast: ['spinner'],
 }

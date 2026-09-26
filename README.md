@@ -1,6 +1,6 @@
 # Kiso UI
 
-Base UI の振る舞いと Panda CSS のレシピを組み合わせた、ソースを所有する React コンポーネント集です。48種類の部品、実際に操作できるプレビュー、使用例、レシピ、ローカルコピー用 CLI を収録しています。
+Base UI の振る舞いと Panda CSS のレシピを組み合わせた、ソースを所有する React コンポーネント集です。49種類の部品、実際に操作できるプレビュー、使用例、レシピ、ローカルコピー用 CLI を収録しています。
 
 Park UI の「パレット（colorPalette）× 見た目（variant）× 大きさ（size）」という考え方を採用し、Base UI の render 合成・状態コールバック・値のジェネリクスを保持しています。配色・意味トークン・状態色・主要部品のサイズ・角丸・影・重なり順・textStyles・disabled の表現は Park UI の定義に準拠しています。
 
@@ -13,7 +13,7 @@ pnpm install
 pnpm dev
 ```
 
-表示先は `http://127.0.0.1:5173`。Overview は実際の部品による作例、Components は48種類の検索、各詳細ページはサイズ・見た目・ソースの確認、Theming は配色と角丸の調整、Quality checks は axe の検査画面です。
+表示先は `http://127.0.0.1:5173`。Overview は実際の部品による作例、Components は49種類の検索、各詳細ページはサイズ・見た目・ソースの確認、Theming は配色と角丸の調整、Quality checks は axe の検査画面です。
 
 ## アプリへコピー
 
@@ -130,7 +130,7 @@ pnpm build
 pnpm preview
 ```
 
-`test:consumer` は別ディレクトリに全コンポーネントをインストールし、48種類の使用例、型、Panda 生成を検証します。JSX に書いた variant・レスポンシブなサイズが抽出され、使っていない variant が CSS に出ないことも確認します。初回の `pnpm install` 後、キャッシュ済み依存を使うオフライン検証です。
+`test:consumer` は別ディレクトリに全コンポーネントをインストールし、49種類の使用例、型、Panda 生成を検証します。JSX に書いた variant・レスポンシブなサイズが抽出され、使っていない variant が CSS に出ないことも確認します。初回の `pnpm install` 後、キャッシュ済み依存を使うオフライン検証です。
 
 `pnpm registry:build` は `public/registry.json`・`public/r/*.json`・`public/llms*.txt` を生成します。これは Kiso のスキーマで、shadcn CLI との互換性を謳うものではありません。実行例と依存情報を人にも AI にも同じソースから提供します。
 

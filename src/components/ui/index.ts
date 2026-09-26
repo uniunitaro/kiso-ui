@@ -1,5 +1,6 @@
 export { Button, type ButtonProps } from './button'
 export { Input, type InputProps } from './input'
+export * as InputGroup from './input-group'
 export { Textarea, type TextareaProps } from './textarea'
 export { Badge, type BadgeProps } from './badge'
 export { Toggle, ToggleGroup } from './toggle'
