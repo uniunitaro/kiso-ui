@@ -468,14 +468,15 @@ export function InstallationPage() {
       />
       <h2 className={s.docHeading}>02 / Copy your first components</h2>
       <p className={s.prose}>
-        Run the local CLI from the Kiso repository. The dry run shows every file before writing. The
-        foundation includes tokens, conditions, shared styles and an integration guide.
+        The CLI is not published to npm. Clone the Kiso repository next to your app and run it from
+        there; <code>--target</code> is the path to your app. The dry run shows every file before
+        writing. The foundation includes tokens, conditions, shared styles and an integration guide.
       </p>
       <div className={css({ mt: '4' })}>
         <CodeBlock
           title="Terminal · Kiso repository"
           code={
-            'pnpm ui init --target ../your-app --dry-run\npnpm ui init --target ../your-app\npnpm ui add button input field --target ../your-app'
+            'git clone <kiso-repository-url> kiso-ui\ncd kiso-ui\npnpm install\n\npnpm ui init --target ../your-app --dry-run\npnpm ui init --target ../your-app\npnpm ui add button input field --target ../your-app'
           }
         />
       </div>
