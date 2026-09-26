@@ -45,9 +45,8 @@ for (const [id, source] of Object.entries(examples)) {
   if (firstJsx < 0) continue
   const before = source.slice(0, firstJsx).trimEnd()
   const jsx = source.slice(firstJsx).replace(/^\/\/ (.*)$/gm, '{/* $1 */}')
-  examples[id] =
-    `'use client'\n${before}\n;\n\nexport function Example() {\n  return (\n    <>\n${jsx
-      .split('\n')
-      .map((line) => '      ' + line)
-      .join('\n')}\n    </>\n  )\n}`
+  examples[id] = `'use client'\n${before}\n\nexport function Example() {\n  return (\n    <>\n${jsx
+    .split('\n')
+    .map((line) => '      ' + line)
+    .join('\n')}\n    </>\n  )\n}`
 }
