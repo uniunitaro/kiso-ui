@@ -187,7 +187,7 @@ export function WorkspaceForm({
         <Field.Error match="valueMissing">Give your workspace a name.</Field.Error>
       </Field.Root>
       <Field.Root>
-        <Field.Label>Team</Field.Label>
+        {/* SelectDemo names itself with Select.Label. */}
         <SelectDemo />
       </Field.Root>
       <CheckControl label="Invite my team later" defaultChecked />
