@@ -176,62 +176,52 @@ export function ToastDemo() {
 }
 
 function DrawerDemo({ size }: { size?: string }) {
+  // Provider, IndentBackground and Indent make the whole page step back, so they wrap the app
+  // (see the usage example), not this preview.
   return (
-    // Provider, IndentBackground and Indent usually wrap the whole app; paint containment keeps
-    // the fixed background inside this frame, which stands in for the page.
-    <Drawer.Provider>
-      <div className={css({ position: 'relative', contain: 'paint', borderRadius: 'l3' })}>
-        <Drawer.IndentBackground />
-        <Drawer.Indent
-          className={css({ p: '6', borderWidth: '1px', borderColor: 'border', borderRadius: 'l3' })}
-        >
-          <div className={s.row}>
-            {(['down', 'right'] as const).map((direction) => (
-              <Drawer.Root key={direction} swipeDirection={direction} size={pass(size)}>
-                <Drawer.Trigger render={<Button variant="outline" colorPalette="gray" />}>
-                  {direction === 'down' ? 'Open bottom sheet' : 'Open side panel'}
-                </Drawer.Trigger>
-                <Drawer.Portal>
-                  <Drawer.Backdrop />
-                  <Drawer.Viewport>
-                    <Drawer.Popup>
-                      <Drawer.Content>
-                        <Drawer.Header>
-                          <Drawer.Title>A little room to focus.</Drawer.Title>
-                          <Drawer.Description>
-                            Review the details, make your next move, and return to what you were
-                            doing.
-                          </Drawer.Description>
-                        </Drawer.Header>
-                        <Drawer.Body>
-                          <div
-                            className={css({
-                              p: '4',
-                              borderWidth: '1px',
-                              borderRadius: 'l3',
-                              display: 'flex',
-                              gap: '3',
-                              alignItems: 'center',
-                            })}
-                          >
-                            <Layers size={20} />
-                            <span className={s.title}>Studio North · Design system</span>
-                          </div>
-                        </Drawer.Body>
-                        <Drawer.Footer>
-                          <Drawer.Close render={<Button />}>Back to the collection</Drawer.Close>
-                        </Drawer.Footer>
-                        <Drawer.CloseTrigger />
-                      </Drawer.Content>
-                    </Drawer.Popup>
-                  </Drawer.Viewport>
-                </Drawer.Portal>
-              </Drawer.Root>
-            ))}
-          </div>
-        </Drawer.Indent>
-      </div>
-    </Drawer.Provider>
+    <div className={s.row}>
+      {(['down', 'right'] as const).map((direction) => (
+        <Drawer.Root key={direction} swipeDirection={direction} size={pass(size)}>
+          <Drawer.Trigger render={<Button variant="outline" colorPalette="gray" />}>
+            {direction === 'down' ? 'Open bottom sheet' : 'Open side panel'}
+          </Drawer.Trigger>
+          <Drawer.Portal>
+            <Drawer.Backdrop />
+            <Drawer.Viewport>
+              <Drawer.Popup>
+                <Drawer.Content>
+                  <Drawer.Header>
+                    <Drawer.Title>A little room to focus.</Drawer.Title>
+                    <Drawer.Description>
+                      Review the details, make your next move, and return to what you were doing.
+                    </Drawer.Description>
+                  </Drawer.Header>
+                  <Drawer.Body>
+                    <div
+                      className={css({
+                        p: '4',
+                        borderWidth: '1px',
+                        borderRadius: 'l3',
+                        display: 'flex',
+                        gap: '3',
+                        alignItems: 'center',
+                      })}
+                    >
+                      <Layers size={20} />
+                      <span className={s.title}>Studio North · Design system</span>
+                    </div>
+                  </Drawer.Body>
+                  <Drawer.Footer>
+                    <Drawer.Close render={<Button />}>Back to the collection</Drawer.Close>
+                  </Drawer.Footer>
+                  <Drawer.CloseTrigger />
+                </Drawer.Content>
+              </Drawer.Popup>
+            </Drawer.Viewport>
+          </Drawer.Portal>
+        </Drawer.Root>
+      ))}
+    </div>
   )
 }
 
