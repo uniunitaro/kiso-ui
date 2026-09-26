@@ -254,7 +254,7 @@ export function ComponentPage({ entry }: { entry: ComponentEntry }) {
           Set up the foundation
         </a>
         . The CLI copies the component, recipe, and shared dependencies. It never installs packages
-        or overwrites existing files by default.
+        or overwrites files you have changed.
       </p>
       <h2 className={s.docHeading}>Read it. Change it. Own it.</h2>
       <div
@@ -510,11 +510,27 @@ export function InstallationPage() {
           code={`import { Button } from './components/ui/button'\n\n// Set data-theme="light" or "dark" on <html>.\n// Every component inherits colorPalette="accent"; pass colorPalette to change one,\n// or set it on an ancestor to recolor everything inside.\n\nexport function App() {\n  return <Button variant="solid" size="md">Make something good</Button>\n}`}
         />
       </div>
+      <h2 className={s.docHeading}>05 / Stay up to date</h2>
+      <p className={s.prose}>
+        The CLI records a hash of every file it writes in <code>.kiso/installed.json</code>. After
+        you pull a newer Kiso, <code>update</code> rewrites the files you have not changed and lists
+        the ones you edited as <code>customized</code>, leaving them as they are. <code>add</code>{' '}
+        does the same for the foundation and the components it copies. <code>diff</code> shows how
+        your copies differ from Kiso, so you can merge the changes by hand.
+      </p>
+      <div className={css({ mt: '4' })}>
+        <CodeBlock
+          title="Terminal · Kiso repository"
+          code={
+            'git pull\npnpm ui diff --target ../your-app\npnpm ui update --target ../your-app --dry-run\npnpm ui update --target ../your-app'
+          }
+        />
+      </div>
       <h2 className={s.docHeading}>A note about generation</h2>
       <p className={s.prose}>
         Run <code>pnpm exec panda codegen</code> after adding a component or changing a recipe. Add
-        it to your prepare script. Each recipe explicitly generates its variants, so values from
-        props and agent-generated code work consistently. Keep the generated{' '}
+        it to your prepare script. Panda emits the colorPalette, variant and size values written in
+        JSX; list values chosen from variables in <code>staticCss.recipes</code>. Keep the generated{' '}
         <code>styled-system</code> directory out of version control.
       </p>
     </>

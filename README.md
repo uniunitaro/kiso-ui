@@ -84,6 +84,19 @@ export function Example() {
 
 CLI は依存ファイルとレシピを追跡し、ページ分割の Button 依存などもコピーします。未知の名前や新規ファイルの衝突は書き込み前に止め、すでに所有する部品の編集内容は維持します。パッケージのインストールや通信は行いません。`src/components/ui`・`src/theme`・ルートの `styled-system` という配置に対応しています。`src/theme/recipes/index.ts` は CLI 管理ファイルで、個々のレシピは自由に編集できます。
 
+### 更新
+
+CLI は書き込んだファイルのハッシュを `.kiso/installed.json` に記録します。Kiso を `git pull` した後に `update` を実行すると、書き込んだときのまま変更していないファイルだけを新しい版に置き換え、編集したファイルは `customized` と表示してそのまま残します。`add` も、コピーする基盤と部品について同じように扱います。`diff` は手元のファイルと Kiso の差分を表示します（`outdated` は未編集で古いもの、`customized` は編集したもの）。編集したファイルに Kiso の変更を取り込むときは手で統合するか、ファイルを削除してから `update` を実行します。
+
+```sh
+pnpm ui diff --target ../your-app
+pnpm ui update --target ../your-app --dry-run
+pnpm ui update --target ../your-app
+pnpm ui update dialog --target ../your-app
+```
+
+以前の CLI で入れた（ハッシュの記録がない）ファイルは、Kiso と一致するものだけを未編集として記録します。一致しないものは編集の有無を判別できないため `customized` として扱います。`--accent` / `--gray` は記録され、次回以降の既定値になります。
+
 ## カスタマイズ
 
 - **全体**: `panda.config.ts` の `semanticTokens.colors`。使うパレットを並べ、`gray` と別名（`aliases`）を決めます。`src/theme/colors/` には Park UI と同じ31色（ライト・ダーク）がありますが、CSS に出るのは並べた色だけです。

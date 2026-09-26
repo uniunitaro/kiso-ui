@@ -1,9 +1,9 @@
 {
-  "date": "2026-09-26T04:55:36.082Z",
+  "date": "2026-09-26T05:03:49.352Z",
   "status": "passed",
   "components": 48,
   "examples": 48,
-  "fixture": ".test-workspaces\\consumer-OuzzuK",
+  "fixture": ".test-workspaces\\consumer-M6TZRj",
   "checks": [
     "offline installation",
     "Kiso merged into the panda.config.ts panda init writes; merging again changes nothing",

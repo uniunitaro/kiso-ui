@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import {
   mkdirSync,
   mkdtempSync,
@@ -64,7 +65,7 @@ describe('source installer', () => {
     const tokens = path.join(target, 'src/theme/tokens.ts')
     writeFileSync(tokens, readFileSync(tokens, 'utf8') + '\n// Consumer customization\n')
     const output = cli(['add', 'dialog', '--target', target])
-    expect(output).toContain('preserve')
+    expect(output).toMatch(/customized\s+src\/theme\/tokens\.ts/)
     expect(readFileSync(tokens, 'utf8')).toContain('Consumer customization')
     const index = readFileSync(path.join(target, 'src/theme/recipes/index.ts'), 'utf8')
     expect(index).toContain('export const slotRecipes = { dialog }')
@@ -97,6 +98,84 @@ describe('source installer', () => {
     )
     // Button's loading state renders the Spinner component.
     expect(installed.components).toEqual(['button', 'pagination', 'spinner'])
+  })
+})
+
+describe('keeping copies up to date', () => {
+  const read = (app: string, file: string) => readFileSync(path.join(app, file), 'utf8')
+  const source = (file: string) => readFileSync(path.join(workspace, file), 'utf8')
+  const sha = (text: string) => createHash('sha256').update(text).digest('hex')
+  // Pretends Kiso has changed since the install: the copy and its record hold an older version.
+  function ageCopy(app: string, file: string) {
+    const older = source(file) + '// An older Kiso version\n'
+    writeFileSync(path.join(app, file), older)
+    const metaPath = path.join(app, '.kiso/installed.json')
+    const meta = JSON.parse(readFileSync(metaPath, 'utf8'))
+    meta.files[file] = sha(older)
+    writeFileSync(metaPath, JSON.stringify(meta))
+  }
+
+  it('records a hash of every file it writes', () => {
+    const app = path.join(target, 'drift-record')
+    cli(['add', 'badge', '--target', app, '--accent=teal'])
+    const meta = JSON.parse(read(app, '.kiso/installed.json'))
+    expect(meta.schemaVersion).toBe(2)
+    expect(meta.palettes).toEqual({ accent: 'teal', gray: 'neutral' })
+    expect(meta.files['src/components/ui/badge.tsx']).toBe(
+      sha(source('src/components/ui/badge.tsx')),
+    )
+    expect(meta.files['src/theme/shared.ts']).toBe(sha(source('src/theme/shared.ts')))
+    // Later runs reuse the palettes; KISO-SETUP.md stays as written.
+    expect(cli(['add', 'kbd', '--target', app])).toMatch(/unchanged\s+KISO-SETUP\.md/)
+  })
+  // Seven CLI runs.
+  it('updates unchanged copies and keeps the ones you edited', () => {
+    const app = path.join(target, 'drift-update')
+    cli(['add', 'badge', 'kbd', '--target', app])
+    ageCopy(app, 'src/theme/shared.ts')
+    ageCopy(app, 'src/components/ui/kbd.tsx')
+    const badge = path.join(app, 'src/components/ui/badge.tsx')
+    writeFileSync(badge, read(app, 'src/components/ui/badge.tsx') + '// Consumer change\n')
+    // add refreshes the foundation it depends on, but not other components.
+    const added = cli(['add', 'separator', '--target', app])
+    expect(added).toMatch(/update\s+src\/theme\/shared\.ts/)
+    expect(read(app, 'src/theme/shared.ts')).toBe(source('src/theme/shared.ts'))
+    expect(read(app, 'src/components/ui/kbd.tsx')).toContain('An older Kiso version')
+
+    const diff = cli(['diff', '--target', app])
+    expect(diff).toContain('outdated: src/components/ui/kbd.tsx')
+    expect(diff).toContain('-// An older Kiso version')
+    expect(diff).toContain('customized: src/components/ui/badge.tsx')
+    expect(diff).toContain('-// Consumer change')
+    expect(JSON.parse(cli(['diff', 'kbd', '--target', app, '--json'])).files).toEqual([
+      { path: 'src/components/ui/kbd.tsx', status: 'outdated' },
+    ])
+
+    const updated = cli(['update', '--target', app])
+    expect(updated).toMatch(/update\s+src\/components\/ui\/kbd\.tsx/)
+    expect(updated).toMatch(/customized\s+src\/components\/ui\/badge\.tsx/)
+    expect(updated).toContain('pnpm ui diff')
+    expect(read(app, 'src/components/ui/kbd.tsx')).toBe(source('src/components/ui/kbd.tsx'))
+    expect(read(app, 'src/components/ui/badge.tsx')).toContain('Consumer change')
+    // An edited file stays customized on later runs.
+    expect(cli(['update', '--target', app])).toMatch(/customized\s+src\/components\/ui\/badge\.tsx/)
+    expect(() => cli(['update', 'dialog', '--target', app])).toThrow(/Not installed: dialog/)
+  }, 20_000)
+  it('treats differing files from a version 1 record as customized', () => {
+    const app = path.join(target, 'drift-legacy')
+    cli(['add', 'badge', '--target', app])
+    const metaPath = path.join(app, '.kiso/installed.json')
+    writeFileSync(metaPath, JSON.stringify({ schemaVersion: 1, components: ['badge'] }))
+    const tokens = path.join(app, 'src/theme/tokens.ts')
+    writeFileSync(tokens, read(app, 'src/theme/tokens.ts') + '// Unknown origin\n')
+    expect(cli(['update', '--target', app])).toMatch(/customized\s+src\/theme\/tokens\.ts/)
+    expect(read(app, 'src/theme/tokens.ts')).toContain('Unknown origin')
+    const meta = JSON.parse(readFileSync(metaPath, 'utf8'))
+    expect(meta.schemaVersion).toBe(2)
+    expect(meta.files['src/theme/tokens.ts']).toBeUndefined()
+    expect(meta.files['src/components/ui/badge.tsx']).toBe(
+      sha(source('src/components/ui/badge.tsx')),
+    )
   })
 })
 
