@@ -42,6 +42,8 @@ await writeFile(
         moduleResolution: 'Bundler',
         jsx: 'react-jsx',
         strict: true,
+        noUnusedLocals: true,
+        noUnusedParameters: true,
         skipLibCheck: true,
         esModuleInterop: true,
         noEmit: true,

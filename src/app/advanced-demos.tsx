@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Bold, Copy, Italic, Layers, Link, Minus, Plus, Search, Settings2 } from 'lucide-react'
+import { Bold, Copy, Italic, Layers, Link, Search, Settings2 } from 'lucide-react'
 import * as Autocomplete from '../components/ui/autocomplete'
 import { Button } from '../components/ui/button'
 import * as Checkbox from '../components/ui/checkbox'
