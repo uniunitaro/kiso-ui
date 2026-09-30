@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { catalog, sourceRoot } from './registry-lib.mjs'
@@ -61,6 +61,9 @@ function pnpm(args) {
   if (result.error) throw result.error
   if (result.status !== 0) throw new Error(`Consumer command failed: pnpm ${args.join(' ')}`)
 }
+// Start from this repository's lockfile so pnpm keeps the versions already in the store. Without
+// it, the offline install picks the newest release pnpm has seen, which may not be downloaded.
+await copyFile(path.join(sourceRoot, 'pnpm-lock.yaml'), path.join(target, 'pnpm-lock.yaml'))
 pnpm(['install', '--offline', '--ignore-scripts'])
 // Start from what `panda init` (1.12) writes, then let the CLI merge Kiso into it. panda init
 // itself would find the Kiso repository's config above this fixture and write nothing.
@@ -175,7 +178,7 @@ await writeFile(
       examples: catalog.length,
       fixture: path.relative(sourceRoot, target),
       checks: [
-        'offline installation',
+        'offline installation pinned by the Kiso lockfile',
         'Kiso merged into the panda.config.ts panda init writes; merging again changes nothing',
         'source dependency closure',
         'Panda codegen',
