@@ -4,8 +4,9 @@
     {
       "name": "kiso-ui-dev",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev", "--port", "4173", "--strictPort"],
-      "port": 4173
+      "runtimeArgs": ["dev"],
+      "port": 4173,
+      "autoPort": true
     }
   ]
 }
