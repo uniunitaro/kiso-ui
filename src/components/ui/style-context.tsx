@@ -8,7 +8,6 @@ import {
   type ReactNode,
 } from 'react'
 import { css, cx } from '../../../styled-system/css'
-import type { SystemStyleObject } from '../../../styled-system/types'
 import type { ColorPalette } from '../../../styled-system/tokens'
 
 /**
