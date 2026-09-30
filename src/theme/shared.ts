@@ -1,22 +1,26 @@
 import type { SystemStyleObject } from '../../styled-system/types'
 
+// Raw CSS values are wrapped in [ ] (Panda's escape hatch) so the objects also type-check when an
+// app sets strictTokens: true. The CSS is the same; token references inside still resolve.
+
 /** Floating surfaces (menus, listboxes, popovers). Base UI drives the enter/exit attributes. */
 export const popup = {
   bg: 'gray.surface.bg',
   color: 'fg.default',
   borderRadius: 'l3',
   boxShadow: 'md',
-  outline: '0',
+  outline: '[0]',
   transformOrigin: 'var(--transform-origin)',
-  transitionProperty: 'opacity, scale, translate',
+  transitionProperty: '[opacity, scale, translate]',
   transitionDuration: 'fast',
-  _startingStyle: { opacity: 0, scale: '0.97', translate: '0 -3px' },
-  _endingStyle: { opacity: 0, scale: '0.97' },
+  _startingStyle: { opacity: 0, scale: '[0.97]', translate: '[0 -3px]' },
+  _endingStyle: { opacity: 0, scale: '[0.97]' },
 } satisfies SystemStyleObject
 
 /**
  * Corner for things inside an l3 container with p: '1' (menu rows, enclosed tabs, menubar
  * triggers): both curves share a center at any radius scale. calc() clamps negatives to 0.
+ * A raw value: wrap it in [ ] where it is used in a style object.
  */
 export const insetRadius = 'calc({radii.l3} - {spacing.1})'
 
@@ -31,10 +35,10 @@ export const item = {
   display: 'flex',
   alignItems: 'center',
   width: 'full',
-  paddingInline: itemPaddingInline,
-  borderRadius: insetRadius,
+  paddingInline: `[${itemPaddingInline}]`,
+  borderRadius: `[${insetRadius}]`,
   cursor: 'default',
-  outline: '0',
+  outline: '[0]',
   textAlign: 'start',
   userSelect: 'none',
   _highlighted: { bg: 'gray.surface.bg.hover' },
@@ -45,7 +49,7 @@ export const item = {
 export const groupLabel = {
   display: 'flex',
   alignItems: 'center',
-  paddingInline: itemPaddingInline,
+  paddingInline: `[${itemPaddingInline}]`,
   color: 'fg.muted',
   fontWeight: 'medium',
 } satisfies SystemStyleObject
@@ -56,7 +60,7 @@ export const groupLabel = {
  */
 export const disabledLabel = {
   layerStyle: 'disabled',
-  '& [data-disabled]': { opacity: '1', filter: 'none' },
+  '& [data-disabled]': { opacity: '1', filter: '[none]' },
 } satisfies SystemStyleObject
 
 /**
@@ -85,12 +89,12 @@ export const choiceLabelSizes = {
 export const fieldControl = {
   appearance: 'none',
   borderRadius: 'l2',
-  outline: '0',
+  outline: '[0]',
   position: 'relative',
   width: 'full',
   minWidth: '0',
   color: 'fg.default',
-  transitionProperty: 'background-color, border-color, box-shadow',
+  transitionProperty: '[background-color, border-color, box-shadow]',
   transitionDuration: 'fast',
   _disabled: { layerStyle: 'disabled' },
 } satisfies SystemStyleObject
@@ -123,7 +127,7 @@ export const fieldVariants = {
 
 const focusWithin = {
   _focusWithin: {
-    outline: '1px solid',
+    outline: '[1px solid]',
     outlineColor: 'colorPalette.solid.bg',
     borderColor: 'colorPalette.solid.bg',
   },
@@ -163,11 +167,11 @@ export const fieldGroupVariants = {
 export const arrow = {
   width: '3',
   height: '3',
-  bg: 'inherit',
+  bg: '[inherit]',
   borderWidth: '1px',
   borderColor: { base: 'gray.a4', _dark: 'gray.a8' },
-  rotate: '45deg',
-  zIndex: '-1',
+  rotate: '[45deg]',
+  zIndex: '[-1]',
   '&[data-side=top]': { bottom: '-1.5' },
   '&[data-side=bottom]': { top: '-1.5' },
   '&[data-side=left], &[data-side=inline-start]': { right: '-1.5' },
@@ -201,8 +205,8 @@ export const closeTrigger = {
   borderRadius: 'l2',
   color: 'gray.plain.fg',
   cursor: 'pointer',
-  outline: '0',
-  transitionProperty: 'background-color, color, box-shadow',
+  outline: '[0]',
+  transitionProperty: '[background-color, color, box-shadow]',
   transitionDuration: 'fast',
   focusVisibleRing: 'outside',
   _hover: { bg: 'gray.plain.bg.hover' },

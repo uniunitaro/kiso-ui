@@ -33,4 +33,9 @@ const white = defineTokens.colors({
   a12: { value: 'rgba(255, 255, 255, 0.95)' },
 })
 
-export const colors = { black, white }
+// Kiso: removePandaPresetColors drops Panda's colors, including these two. Same names as Panda's
+// preset so bg: 'transparent' and color: 'current' still work with strictTokens: true.
+const transparent = { value: 'transparent' }
+const current = { value: 'currentColor' }
+
+export const colors = { black, white, transparent, current }

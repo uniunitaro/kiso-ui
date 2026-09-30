@@ -64,6 +64,7 @@ function pnpm(args) {
 pnpm(['install', '--offline', '--ignore-scripts'])
 // Start from what `panda init` (1.12) writes, then let the CLI merge Kiso into it. panda init
 // itself would find the Kiso repository's config above this fixture and write nothing.
+// strictTokens: true (an app's own choice) checks that Kiso's theme and examples use only tokens.
 await writeFile(
   path.join(target, 'panda.config.ts'),
   `import { defineConfig } from "@pandacss/dev";
@@ -71,6 +72,7 @@ await writeFile(
 export default defineConfig({
   // Whether to use css reset
   preflight: true,
+  strictTokens: true,
 
   // Where to look for your css declarations
   include: ["./src/**/*.{js,jsx,ts,tsx}", "./pages/**/*.{js,jsx,ts,tsx}"],
@@ -177,7 +179,7 @@ await writeFile(
         'Kiso merged into the panda.config.ts panda init writes; merging again changes nothing',
         'source dependency closure',
         'Panda codegen',
-        'strict TypeScript with every documented example',
+        'strict TypeScript and Panda strictTokens with every documented example',
         'CSS generation',
         'recipe variants extracted from JSX (no staticCss); unused variants omitted',
         'colorPalette extracted from component props (no staticCss)',

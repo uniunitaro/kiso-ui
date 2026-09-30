@@ -172,7 +172,7 @@ semanticTokens: {
 
 各パレットは `1`〜`12`、透過色 `a1`〜`a12`、`solid / subtle / surface / outline / plain` の背景・文字・境界線・状態色を持ちます。
 
-意味トークンは Park UI と同じ `fg.default / fg.muted / fg.subtle`、`canvas`、`border`、`error` です。Kiso は読みやすいエラー文用に `fg.error`（danger の11番）を足しています。パレットの別名は `gray`（Park UI と同じく config で `gray: neutral` のように割り当て）と、`aliases()` で作る `accent`・`info`・`success`・`warning`・`danger` です。
+意味トークンは Park UI と同じ `fg.default / fg.muted / fg.subtle`、`canvas`、`border`、`error` です。Kiso は読みやすいエラー文用に `fg.error`（danger の11番）を足しています。パレットの別名は `gray`（Park UI と同じく config で `gray: neutral` のように割り当て）と、`aliases()` で作る `accent`・`info`・`success`・`warning`・`danger` です。Panda 標準の色は外しますが、`transparent` と `current` は同じ名前のトークンとして残します。部品とテーマは Panda の `strictTokens: true` でも型エラーになりません。
 
 主な操作部品の `xs / sm / md / lg / xl / 2xl` は高さ32 / 36 / 40 / 44 / 48 / 64px。Select・Combobox・Menu の size はポップアップ内の項目の高さと文字にも効きます。Checkbox・Radio・Switchは16 / 18 / 20 / 22 / 24 / 32pxです。Badgeは公式レシピに合わせて sm〜2xl が18 / 20 / 22 / 24 / 28pxです。Button・Inputには公式の2xs（24 / 28px）もあります。Slider は Park UI では3サイズが同じ値ですが、Kiso ではつまみと溝の太さが変わります。Park UIにない部品や追加サイズはKiso側の拡張です。
 

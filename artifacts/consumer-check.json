@@ -1,15 +1,15 @@
 {
-  "date": "2026-09-26T07:16:18.241Z",
+  "date": "2026-09-30T05:43:47.601Z",
   "status": "passed",
   "components": 49,
   "examples": 49,
-  "fixture": ".test-workspaces\\consumer-nkmYbf",
+  "fixture": ".test-workspaces\\consumer-zNEu9n",
   "checks": [
     "offline installation",
     "Kiso merged into the panda.config.ts panda init writes; merging again changes nothing",
     "source dependency closure",
     "Panda codegen",
-    "strict TypeScript with every documented example",
+    "strict TypeScript and Panda strictTokens with every documented example",
     "CSS generation",
     "recipe variants extracted from JSX (no staticCss); unused variants omitted",
     "colorPalette extracted from component props (no staticCss)",
