@@ -11,27 +11,35 @@ export interface Palettes {
 export const defaultPalettes: Palettes = { accent: 'iris', gray: 'neutral' }
 const statusPalettes = { info: 'blue', success: 'green', warning: 'amber', danger: 'red' }
 
-/** Palettes listed by name in semanticTokens.colors. */
-export const listedPalettes = ({ accent }: Palettes) => [
-  ...new Set([accent, ...Object.values(statusPalettes)]),
+/** Kiso's roles and the palette each one copies. Recipes read only the roles and gray. */
+export const rolePalettes = ({ accent }: Palettes) => ({ accent, ...statusPalettes })
+
+/** The palettes the config imports: the gray and the sources of the roles. */
+export const importedPalettes = (palettes: Palettes) => [
+  ...new Set([...Object.values(rolePalettes(palettes)), palettes.gray]),
 ]
 
-export const aliasesCall = ({ accent }: Palettes) =>
-  `aliases({ accent: ${accent}, ${Object.entries(statusPalettes)
-    .map(([role, name]) => `${role}: ${name}`)
-    .join(', ')} })`
+/** Entries after ...semanticColors in semanticTokens.colors. */
+export const paletteEntries = (palettes: Palettes, quote = "'") => [
+  `gray: ${palettes.gray}`,
+  ...Object.entries(rolePalettes(palettes)).map(
+    ([role, name]) => `${role}: definePalette(${quote}${role}${quote}, ${name})`,
+  ),
+]
 
 /** Every identifier the config imports, in the order the template lists them. */
 export const importOrder = (palettes: Palettes) => [
-  ...['tokens', 'semanticColors', 'aliases', 'radii', 'removePandaPresetColors', 'shadows'],
-  ...new Set([...listedPalettes(palettes), palettes.gray]),
+  ...['tokens', 'semanticColors', 'definePalette', 'radii', 'removePandaPresetColors', 'shadows'],
+  ...importedPalettes(palettes),
   ...['conditions', 'globalCss', 'textStyles', 'layerStyles', 'keyframes', 'recipes'],
   'slotRecipes',
 ]
 
 /** Where each identifier comes from, relative to the project root. */
 export function moduleOf(name: string) {
-  if (['tokens', 'semanticColors', 'aliases', 'radii', 'removePandaPresetColors'].includes(name))
+  if (
+    ['tokens', 'semanticColors', 'definePalette', 'radii', 'removePandaPresetColors'].includes(name)
+  )
     return './src/theme/tokens'
   if (name === 'recipes' || name === 'slotRecipes') return './src/theme/recipes'
   if ((accentNames as readonly string[]).includes(name)) return `./src/theme/colors/${name}`
@@ -67,12 +75,11 @@ export default defineConfig({
       semanticTokens: {
         colors: {
           ...semanticColors,
-          // Only the palettes listed here exist. Add one: import it and list it.
-${listedPalettes(palettes)
-  .map((name) => `          ${name},`)
+          // Recipes read gray and these roles; each role is a copy of a palette. Only what is
+          // listed here exists: to use another color by name, import it and list it too.
+${paletteEntries(palettes)
+  .map((entry) => `          ${entry},`)
   .join('\n')}
-          gray: ${palettes.gray},
-          ...${aliasesCall(palettes)},
         },
         radii,
         shadows,

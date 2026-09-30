@@ -6,7 +6,7 @@ import { Input } from '../components/ui/input'
 import * as Field from '../components/ui/field'
 import * as Select from '../components/ui/select'
 import { css, cx } from '../../styled-system/css'
-import { paletteClass } from '../components/ui/style-context'
+import { paletteClass, type PaletteName } from '../components/ui/style-context'
 import { catalog, type ComponentEntry } from './catalog'
 import { Demo, type DemoSize } from './demos'
 import { examples } from './examples'
@@ -178,7 +178,12 @@ export function ComponentPage({ entry }: { entry: ComponentEntry }) {
         <div>
           <div className={s.preview}>
             {/* The chosen palette is inherited by every part rendered in place. */}
-            <div className={cx(css({ width: 'full', maxWidth: '420px' }), paletteClass(palette))}>
+            <div
+              className={cx(
+                css({ width: 'full', maxWidth: '420px' }),
+                paletteClass(palette as PaletteName),
+              )}
+            >
               <Demo
                 id={entry.id}
                 size={size}

@@ -9,9 +9,16 @@ import {
 } from 'react'
 import { css, cx } from '../../../styled-system/css'
 import type { SystemStyleObject } from '../../../styled-system/types'
+import type { ColorPalette } from '../../../styled-system/tokens'
 
-/** Any palette from the theme: accent, gray, danger, iris, or one added in panda.config.ts. */
-export type ColorPaletteProp = { colorPalette?: SystemStyleObject['colorPalette'] }
+/**
+ * A palette name from the theme: accent, gray, danger, or one added in panda.config.ts. Only the
+ * top-level names: Panda's full colorPalette type (every nested role, [ ] and responsive values)
+ * grows with each palette until `<Button colorPalette="gray" {...props} />` hits TS2590 under
+ * strictTokens. For responsive colors, set colorPalette with css() on an ancestor.
+ */
+export type PaletteName = Exclude<ColorPalette, `${string}.${string}`>
+export type ColorPaletteProp = { colorPalette?: PaletteName }
 
 export function paletteClass(colorPalette: ColorPaletteProp['colorPalette']) {
   return colorPalette ? css({ colorPalette }) : undefined

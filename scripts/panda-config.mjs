@@ -1,12 +1,12 @@
 import { Node, Project, SyntaxKind } from 'ts-morph'
 import { accentNames, grayNames } from '../src/app/palettes.ts'
 import {
-  aliasesCall,
   defaultPalettes,
   importLines,
   importOrder,
-  listedPalettes as listed,
+  importedPalettes,
   moduleOf,
+  paletteEntries,
   pandaConfigTemplate,
 } from '../src/app/panda-config-template.ts'
 
@@ -143,14 +143,9 @@ export function mergePandaConfig(source, palettes = defaultPalettes) {
   function block(spec, indent, unit) {
     let lines
     if (spec.kind === 'colors') {
-      const colors = listed(palettes)
-      for (const name of ['semanticColors', ...colors, palettes.gray, 'aliases']) used.add(name)
-      lines = [
-        '...semanticColors',
-        ...colors,
-        `gray: ${palettes.gray}`,
-        `...${aliasesCall(palettes)}`,
-      ]
+      for (const name of ['semanticColors', 'definePalette', ...importedPalettes(palettes)])
+        used.add(name)
+      lines = ['...semanticColors', ...paletteEntries(palettes, quote)]
     } else {
       lines = spec.entries.map(([key, child]) => entry(key, child, indent + unit, unit))
       if (lines.length === 1 && !lines[0].includes('\n')) return `{ ${lines[0]} }`
@@ -205,7 +200,7 @@ export function mergePandaConfig(source, palettes = defaultPalettes) {
         if (isEmptyObject(value)) fill(value, want)
         else if (!refersTo(value, 'semanticColors'))
           conflicts.push(
-            `${where}: already set; add ...semanticColors, the palettes and ...aliases() by hand.`,
+            `${where}: already set; add ...semanticColors, gray and the roles (accent: definePalette('accent', iris), …) by hand.`,
           )
       } else if (!Node.isArrayLiteralExpression(value))
         conflicts.push(`${where}: expected an array literal.`)

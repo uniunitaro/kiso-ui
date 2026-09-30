@@ -10,7 +10,7 @@ import { css } from '../../styled-system/css'
 import { CodeBlock, Choice } from './docs'
 import * as Checkbox from '../components/ui/checkbox'
 import { accentNames, grayNames, radiusLevels, radiusNames } from './palettes'
-import { aliasesCall, importLines, listedPalettes } from './panda-config-template'
+import { importLines, importedPalettes, paletteEntries } from './panda-config-template'
 import { styles as s } from './styles'
 
 export type ThemeSettings = {
@@ -304,7 +304,13 @@ export function ThemePage({
       <div className={css({ mt: '4' })}>
         <CodeBlock
           title="panda.config.ts · theme settings"
-          code={`${importLines(['semanticColors', 'aliases', ...new Set([...listedPalettes(theme), theme.gray])]).join('\n')}\n\n// defineConfig > theme.extend.semanticTokens\ncolors: {\n  ...semanticColors,\n  ${listedPalettes(theme).join(', ')},\n  gray: ${theme.gray},\n  ...${aliasesCall(theme)},\n},\nradii: { l1: { value: '${radiusLevels[theme.radius][0]}px' }, l2: { value: '${radiusLevels[theme.radius][1]}px' }, l3: { value: '${radiusLevels[theme.radius][2]}px' } },\n\n// <Button colorPalette="red" variant="surface">Remove</Button>\n// <div className={css({ colorPalette: 'green' })}>…</div>`}
+          code={`${importLines(['semanticColors', 'definePalette', ...importedPalettes(theme)]).join('\n')}\n\n// defineConfig > theme.extend.semanticTokens\ncolors: {\n  ...semanticColors,\n${paletteEntries(
+            theme,
+          )
+            .map((entry) => `  ${entry},`)
+            .join(
+              '\n',
+            )}\n},\nradii: { l1: { value: '${radiusLevels[theme.radius][0]}px' }, l2: { value: '${radiusLevels[theme.radius][1]}px' }, l3: { value: '${radiusLevels[theme.radius][2]}px' } },\n\n// <Button colorPalette="danger" variant="surface">Remove</Button>\n// <div className={css({ colorPalette: 'success' })}>…</div>`}
         />
       </div>
       <h2 className={s.docHeading}>Go a little deeper</h2>

@@ -37,8 +37,8 @@ export default defineConfig({
       semanticTokens: {
         colors: {
           ...semanticColors,
-          // Every palette, with accent and gray picked at runtime. Apps list only what they use
-          // and add `...aliases({ accent, info, success, warning, danger })` instead.
+          // Every palette, with accent and gray picked at runtime. Apps list gray and the roles
+          // as copies instead: `accent: definePalette('accent', iris)`, and so on.
           ...runtimeColors({ accent: 'iris', gray: 'neutral' }),
           info: aliasPalette('blue', blue),
           success: aliasPalette('green', green),

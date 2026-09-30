@@ -2,7 +2,7 @@
 
 ## 三つの層
 
-1. `src/theme/tokens.ts`: Park UI と同じ意味トークン（`fg.default / fg.muted / fg.subtle`・`canvas`・`border`・`error`、Kiso 追加の `fg.error`）と、パレットの別名（`accent`・`gray`・`info`・`success`・`warning`・`danger`）を定義します。
+1. `src/theme/tokens.ts`: Park UI と同じ意味トークン（`fg.default / fg.muted / fg.subtle`・`canvas`・`border`・`error`、Kiso 追加の `fg.error`）と、パレットをコピーして役割（`accent`・`info`・`success`・`warning`・`danger`）を作る `definePalette` を定義します。役割と `gray` は `panda.config.ts` で並べます。
 2. `src/theme/recipes`: 単一部品は defineRecipe、複数パーツは defineSlotRecipe。色（colorPalette）・見た目（variant）・大きさ（size）は独立した軸です。レシピは `colorPalette.*` と `gray.*` だけを参照し、特定のパレット名を書きません。
 3. `src/components/ui`: Base UI の振る舞いを薄く包みます。UI の状態管理やキーボード処理を独自に再実装しません。レイアウト専用部品では適切なネイティブ要素を使います。
 
@@ -16,7 +16,7 @@
 
 JSX に書いた `colorPalette="red"` は、Panda が各レシピの `jsx`（部品名）から静的に抽出します。そのため `staticCss` で全パレットを生成する必要はありません。値を実行時に決める場合だけ、使う名前を staticCss に列挙します。プレビューはパレット選択のためにこれを使っています。
 
-別名はパレットの役割をそのまま指すだけで、コントラストの自動調整はしません。緑・琥珀の淡い背景の文字や、明るい solid の白文字は4.5:1に届かない場合がありますが、Park UI の見た目を優先します。
+役割はパレットの値をそのままコピーするだけで、コントラストの自動調整はしません。緑・琥珀の淡い背景の文字や、明るい solid の白文字は4.5:1に届かない場合がありますが、Park UI の見た目を優先します。
 
 ## 状態の共通ルール
 
@@ -53,7 +53,7 @@ catalog が一覧、anatomy、依存レシピ、注意事項の入口です。re
 
 ## Park UI のテーマ定義
 
-Park UI と同じく、`panda.config.ts` の `semanticTokens.colors` に使うパレットだけを並べます。`src/theme/colors` の31色はファイルとしてコピーされますが、CSS に出るのは並べた色だけです。`gray` は config で割り当て、Kiso の別名（`accent`・`info`・`success`・`warning`・`danger`）は `aliases()` が作ります。`definePalette('brand', blue)` は参照を付け替えたコピーを作ります。Panda 標準の色は `removePandaPresetColors` で除きます。ランタイムのプレビューにはPanda設定用モジュールをimportせず、名前だけの `src/app/palettes.ts` を使います。
+Park UI と同じく、`panda.config.ts` の `semanticTokens.colors` に使うパレットだけを並べます。`src/theme/colors` の31色はファイルとしてコピーされますが、CSS に出るのは並べた色だけです。`gray` は config で割り当て、Kiso の役割（`accent`・`info`・`success`・`warning`・`danger`）は `accent: definePalette('accent', iris)` のようにパレットのコピーとして並べます。`definePalette` は参照を新しい名前に付け替えるため、コピー元を並べる必要はありません。名前のまま使うパレットだけを追加で並べます。部品の `colorPalette` prop はパレット名（入れ子の名前を除いた `ColorPalette`）だけを受け取り、既定色を付けて包む部品でも strictTokens で TS2590 になりません。Panda 標準の色は `removePandaPresetColors` で除きます。ランタイムのプレビューにはPanda設定用モジュールをimportせず、名前だけの `src/app/palettes.ts` を使います。
 
 実行時にアクセント・グレー・角丸を切り替える仕組みはプレビュー専用で、`src/app/theme-runtime.ts`（CLI のコピー対象外）にあります。全パレットを登録し、`data-accent` / `data-gray` の条件で別名を切り替えます。
 

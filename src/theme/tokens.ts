@@ -56,8 +56,11 @@ export function paletteName(palette: Palette) {
 }
 
 /**
- * Copy a palette under a new name, e.g. `brand: definePalette('brand', blue)`. References are
- * rebased, so overriding brand.9 also updates brand.solid.bg.
+ * Copy a palette under a new name. Kiso's roles are made this way in panda.config.ts:
+ * `accent: definePalette('accent', iris)`, `danger: definePalette('danger', red)`, and so is an
+ * extra color such as `brand: definePalette('brand', blue)`. The copy holds the values itself, so
+ * the source palette does not need to be listed. References are rebased, so overriding accent.9
+ * also updates accent.solid.bg.
  */
 export function definePalette(name: string, source: Palette): Palette {
   const from = paletteName(source)
@@ -66,7 +69,11 @@ export function definePalette(name: string, source: Palette): Palette {
   ) as Palette
 }
 
-/** Alias every role of a registered palette: colorPalette="accent" then behaves like "iris". */
+/**
+ * Point every role of a name at a registered palette (colorPalette="accent" then behaves like
+ * "iris"). The preview uses it with conditions to switch palettes at runtime; apps use
+ * definePalette instead.
+ */
 export function aliasPalette(
   name: string,
   shape: Palette,
@@ -88,20 +95,4 @@ export function aliasPalette(
     )
   }
   return visit(shape as unknown as TokenTree)
-}
-
-export type AliasOptions = Record<'accent' | 'info' | 'success' | 'warning' | 'danger', Palette>
-
-/**
- * Kiso's palette aliases. Pass palettes you also register in semanticTokens.colors:
- * `...aliases({ accent: iris, info: blue, success: green, warning: amber, danger: red })`.
- * Components inherit `accent`; status components and `fg.error` read the status aliases.
- */
-export function aliases(options: AliasOptions) {
-  return Object.fromEntries(
-    Object.entries(options).map(([alias, palette]) => [
-      alias,
-      aliasPalette(paletteName(palette), palette),
-    ]),
-  ) as Record<keyof AliasOptions, TokenTree>
 }

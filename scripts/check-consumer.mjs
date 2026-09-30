@@ -3,6 +3,7 @@ import path from 'node:path'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { catalog, sourceRoot } from './registry-lib.mjs'
 import { examples } from '../src/app/examples.ts'
+import { teal } from '../src/theme/colors/teal.ts'
 
 const fixtureRoot = path.join(sourceRoot, '.test-workspaces')
 await mkdir(fixtureRoot, { recursive: true })
@@ -112,6 +113,30 @@ const rerun = JSON.parse(
 )
 if (rerun.files.find((file) => file.path === 'panda.config.ts')?.action !== 'unchanged')
   throw new Error('Merging Kiso into panda.config.ts again changed it.')
+// The app then adds colors of its own, as the README shows: a renamed copy and raw palettes it
+// uses by name. The larger palette set is also what made wide colorPalette types hit TS2590.
+const extraPalettes = ['tomato', 'plum', 'cyan', 'grass', 'orange', 'sky']
+const configPath = path.join(target, 'panda.config.ts')
+const config = await readFile(configPath, 'utf8')
+const withColors = config
+  .replace(
+    'import { slate } from "./src/theme/colors/slate";',
+    (line) =>
+      line +
+      extraPalettes
+        .map((name) => `\nimport { ${name} } from "./src/theme/colors/${name}";`)
+        .join(''),
+  )
+  .replace(
+    '          danger: definePalette("danger", red),\n',
+    (line) =>
+      `${line}          brand: definePalette("brand", blue),\n` +
+      extraPalettes.map((name) => `          ${name},\n`).join(''),
+  )
+// One import and one entry per palette, plus brand.
+if (withColors.split('\n').length !== config.split('\n').length + extraPalettes.length * 2 + 1)
+  throw new Error('The merged panda.config.ts no longer has the expected colors block.')
+await writeFile(configPath, withColors)
 await writeFile(
   path.join(target, 'src', 'brand-example.tsx'),
   `import { Button } from './components/ui/button'
@@ -119,13 +144,38 @@ import * as Checkbox from './components/ui/checkbox'
 import { Pagination } from './components/ui/pagination'
 export const Brand = ({ wide }: { wide: boolean }) => (
   <>
-    <Button colorPalette="teal" variant="surface" size={{base:'xs',md:'2xl'}}>Teal</Button>
+    <Button colorPalette="success" variant="surface" size={{base:'xs',md:'2xl'}}>Done</Button>
     <Button size={wide ? 'xl' : 'lg'}>Either</Button>
     <Checkbox.Root colorPalette="danger" size={{ base: 'md', lg: 'sm' }} />
+    <Button colorPalette="brand">Brand</Button>
+    <Button colorPalette="tomato" variant="outline">Tomato</Button>
     <Checkbox.Label size="2xl"><Checkbox.Root />Large</Checkbox.Label>
     <Pagination count={3} size="2xs" />
   </>
 )
+`,
+)
+// Apps wrap Kiso parts with a default palette. With Panda's full colorPalette type (every nested
+// role, [ ] and responsive value), these spreads hit TS2590 under strictTokens as palettes grow.
+await writeFile(
+  path.join(target, 'src', 'palette-wrappers.tsx'),
+  `import type { ComponentProps } from 'react'
+import { Badge } from './components/ui/badge'
+import { Button } from './components/ui/button'
+import * as Checkbox from './components/ui/checkbox'
+export const GrayButton = (props: ComponentProps<typeof Button>) => (
+  <Button colorPalette="gray" {...props} />
+)
+export const QuietBadge = (props: ComponentProps<typeof Badge>) => (
+  <Badge {...props} colorPalette={props.colorPalette ?? 'gray'} />
+)
+export const AccentCheckbox = (props: ComponentProps<typeof Checkbox.Root>) => (
+  <Checkbox.Root colorPalette="accent" {...props} />
+)
+// @ts-expect-error The prop takes palette names; nested roles are for css().
+export const Nested = () => <Button colorPalette="accent.solid" />
+// @ts-expect-error Only the palettes listed in panda.config.ts exist; accent copies teal.
+export const Unlisted = () => <Button colorPalette="teal" />
 `,
 )
 for (const entry of catalog) {
@@ -138,12 +188,17 @@ pnpm(['exec', 'panda', 'cssgen'])
 const generatedCss = await readFile(path.join(target, 'styled-system', 'styles.css'), 'utf8')
 for (const selector of [
   // Extracted from JSX props: no staticCss for colorPalette in the consumer config.
-  '.color-palette_teal',
+  '.color-palette_success',
   '.color-palette_danger',
-  // --accent and --gray reach the merged config.
-  '--colors-teal-solid-bg',
-  '--colors-accent-solid-bg: var(--colors-teal-solid-bg)',
-  '--colors-warning-subtle-bg: var(--colors-amber-subtle-bg)',
+  '.color-palette_brand',
+  '.color-palette_tomato',
+  // Colors the app adds: a renamed copy and a raw palette listed as is.
+  '--colors-brand-solid-bg: var(--colors-brand-9)',
+  '--colors-tomato-solid-bg: var(--colors-tomato-9)',
+  // --accent reaches the merged config: accent is a copy of teal whose roles refer to itself.
+  `--colors-accent-9: ${teal['9'].value.base}`,
+  '--colors-accent-solid-bg: var(--colors-accent-9)',
+  '--colors-warning-subtle-bg: var(--colors-warning-a3)',
   '--global-color-focus-ring: var(--colors-color-palette-solid-bg)',
   '.kiso-button:is(:focus-visible, [data-focus-visible])',
   // Variants are extracted from JSX like Park UI: literals, ternaries and responsive objects.
@@ -163,8 +218,15 @@ for (const selector of [
 for (const unused of ['.sm\\:kiso-spinner--size_lg', '.xl\\:kiso-select__trigger--size_2xs']) {
   if (generatedCss.includes(unused)) throw new Error(`Unused variant in CSS: ${unused}`)
 }
-// Only the palettes listed in the config are emitted; Panda's own 50–950 colors are removed.
-for (const unexpected of ['--colors-tomato-9', '--colors-iris-9', '--colors-red-500']) {
+// Only what the config lists is emitted: the palettes the roles copy (teal, amber, slate…) are
+// not, and Panda's own 50–950 colors are removed.
+for (const unexpected of [
+  '--colors-teal-',
+  '--colors-amber-',
+  '--colors-slate-',
+  '--colors-iris-',
+  '--colors-red-500',
+]) {
   if (generatedCss.includes(unexpected)) throw new Error(`Unlisted color in CSS: ${unexpected}`)
 }
 await mkdir(path.join(sourceRoot, 'artifacts'), { recursive: true })
@@ -183,10 +245,11 @@ await writeFile(
         'source dependency closure',
         'Panda codegen',
         'strict TypeScript and Panda strictTokens with every documented example',
+        'colorPalette takes palette names only: wrappers with a default palette compile (no TS2590)',
         'CSS generation',
         'recipe variants extracted from JSX (no staticCss); unused variants omitted',
         'colorPalette extracted from component props (no staticCss)',
-        'only listed palettes emitted; Panda preset colors removed',
+        'only listed colors emitted (roles are copies; their sources are not); Panda preset colors removed',
       ],
     },
     null,

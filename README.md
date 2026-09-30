@@ -97,10 +97,22 @@ pnpm ui update dialog --target ../your-app
 
 以前の CLI で入れた（ハッシュの記録がない）ファイルは、Kiso と一致するものだけを未編集として記録します。一致しないものは編集の有無を判別できないため `customized` として扱います。`--accent` / `--gray` は記録され、次回以降の既定値になります。
 
+### 既存アプリの移行: aliases() から definePalette へ
+
+`aliases()` を廃止し、役割は `definePalette()` で作るコピーになりました。`update` は `panda.config.ts` を書き換えないため、`src/theme/tokens.ts` を更新すると `import { aliases }` が壊れます。`panda.config.ts` は手で次のように直してください。
+
+1. `...aliases({ accent: iris, info: blue, success: green, warning: amber, danger: red })` を、役割ごとの行 `accent: definePalette('accent', iris)`・`info: definePalette('info', blue)`・`success: definePalette('success', green)`・`warning: definePalette('warning', amber)`・`danger: definePalette('danger', red)` に置き換えます。`gray: neutral` はそのままです。
+2. import を `aliases` から `definePalette` に替えます。
+3. `iris, blue, green, amber, red` のように並べていた元のパレットは、`colorPalette="red"` のように名前のまま使うものだけ残し、ほかは行と import を消します。
+4. `colorPalette` prop はパレット名だけを受け取ります。`colorPalette="accent.solid"` やレスポンシブ指定を prop に渡していた箇所は、祖先の `css({ colorPalette })` に移します。
+5. `panda codegen` を実行し、型検査で消したパレット名の使用が残っていないか確かめます。
+
+新しく `--panda-config=merge` で書き込む場合は、この形の設定が入ります。すでに `semanticTokens.colors` がある設定には書き込まず、手で直すよう表示します。
+
 ## カスタマイズ
 
-- **全体**: `panda.config.ts` の `semanticTokens.colors`。使うパレットを並べ、`gray` と別名（`aliases`）を決めます。`src/theme/colors/` には Park UI と同じ31色（ライト・ダーク）がありますが、CSS に出るのは並べた色だけです。
-- **色**: すべての部品は `colorPalette.*` だけを参照します。既定は html に設定した `accent` を継承し、部品の `colorPalette` prop、または祖先の `css({ colorPalette })` で差し替えます。
+- **全体**: `panda.config.ts` の `semanticTokens.colors`。`gray` と役割（`accent`・`info`・`success`・`warning`・`danger`）にどのパレットを使うかを決めます。`src/theme/colors/` には Park UI と同じ31色（ライト・ダーク）がありますが、CSS に出るのは並べた色だけです。
+- **色**: すべての部品は `colorPalette.*` だけを参照します。既定は html に設定した `accent` を継承し、部品の `colorPalette` prop、または祖先の `css({ colorPalette })` で差し替えます。prop が受け取るのは `accent`・`gray`・`brand` のようなパレット名だけです。`accent.solid` のような入れ子の名前やレスポンシブ指定は、祖先の `css({ colorPalette })` で指定します。
 - **部品**: `src/theme/recipes/*.ts` の `defineRecipe` / `defineSlotRecipe`。サイズ、バリアント、状態、各スロットの見た目を変更できます。
 - **局所**: `className={css({ ... })}`。utilities レイヤーが recipes レイヤーより後に適用されます。
 - **合成**: Base UI の `render`、`ref`、状態を受ける `className`、controlled / uncontrolled の props を利用できます。
@@ -147,32 +159,35 @@ Base UI のフォーム、選択、オーバーレイ、ナビゲーションに
 色は Park UI と同じく、`panda.config.ts` の `semanticTokens.colors` に使うものだけを並べます。並べた色だけが CSS に出力され、`colorPalette` にも使えます。Panda 標準の 50〜950 の色は `removePandaPresetColors` で取り除きます。
 
 ```ts
+import { semanticColors, definePalette } from './src/theme/tokens'
+import { iris } from './src/theme/colors/iris'
 import { tomato } from './src/theme/colors/tomato'
-import { definePalette } from './src/theme/tokens'
-
-const brand = definePalette('brand', blue) // 既存パレットを別名でコピー（brand.9 を上書きすれば役割も追従）
+// blue・green・amber・red・neutral も同じく import します
 
 semanticTokens: {
   colors: {
     ...semanticColors,
-    iris, blue, green, amber, red,
-    tomato, // 色を足す: import して1行
-    brand,
     gray: neutral, // グレーの差し替え: slate / mauve / olive / sage / sand
-    ...aliases({ accent: brand, info: blue, success: green, warning: tomato, danger: red }),
+    accent: definePalette('accent', iris),
+    info: definePalette('info', blue),
+    success: definePalette('success', green),
+    warning: definePalette('warning', amber),
+    danger: definePalette('danger', red),
+    brand: definePalette('brand', blue), // 名前を付けた追加色
+    tomato, // 名前のまま使う色だけ並べる
   },
   radii,
   shadows,
 }
 ```
 
-`aliases()` は Kiso の別名 `accent`・`info`・`success`・`warning`・`danger` を作ります（Park UI にはない Kiso の追加です）。渡す色は、同じ `colors` に並べたものにしてください。部品は `accent` を継承し、Alert・Toast・`fg.error` などは状態の別名を参照します。追加色は `<Button colorPalette="brand" variant="surface" />` のように使えます。設定変更後に Panda を再生成してください。
+役割 `accent`・`info`・`success`・`warning`・`danger` は Kiso の追加で（Park UI にはありません）、`definePalette(名前, パレット)` で作るパレットのコピーです。コピーは値を自分で持つため、元の `iris` や `red` を並べる必要はなく、並べなければ CSS にも出ません。参照は新しい名前に付け替わるので、`accent.9` を上書きすれば `accent.solid.bg` なども追従します。`gray` は Park UI と同じくパレットをそのまま割り当てます。部品は `accent` を継承し、Alert・Toast・`fg.error` などは役割を参照します。`colorPalette="tomato"` のように元の名前で使いたいパレットだけ、import して並べてください。追加色は `<Button colorPalette="brand" variant="surface" />` のように使えます。設定変更後に Panda を再生成してください。
 
-`colorPalette="red"`・`variant`・`size` のように JSX に書いた値は、Park UI と同じく Panda が部品名（各レシピの `jsx`）から静的に抽出し、使われた値だけを CSS にします。三項演算子やレスポンシブ指定（`size={{ base: 'sm', md: 'lg' }}`）も抽出されるため、通常は `staticCss` は不要です。変数から variant やサイズを決める場合は、使う値を `staticCss.recipes` に列挙します（例：`staticCss: { recipes: { button: [{ size: ['sm', 'lg'] }] } }`）。変数で色を決める場合だけ、使う名前を `staticCss.css[].properties.colorPalette` に列挙します。プレビューの Theming ページはアクセントとグレーを実行時に切り替えるため、全パレットを登録しています（`src/app/theme-runtime.ts`、コピー対象外）。
+`colorPalette="danger"`・`variant`・`size` のように JSX に書いた値は、Park UI と同じく Panda が部品名（各レシピの `jsx`）から静的に抽出し、使われた値だけを CSS にします。三項演算子やレスポンシブ指定（`size={{ base: 'sm', md: 'lg' }}`）も抽出されるため、通常は `staticCss` は不要です。変数から variant やサイズを決める場合は、使う値を `staticCss.recipes` に列挙します（例：`staticCss: { recipes: { button: [{ size: ['sm', 'lg'] }] } }`）。変数で色を決める場合だけ、使う名前を `staticCss.css[].properties.colorPalette` に列挙します。プレビューの Theming ページはアクセントとグレーを実行時に切り替えるため、全パレットを登録しています（`src/app/theme-runtime.ts`、コピー対象外）。
 
 各パレットは `1`〜`12`、透過色 `a1`〜`a12`、`solid / subtle / surface / outline / plain` の背景・文字・境界線・状態色を持ちます。
 
-意味トークンは Park UI と同じ `fg.default / fg.muted / fg.subtle`、`canvas`、`border`、`error` です。Kiso は読みやすいエラー文用に `fg.error`（danger の11番）を足しています。パレットの別名は `gray`（Park UI と同じく config で `gray: neutral` のように割り当て）と、`aliases()` で作る `accent`・`info`・`success`・`warning`・`danger` です。Panda 標準の色は外しますが、`transparent` と `current` は同じ名前のトークンとして残します。部品とテーマは Panda の `strictTokens: true` でも型エラーになりません。
+意味トークンは Park UI と同じ `fg.default / fg.muted / fg.subtle`、`canvas`、`border`、`error` です。Kiso は読みやすいエラー文用に `fg.error`（danger の11番）を足しています。パレットの役割は `gray`（Park UI と同じく config で `gray: neutral` のように割り当て）と、`definePalette()` で作る `accent`・`info`・`success`・`warning`・`danger` です。Panda 標準の色は外しますが、`transparent` と `current` は同じ名前のトークンとして残します。部品とテーマは Panda の `strictTokens: true` でも型エラーになりません。`colorPalette` prop の型をパレット名に絞っているため、`<Button colorPalette="gray" {...props} />` のように既定色を付けて包む部品も、パレットを増やして TS2590（union 型が複雑すぎる）になりません。
 
 主な操作部品の `xs / sm / md / lg / xl / 2xl` は高さ32 / 36 / 40 / 44 / 48 / 64px。Select・Combobox・Menu の size はポップアップ内の項目の高さと文字にも効きます。Checkbox・Radio・Switchは16 / 18 / 20 / 22 / 24 / 32pxです。Badgeは公式レシピに合わせて sm〜2xl が18 / 20 / 22 / 24 / 28pxです。Button・Inputには公式の2xs（24 / 28px）もあります。Slider は Park UI では3サイズが同じ値ですが、Kiso ではつまみと溝の太さが変わります。Park UIにない部品や追加サイズはKiso側の拡張です。
 
@@ -182,7 +197,7 @@ semanticTokens: {
 
 disabled は Park UI の `layerStyle: 'disabled'`（不透明度0.67とグレースケール）で統一し、hover / active は disabled の要素に効かない条件に置き換えています。フォーカス表示は Panda の `focusVisibleRing`（ボタン類は外側2px、入力類は内側1px＋枠線）で、色は `--global-color-focus-ring`（その要素の `colorPalette.solid.bg`）です。
 
-影はモードに対応した `xs`〜`2xl` と `inset`、重なり順は `dropdown`〜`tooltip` の名前付きトークンを使用します。別名（`accent`・`info`・`success`・`warning`・`danger`）は Park UI のパレットをそのまま指し、コントラストの自動調整はしません。緑・琥珀の淡い背景の文字や明るい solid の白文字は4.5:1に届かない場合があります。本文には `fg.default / fg.muted`、エラー文には `fg.error` を使います。
+影はモードに対応した `xs`〜`2xl` と `inset`、重なり順は `dropdown`〜`tooltip` の名前付きトークンを使用します。役割（`accent`・`info`・`success`・`warning`・`danger`）は Park UI のパレットの値をそのままコピーし、コントラストの自動調整はしません。緑・琥珀の淡い背景の文字や明るい solid の白文字は4.5:1に届かない場合があります。本文には `fg.default / fg.muted`、エラー文には `fg.error` を使います。
 
 ネストした Dialog は、子が開いている間、親を少し縮めて暗くします（Base UI の `data-nested-dialog-open` と `--nested-dialogs`）。子の backdrop は重ねません。
 

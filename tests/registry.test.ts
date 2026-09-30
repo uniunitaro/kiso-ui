@@ -223,7 +223,9 @@ describe('panda.config.ts', () => {
     const merged = readFileSync(config, 'utf8')
     expect(merged).toContain('// Useful for theme customization')
     expect(merged).toContain('import { recipes, slotRecipes } from "./src/theme/recipes";')
-    expect(merged).toContain('...aliases({ accent: iris,')
+    expect(merged).toContain('accent: definePalette("accent", iris),')
+    expect(merged).toContain('danger: definePalette("danger", red),')
+    expect(merged).not.toContain('aliases')
     cli(['add', 'badge', '--target', app, '--panda-config', 'overwrite', '--accent', 'tomato'])
     expect(readFileSync(config, 'utf8')).toBe(
       pandaConfigTemplate({ accent: 'tomato', gray: 'neutral' }),
@@ -292,7 +294,7 @@ export default defineConfig({
 `)
     expect(conflicts).toEqual([
       "jsxFramework: Kiso needs 'react'.",
-      'theme.extend.semanticTokens.colors: already set; add ...semanticColors, the palettes and ...aliases() by hand.',
+      "theme.extend.semanticTokens.colors: already set; add ...semanticColors, gray and the roles (accent: definePalette('accent', iris), …) by hand.",
       'tokens: the name is already used in panda.config.ts.',
     ])
   })

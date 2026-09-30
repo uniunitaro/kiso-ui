@@ -1,18 +1,19 @@
 {
-  "date": "2026-09-30T05:49:42.552Z",
+  "date": "2026-09-30T07:38:26.057Z",
   "status": "passed",
   "components": 49,
   "examples": 49,
-  "fixture": ".test-workspaces\\consumer-H069W9",
+  "fixture": ".test-workspaces\\consumer-TE83wz",
   "checks": [
     "offline installation pinned by the Kiso lockfile",
     "Kiso merged into the panda.config.ts panda init writes; merging again changes nothing",
     "source dependency closure",
     "Panda codegen",
     "strict TypeScript and Panda strictTokens with every documented example",
+    "colorPalette takes palette names only: wrappers with a default palette compile (no TS2590)",
     "CSS generation",
     "recipe variants extracted from JSX (no staticCss); unused variants omitted",
     "colorPalette extracted from component props (no staticCss)",
-    "only listed palettes emitted; Panda preset colors removed"
+    "only listed colors emitted (roles are copies; their sources are not); Panda preset colors removed"
   ]
 }

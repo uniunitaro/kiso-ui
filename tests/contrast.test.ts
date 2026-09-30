@@ -82,9 +82,12 @@ describe('Park palette contracts', () => {
       expect(contrast('gray.a9', 'canvas', 'canvas', mode)).toBeGreaterThanOrEqual(3)
       expect(contrast('gray.a9', 'gray.surface.bg', 'canvas', mode)).toBeGreaterThanOrEqual(3)
     })
-    it(`${mode}: aliases resolve to the palettes listed in the config`, () => {
+    it(`${mode}: roles copy the palettes named in the config`, () => {
       const custom = customColors as Tree
       expect(resolve('accent.subtle.bg', mode, custom)).toBe(raw('blue', 'a3', mode))
+      expect(resolve('accent.solid.bg', mode, custom)).toBe(raw('blue', '9', mode))
+      expect(resolve('info.9', mode, custom)).toBe(raw('blue', '9', mode))
+      expect(resolve('red.9', mode, custom)).toBe(raw('red', '9', mode))
       expect(resolve('canvas', mode, custom)).toBe(raw('slate', '1', mode))
       expect(resolve('warning.subtle.bg', mode, custom)).toBe(raw('orange', 'a3', mode))
       expect(resolve('danger.9', mode, custom)).toBe(raw('red', '9', mode))
@@ -92,26 +95,27 @@ describe('Park palette contracts', () => {
       expect(resolve('accent.subtle.bg.hover', mode, custom)).toBe(raw('blue', 'a4', mode))
     })
   }
-  it('registers only the palettes the config lists', () => {
+  it('registers only gray and the roles by default', () => {
     expect(Object.keys(defaultColors).sort()).toEqual(
       [
         'accent',
-        'amber',
-        'blue',
         'border',
         'canvas',
         'danger',
         'error',
         'fg',
         'gray',
-        'green',
         'info',
-        'iris',
-        'red',
         'success',
         'warning',
       ].sort(),
     )
+    // Each role is a copy: it refers only to itself and gray, never to an unlisted palette.
+    for (const role of ['accent', 'info', 'success', 'warning', 'danger'] as const)
+      expect(JSON.stringify(defaultColors[role]).match(/\{colors\.[^.}]+/g)).toSatisfy(
+        (refs: string[] | null) =>
+          refs === null || refs.every((ref) => [`{colors.${role}`, '{colors.gray'].includes(ref)),
+      )
     expect(Object.keys(defaultColors.fg).sort()).toEqual(['default', 'error', 'muted', 'subtle'])
     expect(defaultColors.accent).not.toHaveProperty('DEFAULT')
   })
