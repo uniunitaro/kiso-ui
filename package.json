@@ -13,6 +13,7 @@
     "registry:build": "node scripts/build-registry.mjs",
     "ui": "node scripts/cli.mjs",
     "preview": "vite preview --host 127.0.0.1",
+    "deploy": "wrangler deploy",
     "test:consumer": "node scripts/check-consumer.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -41,7 +42,8 @@
     "ts-morph": "28.0.0",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.0",
+    "wrangler": "^4.145.0"
   },
   "engines": {
     "node": ">=24"

@@ -15,6 +15,21 @@ pnpm dev
 
 表示先は `http://127.0.0.1:5173`。Overview は実際の部品による作例、Components は49種類の検索、各詳細ページはサイズ・見た目・ソースの確認、Theming は配色と角丸の調整、Quality checks は axe の検査画面です。
 
+## ドキュメントサイトの公開
+
+Cloudflare Workers Static Assets で `dist` を配信します。公開先は `https://kiso-ui.uniunita.ro`。Worker 名、アセットの場所、独自ドメインは `wrangler.jsonc` で管理します。
+
+Cloudflare Workers Builds でこの GitHub リポジトリを接続し、Worker 名を `kiso-ui`、本番ブランチを `main`、ビルドコマンドを `pnpm build`、デプロイコマンドを `pnpm deploy` に設定します。ビルド環境変数は `NODE_VERSION=24`、`PNPM_VERSION=10.26.2`、ルートディレクトリはリポジトリ直下です。以後、`main` への push で自動公開されます。
+
+手元から公開する場合は、Cloudflare にログインしてから次を実行します。
+
+```sh
+pnpm build
+pnpm deploy
+```
+
+画面遷移はハッシュ方式なので、SPA 用のフォールバック設定は不要です。ビルドで生成するレジストリと `llms.txt` も静的アセットとして公開します。
+
 ## アプリへコピー
 
 コピー先は React 19 / TypeScript / Panda CSS のアプリを想定します。CLI は npm に公開していないため、このリポジトリを手元に置き、そこから実行します。`--target` はこのリポジトリから見たコピー先のパスです。

@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "kiso-ui",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+  },
+  "routes": [{ "pattern": "kiso-ui.uniunita.ro", "custom_domain": true }],
+}
