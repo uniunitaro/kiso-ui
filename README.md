@@ -19,13 +19,13 @@ pnpm dev
 
 Cloudflare Workers Static Assets で `dist` を配信します。公開先は `https://kiso-ui.uniunita.ro`。Worker 名、アセットの場所、独自ドメインは `wrangler.jsonc` で管理します。
 
-Cloudflare Workers Builds でこの GitHub リポジトリを接続し、Worker 名を `kiso-ui`、本番ブランチを `main`、ビルドコマンドを `pnpm build`、デプロイコマンドを `pnpm deploy` に設定します。ビルド環境変数は `NODE_VERSION=24`、`PNPM_VERSION=10.26.2`、ルートディレクトリはリポジトリ直下です。以後、`main` への push で自動公開されます。
+Cloudflare Workers Builds でこの GitHub リポジトリを接続し、Worker 名を `kiso-ui`、本番ブランチを `main`、ビルドコマンドを `pnpm build`、デプロイコマンドを `pnpm run deploy` に設定します。ビルド環境変数は `NODE_VERSION=24`、`PNPM_VERSION=10.26.2`、ルートディレクトリはリポジトリ直下です。以後、`main` への push で自動公開されます。
 
 手元から公開する場合は、Cloudflare にログインしてから次を実行します。
 
 ```sh
 pnpm build
-pnpm deploy
+pnpm run deploy
 ```
 
 画面遷移はハッシュ方式なので、SPA 用のフォールバック設定は不要です。ビルドで生成するレジストリと `llms.txt` も静的アセットとして公開します。
