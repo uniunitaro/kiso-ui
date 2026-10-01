@@ -324,6 +324,40 @@ export function MenuDemo({ size = 'md', palette }: { size?: string; palette?: st
           </Menu.Positioner>
         </Menu.Portal>
       </Menu.Root>
+      {/* One menu for three triggers: moving to the next trigger slides its items in. Not modal, so
+          the other triggers stay clickable while it is open. */}
+      <div className={s.row}>
+        {(Object.keys(sharedMenus) as (keyof typeof sharedMenus)[]).map((key) => (
+          <Menu.Trigger
+            key={key}
+            handle={sharedMenu}
+            payload={key}
+            openOnHover
+            render={<Button variant="plain" colorPalette="gray" />}
+          >
+            {key}
+            <ChevronDown size={14} />
+          </Menu.Trigger>
+        ))}
+      </div>
+      <Menu.Root handle={sharedMenu} modal={false} size={pass(size)} colorPalette={pass(palette)}>
+        {({ payload }) => (
+          <Menu.Portal>
+            <Menu.Positioner sideOffset={6} align="start">
+              <Menu.Popup>
+                <Menu.Viewport>
+                  {payload &&
+                    sharedMenus[payload].map((label) => (
+                      <Menu.Item key={label} onClick={() => setAction(`${label} chosen`)}>
+                        {label}
+                      </Menu.Item>
+                    ))}
+                </Menu.Viewport>
+              </Menu.Popup>
+            </Menu.Positioner>
+          </Menu.Portal>
+        )}
+      </Menu.Root>
       {action && (
         <p role="status" className={s.small}>
           {action} in this demo.
@@ -333,7 +367,67 @@ export function MenuDemo({ size = 'md', palette }: { size?: string; palette?: st
   )
 }
 
+const sharedMenus = {
+  Sort: ['Newest first', 'Oldest first', 'Recently edited', 'Name'],
+  Filter: ['Mine', 'Shared with me'],
+  Share: ['Copy link', 'Invite people', 'Publish to the web'],
+}
+const sharedMenu = Menu.createHandle<keyof typeof sharedMenus>()
+
+const updates = {
+  inbox: {
+    title: 'Three new messages.',
+    text: 'Morgan replied to your review, and two teammates shared new drafts.',
+  },
+  mentions: { title: 'No mentions.', text: 'Nothing needs you right now.' },
+  releases: {
+    title: 'Version 2.4 is out.',
+    text: 'Faster builds, a calmer palette editor and a handful of fixes. Read the notes when you have a minute; nothing here needs action today.',
+  },
+}
+const updatesPopover = Popover.createHandle<keyof typeof updates>()
+
 export function PopoverDemo({ size = 'md' }: { size?: string }) {
+  return (
+    <div className={s.stack}>
+      <SinglePopover size={size} />
+      {/* One popover for three triggers: it moves to the next trigger and resizes to its content. */}
+      <div className={s.row}>
+        {(['inbox', 'mentions', 'releases'] as const).map((key) => (
+          <Popover.Trigger
+            key={key}
+            handle={updatesPopover}
+            payload={key}
+            render={<Button variant="outline" colorPalette="gray" />}
+          >
+            {key[0].toUpperCase() + key.slice(1)}
+          </Popover.Trigger>
+        ))}
+      </div>
+      <Popover.Root handle={updatesPopover} size={pass(size)}>
+        {({ payload }) => (
+          <Popover.Portal>
+            <Popover.Positioner sideOffset={8}>
+              <Popover.Popup>
+                <Popover.Arrow />
+                <Popover.Viewport>
+                  {payload && (
+                    <>
+                      <Popover.Title>{updates[payload].title}</Popover.Title>
+                      <Popover.Description>{updates[payload].text}</Popover.Description>
+                    </>
+                  )}
+                </Popover.Viewport>
+              </Popover.Popup>
+            </Popover.Positioner>
+          </Popover.Portal>
+        )}
+      </Popover.Root>
+    </div>
+  )
+}
+
+function SinglePopover({ size }: { size: string }) {
   return (
     <Popover.Root size={pass(size)}>
       <Popover.Trigger render={<Button variant="outline" colorPalette="gray" />}>
@@ -358,6 +452,69 @@ export function PopoverDemo({ size = 'md' }: { size?: string }) {
         </Popover.Positioner>
       </Popover.Portal>
     </Popover.Root>
+  )
+}
+
+const formats = {
+  bold: { label: 'Bold', hint: 'Bold', Icon: Bold },
+  italic: { label: 'Italic', hint: 'Italic, for a softer emphasis', Icon: Italic },
+  underline: { label: 'Underline', hint: 'Underline', Icon: Underline },
+}
+const formatTooltip = Tooltip.createHandle<keyof typeof formats>()
+
+function TooltipDemo() {
+  return (
+    <Tooltip.Provider delay={200}>
+      <div className={s.stack}>
+        <Tooltip.Root>
+          <Tooltip.Trigger
+            render={
+              <Button
+                variant="outline"
+                colorPalette="gray"
+                square
+                aria-label="About this component"
+              />
+            }
+          >
+            <Info size={16} />
+          </Tooltip.Trigger>
+          <Tooltip.Portal>
+            <Tooltip.Positioner sideOffset={8}>
+              <Tooltip.Popup>A little context goes a long way.</Tooltip.Popup>
+            </Tooltip.Positioner>
+          </Tooltip.Portal>
+        </Tooltip.Root>
+        {/* One tooltip for three buttons: it glides to the next button and resizes to its label. */}
+        <div className={s.row}>
+          {(Object.keys(formats) as (keyof typeof formats)[]).map((key) => {
+            const { label, Icon } = formats[key]
+            return (
+              <Tooltip.Trigger
+                key={key}
+                handle={formatTooltip}
+                payload={key}
+                render={<Button variant="outline" colorPalette="gray" square aria-label={label} />}
+              >
+                <Icon size={16} />
+              </Tooltip.Trigger>
+            )
+          })}
+        </div>
+        <Tooltip.Root handle={formatTooltip}>
+          {({ payload }) => (
+            <Tooltip.Portal>
+              <Tooltip.Positioner sideOffset={8}>
+                <Tooltip.Popup>
+                  <Tooltip.Arrow />
+                  <Tooltip.Viewport>{payload && formats[payload].hint}</Tooltip.Viewport>
+                </Tooltip.Popup>
+              </Tooltip.Positioner>
+            </Tooltip.Portal>
+          )}
+        </Tooltip.Root>
+      </div>
+    </Tooltip.Provider>
   )
 }
 
@@ -789,29 +946,7 @@ export function Demo({
     case 'menu':
       return <MenuDemo size={size} palette={palette} />
     case 'tooltip':
-      return (
-        <Tooltip.Provider delay={200}>
-          <Tooltip.Root>
-            <Tooltip.Trigger
-              render={
-                <Button
-                  variant="outline"
-                  colorPalette="gray"
-                  square
-                  aria-label="About this component"
-                />
-              }
-            >
-              <Info size={16} />
-            </Tooltip.Trigger>
-            <Tooltip.Portal>
-              <Tooltip.Positioner sideOffset={8}>
-                <Tooltip.Popup>A little context goes a long way.</Tooltip.Popup>
-              </Tooltip.Positioner>
-            </Tooltip.Portal>
-          </Tooltip.Root>
-        </Tooltip.Provider>
-      )
+      return <TooltipDemo />
     case 'avatar':
       return (
         <div className={s.row}>

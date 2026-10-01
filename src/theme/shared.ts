@@ -15,7 +15,81 @@ export const popup = {
   transitionDuration: 'fast',
   _startingStyle: { opacity: 0, scale: '[0.97]', translate: '[0 -3px]' },
   _endingStyle: { opacity: 0, scale: '[0.97]' },
+  // Base UI asks for no animation: opened from the keyboard, dismissed, or moving between
+  // tooltips of one group.
+  '&[data-instant]': { transitionDuration: '[0s]' },
 } satisfies SystemStyleObject
+
+const morphEasing = 'cubic-bezier(0.22, 1, 0.36, 1)'
+
+/**
+ * Positioner of a popup that moves between triggers: one handle (createHandle) shared by several
+ * triggers, with a Viewport inside, or NavigationMenu. Base UI then places it with top/left and
+ * sizes it (--positioner-width/height), so it glides to the next trigger. Without a Viewport it is
+ * placed with transform instead, which this does not animate. Base UI turns transitions off while
+ * the popup mounts, so it does not glide in from the corner; data-instant does the same for keyboard
+ * opens, dismissal and once a move has finished.
+ */
+export const morphPositioner = {
+  width: '[var(--positioner-width)]',
+  height: '[var(--positioner-height)]',
+  maxWidth: '[var(--available-width)]',
+  transitionProperty: '[top, left, right, bottom]',
+  transitionDuration: 'slow',
+  transitionTimingFunction: `[${morphEasing}]`,
+  '&[data-instant]': { transitionDuration: '[0s]' },
+} satisfies SystemStyleObject
+
+/**
+ * Popup of morphPositioner: Base UI sets --popup-width/height to the old size and then the new
+ * one while the content changes, and back to auto afterwards, so the size eases between them.
+ * Spread after `popup`; a fixed width set later (a size variant) wins over the width here.
+ */
+export const morphPopup = {
+  width: '[var(--popup-width, auto)]',
+  height: '[var(--popup-height, auto)]',
+  transitionProperty: '[opacity, scale, translate, width, height]',
+  transitionDuration:
+    '[{durations.fast}, {durations.fast}, {durations.fast}, {durations.slow}, {durations.slow}]',
+  transitionTimingFunction: `[ease, ease, ease, ${morphEasing}, ${morphEasing}]`,
+} satisfies SystemStyleObject
+
+/**
+ * Viewport of a popup whose content follows its trigger (a handle's payload). While they swap,
+ * Base UI keeps the old content in [data-previous] and the new in [data-current]; they slide
+ * away from the trigger that was left (data-activation-direction). `inset` is the popup's inline
+ * padding: the viewport reaches the popup's edges, so content slides out of sight there, and both
+ * keep their own width (from --popup-width) while the popup resizes. The flex column and gap
+ * carry the popup's own layout through the two wrappers.
+ */
+export function morphViewport(inset: string) {
+  const hiddenLeft = { translate: '[-50% 0]', opacity: 0 } satisfies SystemStyleObject
+  const hiddenRight = { translate: '[50% 0]', opacity: 0 } satisfies SystemStyleObject
+  return {
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '[inherit]',
+    height: 'full',
+    marginInline: `[calc(-1 * ${inset})]`,
+    paddingInline: `[${inset}]`,
+    overflow: '[clip]',
+    '& > [data-current], & > [data-previous]': {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '[inherit]',
+      width: `[calc(var(--popup-width) - 2 * ${inset})]`,
+      transitionProperty: '[translate, opacity]',
+      transitionDuration: '[{durations.slow}, {durations.normal}]',
+      transitionTimingFunction: `[${morphEasing}]`,
+    },
+    '&[data-activation-direction~=right] > [data-previous][data-ending-style]': hiddenLeft,
+    '&[data-activation-direction~=right] > [data-current][data-starting-style]': hiddenRight,
+    '&[data-activation-direction~=left] > [data-previous][data-ending-style]': hiddenRight,
+    '&[data-activation-direction~=left] > [data-current][data-starting-style]': hiddenLeft,
+    '&[data-instant] > *': { transitionDuration: '[0s]' },
+  } satisfies SystemStyleObject
+}
 
 /**
  * Corner for things inside an l3 container with p: '1' (menu rows, enclosed tabs, menubar

@@ -1,5 +1,5 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { popup } from '../shared'
+import { morphPopup, morphPositioner, popup } from '../shared'
 
 export const navigationMenu = defineSlotRecipe({
   className: 'kiso-navigation',
@@ -46,14 +46,31 @@ export const navigationMenu = defineSlotRecipe({
       _icon: { boxSize: '3.5' },
       _open: { rotate: '180deg' },
     },
-    positioner: { zIndex: 'popover' },
+    // Base UI sizes the positioner and popup for each item's content and moves them between
+    // triggers; the content slides in from the side of the trigger that was left.
+    positioner: { ...morphPositioner, zIndex: 'popover' },
     popup: {
       ...popup,
+      ...morphPopup,
       boxShadow: 'lg',
       maxWidth: 'min(token(sizes.lg), calc(100vw - token(spacing.6)))',
     },
-    viewport: { position: 'relative', overflow: 'hidden' },
-    content: { p: '2' },
+    viewport: { position: 'relative', overflow: 'hidden', width: 'full', height: 'full' },
+    content: {
+      p: '2',
+      // A tall item scrolls inside the space left on screen.
+      maxHeight: 'var(--available-height)',
+      overflowY: 'auto',
+      transitionProperty: 'opacity, translate',
+      transitionDuration: 'normal, slow',
+      transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      _startingStyle: { opacity: 0 },
+      _endingStyle: { opacity: 0 },
+      '&[data-starting-style][data-activation-direction=left]': { translate: '-50% 0' },
+      '&[data-starting-style][data-activation-direction=right]': { translate: '50% 0' },
+      '&[data-ending-style][data-activation-direction=left]': { translate: '50% 0' },
+      '&[data-ending-style][data-activation-direction=right]': { translate: '-50% 0' },
+    },
     link: {
       display: 'block',
       px: '3',

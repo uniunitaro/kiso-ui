@@ -247,7 +247,7 @@ export const catalog: ComponentEntry[] = [
       'Viewport',
       'Link',
     ],
-    note: 'Use real links for navigation. The popup viewport hosts the active content. Keep the navigation labeled and support both pointer and keyboard exploration.',
+    note: 'Use real links for navigation. The popup viewport hosts the active content; moving between items resizes the popup and slides the content in from the side it came from. Keep the navigation labeled and support both pointer and keyboard exploration.',
   },
   {
     id: 'menubar',
@@ -333,8 +333,8 @@ export const catalog: ComponentEntry[] = [
     recipe: 'popover',
     base: 'preview-card',
     sizes: ['sm', 'md', 'lg'],
-    anatomy: ['Root', 'Trigger', 'Portal', 'Backdrop', 'Positioner', 'Popup', 'Arrow'],
-    note: 'Supplement a meaningful link with a preview. Keep essential information outside the hover card because touch users may follow the link directly.',
+    anatomy: ['Root', 'Trigger', 'Portal', 'Backdrop', 'Positioner', 'Popup', 'Viewport', 'Arrow'],
+    note: 'Supplement a meaningful link with a preview. Keep essential information outside the hover card because touch users may follow the link directly. createHandle shares one card between links; Viewport animates the content when it moves between them.',
   },
   {
     id: 'scroll-area',
@@ -675,7 +675,7 @@ export const catalog: ComponentEntry[] = [
       'Separator',
       'SubmenuRoot',
     ],
-    note: 'Use menus for actions. Use Select for a form value. Disabled and highlighted states are provided by Base UI. CheckboxItemIndicator and RadioItemIndicator draw a check; pass children to replace it. LinkItem navigates like a link; a menu with Arrow does not scroll, so keep it short.',
+    note: 'Use menus for actions. Use Select for a form value. Disabled and highlighted states are provided by Base UI. CheckboxItemIndicator and RadioItemIndicator draw a check; pass children to replace it. LinkItem navigates like a link; a menu with Arrow does not scroll, so keep it short. createHandle connects triggers outside Root; Viewport animates the items when one menu moves between triggers.',
   },
   {
     id: 'tooltip',
@@ -685,7 +685,7 @@ export const catalog: ComponentEntry[] = [
     recipe: 'tooltip',
     base: 'tooltip',
     anatomy: ['Provider', 'Root', 'Trigger', 'Portal', 'Positioner', 'Popup', 'Viewport', 'Arrow'],
-    note: 'Wrap related tooltips in Provider. A tooltip supplements an accessible label; it must not be the only label for a control. createHandle shares one tooltip between detached triggers.',
+    note: 'Wrap related tooltips in Provider. A tooltip supplements an accessible label; it must not be the only label for a control. createHandle shares one tooltip between detached triggers; Viewport animates the content when it moves between them.',
   },
   {
     id: 'avatar',

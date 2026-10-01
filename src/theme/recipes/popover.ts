@@ -1,5 +1,13 @@
 import { defineSlotRecipe } from '@pandacss/dev'
-import { arrow, closeTrigger, popup, popupBackdrop } from '../shared'
+import {
+  arrow,
+  closeTrigger,
+  morphPopup,
+  morphPositioner,
+  morphViewport,
+  popup,
+  popupBackdrop,
+} from '../shared'
 
 // Shared by Popover and PreviewCard.
 export const popover = defineSlotRecipe({
@@ -9,6 +17,7 @@ export const popover = defineSlotRecipe({
     'backdrop',
     'positioner',
     'popup',
+    'viewport',
     'title',
     'description',
     'arrow',
@@ -17,9 +26,10 @@ export const popover = defineSlotRecipe({
   ],
   base: {
     backdrop: popupBackdrop,
-    positioner: { zIndex: 'popover' },
+    positioner: { ...morphPositioner, zIndex: 'popover' },
     popup: {
       ...popup,
+      ...morphPopup,
       boxShadow: 'lg',
       position: 'relative',
       display: 'flex',
@@ -31,6 +41,7 @@ export const popover = defineSlotRecipe({
       // No overflow clipping here: the arrow sits outside the popup box.
       maxHeight: 'var(--available-height)',
     },
+    viewport: morphViewport('{spacing.4}'),
     title: { color: 'fg.default', fontWeight: 'medium', textStyle: 'md' },
     description: { color: 'fg.muted', textStyle: 'sm' },
     arrow,

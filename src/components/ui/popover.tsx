@@ -27,7 +27,7 @@ export const Close = withContext(Base.Close, 'close')
 export const CloseTrigger = withIcon(withContext(Base.Close, 'closeTrigger'), <XIcon />, 'Close')
 export const Trigger = Base.Trigger
 export const Portal = Base.Portal
-export const Viewport = Base.Viewport
+export const Viewport = withContext(Base.Viewport, 'viewport')
 
 export const createHandle = Base.createHandle
 export const Handle = Base.Handle

@@ -492,41 +492,7 @@ export function AdvancedDemo({
     case 'drawer':
       return <DrawerDemo size={size} />
     case 'preview-card':
-      return (
-        <PreviewCard.Root size={pass(size)}>
-          <p className={s.small}>
-            Made for a little more{' '}
-            <PreviewCard.Trigger
-              href="#/principles"
-              className={css({
-                color: 'colorPalette.plain.fg',
-                textDecoration: 'underline',
-                textUnderlineOffset: '3px',
-              })}
-            >
-              possibility
-            </PreviewCard.Trigger>
-            .
-          </p>
-          <PreviewCard.Portal>
-            <PreviewCard.Positioner sideOffset={8}>
-              <PreviewCard.Popup>
-                <div className={s.glyph}>
-                  <Layers />
-                </div>
-                <h3 className={css({ fontWeight: 'medium', mt: '3' })}>
-                  A foundation, not a ceiling.
-                </h3>
-                <p
-                  className={css({ fontSize: 'xs', color: 'fg.muted', lineHeight: '1.7', mt: '2' })}
-                >
-                  Own every line. Shape every detail. Make something that feels like you.
-                </p>
-              </PreviewCard.Popup>
-            </PreviewCard.Positioner>
-          </PreviewCard.Portal>
-        </PreviewCard.Root>
-      )
+      return <PreviewCardDemo size={size} />
     case 'scroll-area':
       return (
         <ScrollArea.Root
@@ -623,34 +589,166 @@ export function AdvancedDemo({
         </div>
       )
     case 'navigation-menu':
-      return (
-        <NavigationMenu.Root aria-label="Product navigation">
-          <NavigationMenu.List>
-            <NavigationMenu.Item>
-              <NavigationMenu.Trigger>
-                Explore
-                <NavigationMenu.Icon />
-              </NavigationMenu.Trigger>
-              <NavigationMenu.Content>
-                <NavigationMenu.Link href="#/components">The components</NavigationMenu.Link>
-                <NavigationMenu.Link href="#/theming">Your theme</NavigationMenu.Link>
-                <NavigationMenu.Link href="#/principles">The philosophy</NavigationMenu.Link>
-              </NavigationMenu.Content>
-            </NavigationMenu.Item>
-            <NavigationMenu.Item>
-              <NavigationMenu.Link href="#/installation">Get started</NavigationMenu.Link>
-            </NavigationMenu.Item>
-          </NavigationMenu.List>
-          <NavigationMenu.Portal>
-            <NavigationMenu.Positioner sideOffset={8}>
-              <NavigationMenu.Popup>
-                <NavigationMenu.Viewport />
-              </NavigationMenu.Popup>
-            </NavigationMenu.Positioner>
-          </NavigationMenu.Portal>
-        </NavigationMenu.Root>
-      )
+      return <NavigationMenuDemo />
     default:
       return <NativeDemo id={id} size={size} variant={variant} />
   }
+}
+
+function SinglePreviewCard({ size }: { size?: string }) {
+  return (
+    <PreviewCard.Root size={pass(size)}>
+      <p className={s.small}>
+        Made for a little more{' '}
+        <PreviewCard.Trigger
+          href="#/principles"
+          className={css({
+            color: 'colorPalette.plain.fg',
+            textDecoration: 'underline',
+            textUnderlineOffset: '3px',
+          })}
+        >
+          possibility
+        </PreviewCard.Trigger>
+        .
+      </p>
+      <PreviewCard.Portal>
+        <PreviewCard.Positioner sideOffset={8}>
+          <PreviewCard.Popup>
+            <div className={s.glyph}>
+              <Layers />
+            </div>
+            <h3 className={css({ fontWeight: 'medium', mt: '3' })}>A foundation, not a ceiling.</h3>
+            <p className={css({ fontSize: 'xs', color: 'fg.muted', lineHeight: '1.7', mt: '2' })}>
+              Own every line. Shape every detail. Make something that feels like you.
+            </p>
+          </PreviewCard.Popup>
+        </PreviewCard.Positioner>
+      </PreviewCard.Portal>
+    </PreviewCard.Root>
+  )
+}
+
+const people = {
+  morgan: { name: 'Morgan North', role: 'Design lead. Keeps the system calm and consistent.' },
+  sam: {
+    name: 'Sam Jones',
+    role: 'Engineer. Writes the recipes, the tests and most of the release notes, usually in that order.',
+  },
+}
+const personCard = PreviewCard.createHandle<keyof typeof people>()
+const personLink = css({
+  color: 'colorPalette.plain.fg',
+  textDecoration: 'underline',
+  textUnderlineOffset: '3px',
+})
+
+function PreviewCardDemo({ size }: { size?: string }) {
+  return (
+    <div className={s.stack}>
+      <SinglePreviewCard size={size} />
+      {/* One card for two links: it moves to the next link and resizes to the new person. */}
+      <p className={s.small}>
+        Made by{' '}
+        <PreviewCard.Trigger
+          handle={personCard}
+          payload="morgan"
+          href="#/principles"
+          className={personLink}
+        >
+          Morgan
+        </PreviewCard.Trigger>{' '}
+        and{' '}
+        <PreviewCard.Trigger
+          handle={personCard}
+          payload="sam"
+          href="#/principles"
+          className={personLink}
+        >
+          Sam
+        </PreviewCard.Trigger>
+        .
+      </p>
+      <PreviewCard.Root handle={personCard} size={pass(size)}>
+        {({ payload }) => (
+          <PreviewCard.Portal>
+            <PreviewCard.Positioner sideOffset={8}>
+              <PreviewCard.Popup>
+                <PreviewCard.Viewport>
+                  {payload && (
+                    <>
+                      <h3 className={css({ fontWeight: 'medium' })}>{people[payload].name}</h3>
+                      <p className={css({ fontSize: 'xs', color: 'fg.muted', lineHeight: '1.7' })}>
+                        {people[payload].role}
+                      </p>
+                    </>
+                  )}
+                </PreviewCard.Viewport>
+              </PreviewCard.Popup>
+            </PreviewCard.Positioner>
+          </PreviewCard.Portal>
+        )}
+      </PreviewCard.Root>
+    </div>
+  )
+}
+
+function NavigationMenuDemo() {
+  return (
+    <NavigationMenu.Root aria-label="Product navigation">
+      <NavigationMenu.List>
+        <NavigationMenu.Item>
+          <NavigationMenu.Trigger>
+            Explore
+            <NavigationMenu.Icon />
+          </NavigationMenu.Trigger>
+          <NavigationMenu.Content>
+            <NavigationMenu.Link href="#/components">The components</NavigationMenu.Link>
+            <NavigationMenu.Link href="#/theming">Your theme</NavigationMenu.Link>
+            <NavigationMenu.Link href="#/principles">The philosophy</NavigationMenu.Link>
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item>
+          <NavigationMenu.Trigger>
+            Learn
+            <NavigationMenu.Icon />
+          </NavigationMenu.Trigger>
+          {/* Another size: the popup resizes, and the content slides in from this side. */}
+          <NavigationMenu.Content>
+            <div
+              className={css({
+                display: 'grid',
+                gridTemplateColumns: { base: '1fr', sm: '1fr 1fr' },
+                gap: '1',
+              })}
+            >
+              {[
+                ['Installation', 'Add Kiso to a Panda project.'],
+                ['Theming', 'Palettes, radii and your own roles.'],
+                ['Accessibility', 'What Base UI handles, and what you do.'],
+                ['Updating', 'Keep your edits when Kiso changes.'],
+              ].map(([title, text]) => (
+                <NavigationMenu.Link key={title} href="#/installation">
+                  <span className={css({ display: 'block', fontWeight: 'medium' })}>{title}</span>
+                  <span className={css({ display: 'block', textStyle: 'xs', color: 'fg.muted' })}>
+                    {text}
+                  </span>
+                </NavigationMenu.Link>
+              ))}
+            </div>
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item>
+          <NavigationMenu.Link href="#/installation">Get started</NavigationMenu.Link>
+        </NavigationMenu.Item>
+      </NavigationMenu.List>
+      <NavigationMenu.Portal>
+        <NavigationMenu.Positioner sideOffset={8}>
+          <NavigationMenu.Popup>
+            <NavigationMenu.Viewport />
+          </NavigationMenu.Popup>
+        </NavigationMenu.Positioner>
+      </NavigationMenu.Portal>
+    </NavigationMenu.Root>
+  )
 }
