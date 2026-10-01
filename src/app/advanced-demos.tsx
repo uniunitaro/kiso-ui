@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import { Bold, Copy, Italic, Layers, Link, Search, Settings2 } from 'lucide-react'
 import * as Autocomplete from '../components/ui/autocomplete'
 import { Button } from '../components/ui/button'
@@ -179,49 +179,150 @@ function DrawerDemo({ size }: { size?: string }) {
   // Provider, IndentBackground and Indent make the whole page step back, so they wrap the app
   // (see the usage example), not this preview.
   return (
-    <div className={s.row}>
-      {(['down', 'right'] as const).map((direction) => (
-        <Drawer.Root key={direction} swipeDirection={direction} size={pass(size)}>
+    <div className={s.stack}>
+      <div className={s.row}>
+        {(['down', 'right'] as const).map((direction) => (
+          <Drawer.Root key={direction} swipeDirection={direction} size={pass(size)}>
+            <Drawer.Trigger render={<Button variant="outline" colorPalette="gray" />}>
+              {direction === 'down' ? 'Open bottom sheet' : 'Open side panel'}
+            </Drawer.Trigger>
+            <DrawerSheet
+              title="A little room to focus."
+              description="Review the details, make your next move, and return to what you were doing."
+            >
+              <div className={projectCard}>
+                <Layers size={20} />
+                <span className={s.title}>Studio North · Design system</span>
+              </div>
+            </DrawerSheet>
+          </Drawer.Root>
+        ))}
+        {/* Snap points: the sheet rests at 20rem first; drag it up for the full height. */}
+        <Drawer.Root snapPoints={['20rem', 1]} size={pass(size)}>
           <Drawer.Trigger render={<Button variant="outline" colorPalette="gray" />}>
-            {direction === 'down' ? 'Open bottom sheet' : 'Open side panel'}
+            Open with snap points
           </Drawer.Trigger>
-          <Drawer.Portal>
-            <Drawer.Backdrop />
-            <Drawer.Viewport>
-              <Drawer.Popup>
-                <Drawer.Content>
-                  <Drawer.Header>
-                    <Drawer.Title>A little room to focus.</Drawer.Title>
-                    <Drawer.Description>
-                      Review the details, make your next move, and return to what you were doing.
-                    </Drawer.Description>
-                  </Drawer.Header>
-                  <Drawer.Body>
-                    <div
-                      className={css({
-                        p: '4',
-                        borderWidth: '1px',
-                        borderRadius: 'l3',
-                        display: 'flex',
-                        gap: '3',
-                        alignItems: 'center',
-                      })}
-                    >
-                      <Layers size={20} />
-                      <span className={s.title}>Studio North · Design system</span>
-                    </div>
-                  </Drawer.Body>
-                  <Drawer.Footer>
-                    <Drawer.Close render={<Button />}>Back to the collection</Drawer.Close>
-                  </Drawer.Footer>
-                  <Drawer.CloseTrigger />
-                </Drawer.Content>
-              </Drawer.Popup>
-            </Drawer.Viewport>
-          </Drawer.Portal>
+          <DrawerSheet
+            title="Recent files."
+            description="Drag the handle up to see everything, or down to put it away."
+          >
+            {recentFiles.map((name) => (
+              <div key={name} className={projectCard}>
+                <Layers size={16} />
+                <span>{name}</span>
+              </div>
+            ))}
+          </DrawerSheet>
         </Drawer.Root>
-      ))}
+        <Drawer.Root size={pass(size)}>
+          <Drawer.Trigger render={<Button variant="outline" colorPalette="gray" />}>
+            Open nested drawers
+          </Drawer.Trigger>
+          <NestedSheet level={0} size={size} />
+        </Drawer.Root>
+      </div>
+      <p className={s.small}>
+        With a mouse, drag a drawer by its handle. On a touch screen, swipe anywhere on it.
+      </p>
     </div>
+  )
+}
+
+const projectCard = css({
+  p: '4',
+  borderWidth: '1px',
+  borderRadius: 'l3',
+  display: 'flex',
+  gap: '3',
+  alignItems: 'center',
+})
+
+const recentFiles = [
+  'Brand guidelines',
+  'Color tokens',
+  'Spacing scale',
+  'Button recipe',
+  'Dialog recipe',
+  'Drawer recipe',
+  'Release notes 2.4',
+  'Accessibility review',
+  'Icon set',
+  'Type ramp',
+  'Motion study',
+  'Onboarding flow',
+]
+
+const nestedLevels = [
+  {
+    title: 'Share the project.',
+    description: 'Invite the people who should see it next.',
+    next: 'Invite people',
+  },
+  {
+    title: 'Invite people.',
+    description: 'The drawer behind steps back while this one is open.',
+    next: 'Set permissions',
+  },
+  {
+    title: 'Set permissions.',
+    description: 'Drag this one down and the others come forward with it.',
+  },
+]
+
+// Each level opens the next inside its own Root, which makes Base UI treat it as nested.
+function NestedSheet({ level, size }: { level: number; size?: string }) {
+  const { title, description, next } = nestedLevels[level]
+  return (
+    <DrawerSheet
+      title={title}
+      description={description}
+      backdrop={level === 0}
+      footer={
+        next && (
+          <Drawer.Root size={pass(size)}>
+            <Drawer.Trigger render={<Button />}>{next}</Drawer.Trigger>
+            <NestedSheet level={level + 1} size={size} />
+          </Drawer.Root>
+        )
+      }
+    />
+  )
+}
+
+function DrawerSheet({
+  title,
+  description,
+  children,
+  footer,
+  backdrop = true,
+}: {
+  title: string
+  description: string
+  children?: ReactNode
+  footer?: ReactNode
+  backdrop?: boolean
+}) {
+  return (
+    <Drawer.Portal>
+      {/* A nested drawer needs no backdrop of its own: the first one already dims the page. */}
+      {backdrop && <Drawer.Backdrop />}
+      <Drawer.Viewport>
+        <Drawer.Popup>
+          <Drawer.SwipeHandle />
+          <Drawer.Content>
+            <Drawer.Header>
+              <Drawer.Title>{title}</Drawer.Title>
+              <Drawer.Description>{description}</Drawer.Description>
+            </Drawer.Header>
+            {children && <Drawer.Body>{children}</Drawer.Body>}
+            <Drawer.Footer>
+              {footer || <Drawer.Close render={<Button />}>Done</Drawer.Close>}
+            </Drawer.Footer>
+            <Drawer.CloseTrigger />
+          </Drawer.Content>
+        </Drawer.Popup>
+      </Drawer.Viewport>
+    </Drawer.Portal>
   )
 }
 

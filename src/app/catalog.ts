@@ -314,6 +314,7 @@ export const catalog: ComponentEntry[] = [
       'Backdrop',
       'Viewport',
       'Popup',
+      'SwipeHandle',
       'Content',
       'Header',
       'Title',
@@ -323,7 +324,7 @@ export const catalog: ComponentEntry[] = [
       'Close',
       'CloseTrigger',
     ],
-    note: 'The side follows swipeDirection on Root: "down" (default) is a bottom sheet, "right" / "left" are side panels, "up" drops from the top. Includes focus trapping, dismissal and reduced-motion support. Use Dialog for a centered modal. Wrap the app in Provider with IndentBackground and Indent to make the page step back while a drawer is open. VirtualKeyboardProvider keeps focused fields visible above a mobile keyboard. CloseTrigger is a corner × named "Close"; pass aria-label for another language, or children to replace the icon.',
+    note: 'The side follows swipeDirection on Root: "down" (default) is a bottom sheet, "right" / "left" are side panels, "up" drops from the top. Put SwipeHandle in Popup before Content: a mouse drags the drawer only outside Content (touch works anywhere). snapPoints on Root lets a sheet rest part-way open. A Root inside the Popup of another drawer opens as a nested drawer: the one behind steps back, and a nested drawer needs no Backdrop of its own. Includes focus trapping, dismissal and reduced-motion support. Use Dialog for a centered modal. Wrap the app in Provider with IndentBackground and Indent to make the page step back while a drawer is open. VirtualKeyboardProvider keeps focused fields visible above a mobile keyboard. CloseTrigger is a corner × named "Close"; pass aria-label for another language, or children to replace the icon.',
   },
   {
     id: 'preview-card',

@@ -1,4 +1,5 @@
 'use client'
+import type { ComponentProps } from 'react'
 import { Drawer as Base } from '@base-ui/react/drawer'
 import { drawer, type DrawerVariantProps } from '../../../styled-system/recipes'
 import { createStyleContext, type ColorPaletteProp } from './style-context'
@@ -19,6 +20,14 @@ export const Popup = withContext(Base.Popup, 'popup')
 export const Backdrop = withContext(Base.Backdrop, 'backdrop')
 export const Viewport = withContext(Base.Viewport, 'viewport')
 export const Content = withContext(Base.Content, 'content')
+const StyledSwipeHandle = withContext('div', 'swipeHandle')
+/**
+ * Grip on the edge the drawer is swiped from. Place it in Popup, outside Content: a mouse drag
+ * starts only outside Content. Decorative: the drawer still closes with Close and Escape.
+ */
+export function SwipeHandle(props: ComponentProps<typeof StyledSwipeHandle>) {
+  return <StyledSwipeHandle aria-hidden="true" {...props} />
+}
 export const Title = withContext(Base.Title, 'title')
 export const Description = withContext(Base.Description, 'description')
 export const Close = withContext(Base.Close, 'close')
