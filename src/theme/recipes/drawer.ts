@@ -43,10 +43,17 @@ export const drawer = defineSlotRecipe({
       boxShadow: 'lg',
       outline: '0',
       textStyle: 'sm',
-      transitionProperty: 'translate',
+      // Move with transform, as Base UI's docs do: while swiping, Base UI writes an inline
+      // transform that replaces this one. The translate property would add to it and move the
+      // popup twice as far as the pointer.
+      transitionProperty: 'transform',
       transitionDuration: 'slow',
       transitionTimingFunction: 'cubic-bezier(0.32, 0.72, 0, 1)',
       '&[data-swiping]': { transitionDuration: '0s' },
+      // A fast swipe closes faster (Base UI sets --drawer-swipe-strength from 0.1 to 1).
+      '&[data-ending-style]': {
+        transitionDuration: 'calc(var(--drawer-swipe-strength, 1) * token(durations.slow))',
+      },
       '&[data-swipe-direction=down]': {
         insetInline: '0',
         bottom: '0',
@@ -54,9 +61,10 @@ export const drawer = defineSlotRecipe({
         maxWidth: 'var(--drawer-size)',
         maxHeight: 'calc(100dvh - token(spacing.12))',
         borderTopRadius: 'l3',
-        translate: '0 var(--drawer-swipe-movement-y, 0px)',
-        _startingStyle: { translate: '0 100%' },
-        _endingStyle: { translate: '0 100%' },
+        transform:
+          'translateY(calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px)))',
+        _startingStyle: { transform: 'translateY(100%)' },
+        _endingStyle: { transform: 'translateY(100%)' },
       },
       '&[data-swipe-direction=up]': {
         insetInline: '0',
@@ -65,25 +73,26 @@ export const drawer = defineSlotRecipe({
         maxWidth: 'var(--drawer-size)',
         maxHeight: 'calc(100dvh - token(spacing.12))',
         borderBottomRadius: 'l3',
-        translate: '0 var(--drawer-swipe-movement-y, 0px)',
-        _startingStyle: { translate: '0 -100%' },
-        _endingStyle: { translate: '0 -100%' },
+        transform:
+          'translateY(calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px)))',
+        _startingStyle: { transform: 'translateY(-100%)' },
+        _endingStyle: { transform: 'translateY(-100%)' },
       },
       '&[data-swipe-direction=right]': {
         insetBlock: '0',
         right: '0',
         width: 'min(var(--drawer-size), 100vw)',
-        translate: 'var(--drawer-swipe-movement-x, 0px) 0',
-        _startingStyle: { translate: '100% 0' },
-        _endingStyle: { translate: '100% 0' },
+        transform: 'translateX(var(--drawer-swipe-movement-x, 0px))',
+        _startingStyle: { transform: 'translateX(100%)' },
+        _endingStyle: { transform: 'translateX(100%)' },
       },
       '&[data-swipe-direction=left]': {
         insetBlock: '0',
         left: '0',
         width: 'min(var(--drawer-size), 100vw)',
-        translate: 'var(--drawer-swipe-movement-x, 0px) 0',
-        _startingStyle: { translate: '-100% 0' },
-        _endingStyle: { translate: '-100% 0' },
+        transform: 'translateX(var(--drawer-swipe-movement-x, 0px))',
+        _startingStyle: { transform: 'translateX(-100%)' },
+        _endingStyle: { transform: 'translateX(-100%)' },
       },
     },
     content: {
