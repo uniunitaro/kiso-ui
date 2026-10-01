@@ -29,8 +29,13 @@ export const drawer = defineSlotRecipe({
       opacity: 'calc(1 - var(--drawer-swipe-progress, 0))',
       transitionProperty: 'opacity',
       transitionDuration: 'normal',
+      // Base UI sets data-swiping on the backdrop too: follow the pointer without lag.
+      '&[data-swiping]': { transitionDuration: '0s' },
       _startingStyle: { opacity: 0 },
       _endingStyle: { opacity: 0 },
+      '&[data-ending-style]': {
+        transitionDuration: 'calc(var(--drawer-swipe-strength, 1) * token(durations.normal))',
+      },
     },
     viewport: { position: 'fixed', inset: '0', zIndex: 'modal', pointerEvents: 'none' },
     popup: {
@@ -124,11 +129,15 @@ export const drawer = defineSlotRecipe({
     },
     indent: {
       '--indent-progress': 'calc(1 - var(--drawer-swipe-progress, 0))',
+      // Base UI gives the indent no data-swiping; as in its docs, drop the transition while
+      // --drawer-swipe-progress is above 0 so the page follows the pointer, and ease otherwise.
+      '--indent-transition':
+        'calc(1 - clamp(0, calc(var(--drawer-swipe-progress, 0) * 100000), 1))',
       position: 'relative',
       bg: 'canvas',
       transformOrigin: 'center top',
       transitionProperty: 'scale, translate, border-radius',
-      transitionDuration: 'slow',
+      transitionDuration: 'calc(token(durations.slow) * var(--indent-transition))',
       transitionTimingFunction: 'cubic-bezier(0.32, 0.72, 0, 1)',
       // Base UI's data-active, not the :active press state of _active.
       '&[data-active]': {
