@@ -1,5 +1,5 @@
 import { useRef, useState, type ReactNode } from 'react'
-import { Bold, Copy, Italic, Layers, Link, Search, Settings2 } from 'lucide-react'
+import { Bold, Copy, Italic, Layers, Link, Search, Settings2, Share2 } from 'lucide-react'
 import * as Autocomplete from '../components/ui/autocomplete'
 import { Button } from '../components/ui/button'
 import * as Checkbox from '../components/ui/checkbox'
@@ -577,6 +577,29 @@ export function AdvancedDemo({
                     <Settings2 />
                     Rename
                   </ContextMenu.Item>
+                  <ContextMenu.SubmenuRoot>
+                    <ContextMenu.SubmenuTrigger>
+                      <Share2 />
+                      Share
+                    </ContextMenu.SubmenuTrigger>
+                    <ContextMenu.Portal>
+                      <ContextMenu.Positioner
+                        sideOffset={ContextMenu.submenuOffset}
+                        alignOffset={ContextMenu.submenuOffset}
+                      >
+                        <ContextMenu.Popup>
+                          {['Copy link', 'Send by email', 'Embed'].map((label) => (
+                            <ContextMenu.Item
+                              key={label}
+                              onClick={() => setMessage(`${label} chosen in this demo.`)}
+                            >
+                              {label}
+                            </ContextMenu.Item>
+                          ))}
+                        </ContextMenu.Popup>
+                      </ContextMenu.Positioner>
+                    </ContextMenu.Portal>
+                  </ContextMenu.SubmenuRoot>
                   <ContextMenu.Separator />
                   <ContextMenu.Item disabled>Move to another team</ContextMenu.Item>
                 </ContextMenu.Popup>
@@ -655,7 +678,7 @@ export function AdvancedDemo({
       return (
         <div className={s.stack}>
           <Menubar aria-label="Application menu" variant={pass(variant)}>
-            {['File', 'Edit', 'View'].map((name) => (
+            {menubarMenus.map(({ name, items }) => (
               <Menu.Root key={name}>
                 <Menu.Trigger render={<Button variant="plain" colorPalette="gray" size="sm" />}>
                   {name}
@@ -663,19 +686,39 @@ export function AdvancedDemo({
                 <Menu.Portal>
                   <Menu.Positioner sideOffset={6}>
                     <Menu.Popup>
-                      {(name === 'File'
-                        ? ['New project', 'Open project', 'Save']
-                        : name === 'Edit'
-                          ? ['Undo', 'Redo', 'Find']
-                          : ['Zoom in', 'Zoom out', 'Reset zoom']
-                      ).map((action) => (
-                        <Menu.Item
-                          key={action}
-                          onClick={() => setMessage(`${action} selected in this demo.`)}
-                        >
-                          {action}
-                        </Menu.Item>
-                      ))}
+                      {items.map((item) =>
+                        typeof item === 'string' ? (
+                          <Menu.Item
+                            key={item}
+                            onClick={() => setMessage(`${item} selected in this demo.`)}
+                          >
+                            {item}
+                          </Menu.Item>
+                        ) : (
+                          <Menu.SubmenuRoot key={item.label}>
+                            <Menu.SubmenuTrigger>{item.label}</Menu.SubmenuTrigger>
+                            <Menu.Portal>
+                              <Menu.Positioner
+                                sideOffset={Menu.submenuOffset}
+                                alignOffset={Menu.submenuOffset}
+                              >
+                                <Menu.Popup>
+                                  {item.items.map((label) => (
+                                    <Menu.Item
+                                      key={label}
+                                      onClick={() =>
+                                        setMessage(`${item.label}: ${label} in this demo.`)
+                                      }
+                                    >
+                                      {label}
+                                    </Menu.Item>
+                                  ))}
+                                </Menu.Popup>
+                              </Menu.Positioner>
+                            </Menu.Portal>
+                          </Menu.SubmenuRoot>
+                        ),
+                      )}
                     </Menu.Popup>
                   </Menu.Positioner>
                 </Menu.Portal>
@@ -695,6 +738,23 @@ export function AdvancedDemo({
       return <NativeDemo id={id} size={size} variant={variant} />
   }
 }
+
+// An object opens a submenu with its own items.
+const menubarMenus: { name: string; items: (string | { label: string; items: string[] })[] }[] = [
+  {
+    name: 'File',
+    items: [
+      'New project',
+      { label: 'Open recent', items: ['Brand refresh', 'Design tokens', 'Q3 roadmap'] },
+      'Save',
+    ],
+  },
+  { name: 'Edit', items: ['Undo', 'Redo', 'Find'] },
+  {
+    name: 'View',
+    items: ['Zoom in', 'Zoom out', { label: 'Appearance', items: ['Light', 'Dark', 'System'] }],
+  },
+]
 
 function SinglePreviewCard({ size }: { size?: string }) {
   return (

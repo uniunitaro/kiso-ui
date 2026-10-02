@@ -37,14 +37,15 @@ export const navigationMenu = defineSlotRecipe({
       transitionDuration: 'fast',
       focusVisibleRing: 'outside',
       _hover: { bg: 'gray.plain.bg.hover', color: 'fg.default' },
-      _open: { bg: 'gray.plain.bg.hover', color: 'fg.default' },
+      // Base UI marks the trigger of the open item with data-popup-open, not data-open (_open).
+      '&[data-popup-open]': { bg: 'gray.plain.bg.hover', color: 'fg.default' },
     },
     icon: {
       display: 'flex',
       transitionProperty: 'rotate',
       transitionDuration: 'normal',
       _icon: { boxSize: '3.5' },
-      _open: { rotate: '180deg' },
+      '&[data-popup-open]': { rotate: '180deg' },
     },
     // Base UI sizes the positioner and popup for each item's content and moves them between
     // triggers; the content slides in from the side of the trigger that was left.

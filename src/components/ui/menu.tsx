@@ -1,8 +1,9 @@
 'use client'
+import type { ComponentProps, ReactNode } from 'react'
 import { Menu as Base } from '@base-ui/react/menu'
 import { menu, type MenuVariantProps } from '../../../styled-system/recipes'
 import { createStyleContext, type ColorPaletteProp } from './style-context'
-import { CheckIcon, withIcon } from './icons'
+import { CheckIcon, ChevronRightIcon, withIcon } from './icons'
 
 const { Provider: StyleProvider, withContext } = createStyleContext(menu)
 
@@ -33,7 +34,26 @@ export const RadioItemIndicator = withIcon(
   withContext(Base.RadioItemIndicator, 'radioItemIndicator'),
   <CheckIcon />,
 )
-export const SubmenuTrigger = withContext(Base.SubmenuTrigger, 'submenuTrigger')
+const StyledSubmenuTrigger = withContext(Base.SubmenuTrigger, 'submenuTrigger')
+const SubmenuTriggerIndicator = withContext('span', 'submenuTriggerIndicator')
+/**
+ * Item that opens the submenu of its SubmenuRoot. Ends with an arrow (flipped in RTL); pass
+ * indicator to draw something else, or null to leave it out.
+ */
+export function SubmenuTrigger({
+  children,
+  indicator = <ChevronRightIcon />,
+  ...props
+}: ComponentProps<typeof StyledSubmenuTrigger> & { indicator?: ReactNode }) {
+  return (
+    <StyledSubmenuTrigger {...props}>
+      {children}
+      {indicator != null && (
+        <SubmenuTriggerIndicator aria-hidden="true">{indicator}</SubmenuTriggerIndicator>
+      )}
+    </StyledSubmenuTrigger>
+  )
+}
 export const Arrow = withContext(Base.Arrow, 'arrow')
 export const Trigger = Base.Trigger
 export const Portal = Base.Portal
@@ -41,6 +61,15 @@ export const Viewport = withContext(Base.Viewport, 'viewport')
 export const Group = Base.Group
 export const RadioGroup = Base.RadioGroup
 export const SubmenuRoot = Base.SubmenuRoot
+
+/**
+ * sideOffset and alignOffset for the Positioner of a submenu: beside the menu it overlaps it a
+ * little and lines its first item up with the trigger (the popup has 4px of padding); above or
+ * below, where it goes when the side has no room, it keeps 4px away.
+ */
+export function submenuOffset({ side }: { side: string }) {
+  return side === 'top' || side === 'bottom' ? 4 : -4
+}
 
 export const createHandle = Base.createHandle
 export const Handle = Base.Handle

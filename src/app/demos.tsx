@@ -13,6 +13,7 @@ import {
   Info,
   BookOpen,
   Copy,
+  FolderInput,
   Trash2,
   Settings2,
   MoreHorizontal,
@@ -306,6 +307,26 @@ export function MenuDemo({ size = 'md', palette }: { size?: string; palette?: st
                   <BookOpen />
                   Read the guide
                 </Menu.LinkItem>
+                <Menu.SubmenuRoot>
+                  <Menu.SubmenuTrigger>
+                    <FolderInput />
+                    Move to
+                  </Menu.SubmenuTrigger>
+                  <Menu.Portal>
+                    <Menu.Positioner
+                      sideOffset={Menu.submenuOffset}
+                      alignOffset={Menu.submenuOffset}
+                    >
+                      <Menu.Popup>
+                        {['Design team', 'Marketing', 'Personal'].map((team) => (
+                          <Menu.Item key={team} onClick={() => setAction(`Moved to ${team}`)}>
+                            {team}
+                          </Menu.Item>
+                        ))}
+                      </Menu.Popup>
+                    </Menu.Positioner>
+                  </Menu.Portal>
+                </Menu.SubmenuRoot>
               </Menu.Group>
               <Menu.Separator />
               <Menu.CheckboxItem defaultChecked>

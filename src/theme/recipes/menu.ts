@@ -33,6 +33,7 @@ export const menu = defineSlotRecipe({
     'radioItem',
     'radioItemIndicator',
     'submenuTrigger',
+    'submenuTriggerIndicator',
     'arrow',
   ],
   base: {
@@ -53,7 +54,11 @@ export const menu = defineSlotRecipe({
     item,
     checkboxItem: item,
     radioItem: item,
-    submenuTrigger: { ...item, _open: { bg: 'gray.surface.bg.hover' } },
+    // Base UI marks the trigger of an open submenu with data-popup-open: it stays lit while the
+    // pointer is in the submenu.
+    submenuTrigger: { ...item, '&[data-popup-open]': { bg: 'gray.surface.bg.hover' } },
+    // The submenu opens on the inline-end side, so the arrow turns with the writing direction.
+    submenuTriggerIndicator: { ...indicator, color: 'fg.muted', _rtl: { scale: '-1 1' } },
     groupLabel,
     separator: { h: '1px', bg: 'border', flexShrink: '0' },
     checkboxItemIndicator: indicator,

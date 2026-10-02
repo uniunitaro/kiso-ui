@@ -258,7 +258,7 @@ export const catalog: ComponentEntry[] = [
     base: 'menubar',
     variants: ['outline', 'plain'],
     anatomy: ['Menubar'],
-    note: 'Compose with Menu roots and triggers. Keyboard arrow navigation between menus is managed by Base UI. This is for application commands, not site navigation.',
+    note: 'Compose with Menu roots and triggers. Keyboard arrow navigation between menus is managed by Base UI. Put a Menu.SubmenuRoot in a menu for nested items. This is for application commands, not site navigation.',
   },
   {
     id: 'toolbar',
@@ -293,8 +293,10 @@ export const catalog: ComponentEntry[] = [
       'Item',
       'LinkItem',
       'Separator',
+      'SubmenuRoot',
+      'SubmenuTrigger',
     ],
-    note: 'Opens on a context menu gesture. Ensure the trigger is keyboard focusable and that essential actions are also discoverable elsewhere.',
+    note: 'Opens on a context menu gesture. Ensure the trigger is keyboard focusable and that essential actions are also discoverable elsewhere. Submenus work as in Menu: SubmenuRoot, SubmenuTrigger and a nested Portal.',
   },
   {
     id: 'drawer',
@@ -675,8 +677,9 @@ export const catalog: ComponentEntry[] = [
       'GroupLabel',
       'Separator',
       'SubmenuRoot',
+      'SubmenuTrigger',
     ],
-    note: 'Use menus for actions. Use Select for a form value. Disabled and highlighted states are provided by Base UI. CheckboxItemIndicator and RadioItemIndicator draw a check; pass children to replace it. LinkItem navigates like a link; a menu with Arrow does not scroll, so keep it short. createHandle connects triggers outside Root; Viewport animates the items when one menu moves between triggers.',
+    note: 'Use menus for actions. Use Select for a form value. Disabled and highlighted states are provided by Base UI. CheckboxItemIndicator and RadioItemIndicator draw a check; pass children to replace it. LinkItem navigates like a link; a menu with Arrow does not scroll, so keep it short. A submenu is a SubmenuRoot with a SubmenuTrigger and its own Portal, Positioner and Popup; pass submenuOffset as sideOffset and alignOffset on its Positioner to line its first item up with the trigger. SubmenuTrigger ends with an arrow; pass indicator to replace it, or null to leave it out. createHandle connects triggers outside Root; Viewport animates the items when one menu moves between triggers.',
   },
   {
     id: 'tooltip',
