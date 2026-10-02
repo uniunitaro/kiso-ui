@@ -1,6 +1,9 @@
 import { defineSlotRecipe } from '@pandacss/dev'
 import { closeTrigger } from '../shared'
 
+// Room left above a sheet at its full height.
+const sheetMaxHeight = 'calc(100dvh - token(spacing.12))'
+
 // The side follows Base UI's swipeDirection prop (data-swipe-direction): down is a bottom sheet.
 export const drawer = defineSlotRecipe({
   className: 'kiso-drawer',
@@ -38,7 +41,11 @@ export const drawer = defineSlotRecipe({
         transitionDuration: 'calc(var(--drawer-swipe-strength, 1) * token(durations.normal))',
       },
     },
-    viewport: { position: 'fixed', inset: '0', zIndex: 'modal', pointerEvents: 'none' },
+    // The viewport takes clicks outside the popup: Base UI closes the topmost drawer when one
+    // lands on its viewport. A nested drawer has no backdrop of its own, so without this the
+    // click would reach the backdrop of the first drawer, which is not topmost, and nothing
+    // would close. With modal={false}, give the viewport pointerEvents: 'none' to reach the page.
+    viewport: { position: 'fixed', inset: '0', zIndex: 'modal' },
     popup: {
       position: 'fixed',
       display: 'flex',
@@ -108,11 +115,17 @@ export const drawer = defineSlotRecipe({
         bottom: '0',
         mx: 'auto',
         maxWidth: 'var(--drawer-size)',
-        maxHeight: 'calc(100dvh - token(spacing.12))',
+        maxHeight: sheetMaxHeight,
         borderTopRadius: 'l3',
         // At a lower snap point the bottom of the sheet is off screen: pad it so the end of
         // Content can still be scrolled into view (the popup grows to its max height).
         pb: 'var(--drawer-snap-point-offset, 0px)',
+        // At the full snap point (data-expanded) the padding is gone: keep the max height, or
+        // the sheet would change height at every snap while it moves, and Base UI would
+        // measure it again and change its target halfway.
+        '&[data-expanded]:not([data-nested-drawer-open])': {
+          minHeight: sheetMaxHeight,
+        },
         transformOrigin: 'center bottom',
         transform:
           'translateY(calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px) - var(--stack-peek) - (1 - var(--stack-scale)) * var(--stack-height))) scale(var(--stack-scale))',
@@ -126,7 +139,7 @@ export const drawer = defineSlotRecipe({
         top: '0',
         mx: 'auto',
         maxWidth: 'var(--drawer-size)',
-        maxHeight: 'calc(100dvh - token(spacing.12))',
+        maxHeight: sheetMaxHeight,
         borderBottomRadius: 'l3',
         transformOrigin: 'center top',
         transform:
