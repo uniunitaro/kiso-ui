@@ -2,7 +2,7 @@
 
 Base UI の振る舞いと Panda CSS のレシピを組み合わせた、ソースを所有する React コンポーネント集です。49種類の部品、実際に操作できるプレビュー、使用例、レシピ、ローカルコピー用 CLI を収録しています。
 
-Park UI の「パレット（colorPalette）× 見た目（variant）× 大きさ（size）」という考え方を採用し、Base UI の render 合成・状態コールバック・値のジェネリクスを保持しています。配色・意味トークン・状態色・主要部品のサイズ・角丸・影・重なり順・textStyles・disabled の表現は Park UI の定義に準拠しています。
+Park UI の「パレット（colorPalette）× 見た目（variant）× 大きさ（size）」という考え方を採用し、Base UI の render 合成・状態コールバック・値のジェネリクスを保持しています。配色・意味トークン・状態色・主要部品のサイズ・影・重なり順・textStyles・disabled の表現は Park UI の定義に準拠しています。角丸は入れ子の構造を引き継ぎ、既定値を `xl` にしています。
 
 ## 起動
 
@@ -208,7 +208,7 @@ semanticTokens: {
 
 バリアントは Park UI に合わせています。色を持つ部品は `solid / surface / subtle / outline / plain` から該当するものを持ち、入力系は `outline / surface / subtle`（Input・Textarea は `flushed` も）、Tabs は `line / subtle / enclosed`、Alert は `status`（info / success / warning / error / neutral）と `variant` の組み合わせです。
 
-角丸は `l1 → xs (2px)`、`l2 → sm (4px)`、`l3 → md (6px)`。Panda設定の `semanticTokens.radii` で参照を変更できます。円形部品は `full` を使います。
+角丸の既定は `xl` で、`l1 → lg (8px)`、`l2 → xl (12px)`、`l3 → 2xl (16px)`。Panda設定の `semanticTokens.radii` で参照を変更できます。円形部品は `full` を使います。
 
 disabled は Park UI の `layerStyle: 'disabled'`（不透明度0.67とグレースケール）で統一し、hover / active は disabled の要素に効かない条件に置き換えています。フォーカス表示は Panda の `focusVisibleRing`（ボタン類は外側2px、入力類は内側1px＋枠線）で、色は `--global-color-focus-ring`（その要素の `colorPalette.solid.bg`）です。
 

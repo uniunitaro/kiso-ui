@@ -23,7 +23,7 @@ export const defaultTheme: ThemeSettings = {
   mode: 'light',
   accent: 'iris',
   gray: 'neutral',
-  radius: 'sm',
+  radius: 'xl',
 }
 export const accents = Object.fromEntries(
   accentNames.map((name) => [name, `var(--colors-${name}-9)`]),

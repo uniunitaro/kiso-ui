@@ -27,7 +27,7 @@ export function runtimeColors(defaults: { accent: keyof typeof palettes; gray: s
 
 /** The radius picker writes --kiso-radius-l1..3 on <html>. */
 export const runtimeRadii = defineSemanticTokens.radii({
-  l1: { value: 'var(--kiso-radius-l1, {radii.xs})' },
-  l2: { value: 'var(--kiso-radius-l2, {radii.sm})' },
-  l3: { value: 'var(--kiso-radius-l3, {radii.md})' },
+  l1: { value: 'var(--kiso-radius-l1, {radii.lg})' },
+  l2: { value: 'var(--kiso-radius-l2, {radii.xl})' },
+  l3: { value: 'var(--kiso-radius-l3, {radii.2xl})' },
 })

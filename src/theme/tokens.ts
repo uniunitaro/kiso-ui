@@ -32,9 +32,9 @@ export const semanticColors = defineSemanticTokens.colors({
 
 /** Nested corner radii: l1 inside l2 inside l3. Point them at other radii to restyle. */
 export const radii = defineSemanticTokens.radii({
-  l1: { value: '{radii.xs}' },
-  l2: { value: '{radii.sm}' },
-  l3: { value: '{radii.md}' },
+  l1: { value: '{radii.lg}' },
+  l2: { value: '{radii.xl}' },
+  l3: { value: '{radii.2xl}' },
 })
 
 /** Park UI's Radix-based palettes replace Panda's 50–950 colors; drop those from the preset. */

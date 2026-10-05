@@ -124,9 +124,9 @@ describe('Park design system contracts', () => {
     }
   })
   it('keeps nested radii and overlays in the upstream order', () => {
-    expect(radii.l1.value).toBe('{radii.xs}')
-    expect(radii.l2.value).toBe('{radii.sm}')
-    expect(radii.l3.value).toBe('{radii.md}')
+    expect(radii.l1.value).toBe('{radii.lg}')
+    expect(radii.l2.value).toBe('{radii.xl}')
+    expect(radii.l3.value).toBe('{radii.2xl}')
     expect(
       ['overlay', 'modal', 'popover', 'toast', 'tooltip'].map(
         (key) => tokens.zIndex[key as keyof typeof tokens.zIndex].value,
